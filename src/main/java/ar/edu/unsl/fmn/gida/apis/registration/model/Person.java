@@ -1,11 +1,31 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-public class Person {
-    private int id;
-    private String lastName;
-    private String name;
-    private int dni;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "persons")
+public class Person {
+
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false, length = 30)
+    private String lastName;
+
+    @Column(nullable = false, length = 30)
+    private String name;
+
+    @Column(nullable = false, length = 10)
+    private String dni;
+
+    @Column(nullable = false)
     private boolean active;
 
     public Person() {
@@ -37,11 +57,11 @@ public class Person {
         this.name = name;
     }
 
-    public int getDni() {
+    public String getDni() {
         return this.dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(String dni) {
         this.dni = dni;
     }
 
