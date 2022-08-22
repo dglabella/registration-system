@@ -26,14 +26,13 @@ public class Person {
     private String dni;
 
     @Column(nullable = false)
-    private int active;
+    private boolean active;
 
     public Person() {
 
     }
 
     public int getId() {
-
         return this.id;
     }
 
@@ -65,11 +64,11 @@ public class Person {
         this.dni = dni;
     }
 
-    public int isActive() {
+    public boolean isActive() {
         return this.active;
     }
 
-    public void setActive(int active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }
