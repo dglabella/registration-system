@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +13,12 @@ public class PersonService {
     @Autowired
     private PersonRepository personRepository;
 
-    public ArrayList<Person> getPerson() {
-        return (ArrayList<Person>) personRepository.findAll();
+    public List<Person> getAll() {
+        return personRepository.findAll();
     }
 
-    public Person postPerson(Person person) {
+
+    public Person insert(Person person) {
         Person p = personRepository.save(person);
         return p;
     }
