@@ -19,9 +19,7 @@ public class PersonService {
     }
 
     public Person postPerson(Person person) {
-        System.out.println("persona en service tiene " + person.getDni());
         Person p = personRepository.save(person);
-        System.out.println("despues de save");
         return p;
     }
 }

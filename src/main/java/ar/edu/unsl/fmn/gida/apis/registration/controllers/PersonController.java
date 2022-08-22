@@ -22,7 +22,6 @@ public class PersonController {
 
     @RequestMapping(value = "/{id}")
     public Person getPerson(@PathVariable String id) {
-        System.out.println("YA ANDA ENTRO ACA WACHOOO");
         return null;
     }
 
@@ -33,7 +32,6 @@ public class PersonController {
 
     @PostMapping
     public Person postPerson(@RequestBody Person person) {
-        System.out.println("persona tiene " + person.getDni());
         return personService.postPerson(person);
     }
 
