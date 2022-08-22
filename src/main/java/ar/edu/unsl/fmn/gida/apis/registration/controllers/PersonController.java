@@ -36,8 +36,7 @@ public class PersonController {
 
     @PostMapping
     public Person postPerson(@RequestBody Person person) {
-        System.out.println("persona tiene " + person.getDni());
-        return personService.postPerson(person);
+        return personService.insert(person);
     }
 
 }
