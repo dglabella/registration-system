@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
-@RequestMapping(value = "person")
+@RequestMapping(value = RegistrationSystemApplication.Endpoints.persons)
 public class PersonController {
 
     @Autowired
@@ -36,5 +37,4 @@ public class PersonController {
     public Person postPerson(@RequestBody Person person) {
         return personService.insert(person);
     }
-
 }

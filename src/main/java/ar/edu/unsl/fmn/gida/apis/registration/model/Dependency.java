@@ -1,48 +1,41 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "persons")
-public class Person {
+@Table(name = "dependencies")
+public class Dependency {
     // =================================== keys ===================================
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // @Column(nullable = false)
-    // private int dependencyFk;
-
     // ================================ attributes ================================
-    @Column(nullable = false, length = 30)
-    private String lastName;
-
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, length = 10)
-    private String dni;
+    @Column(nullable = true, length = 100)
+    private String description;
 
     // ================================== extras ==================================
     @Column(nullable = false)
     private boolean active;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dependency_id")
-    private Dependency dependency;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dependency")
+    private List<Person> persons;
 
     // =============================== constructors ===============================
-    public Person() {}
+    public Dependency() {}
 
     // ============================ getters and setters ===========================
     public int getId() {
@@ -53,14 +46,6 @@ public class Person {
         this.id = id;
     }
 
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -69,12 +54,12 @@ public class Person {
         this.name = name;
     }
 
-    public String getDni() {
-        return this.dni;
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isActive() {
@@ -85,11 +70,11 @@ public class Person {
         this.active = active;
     }
 
-    public Dependency getDependency() {
-        return this.dependency;
+    public List<Person> getPersons() {
+        return this.persons;
     }
 
-    public void setDependency(Dependency dependency) {
-        this.dependency = dependency;
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 }
