@@ -21,12 +21,6 @@ public class Register {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private int personFk;
-
-    @Column(nullable = false)
-    private int accessFk;
-
     // ================================ attributes ================================
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -57,22 +51,6 @@ public class Register {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPersonFk() {
-        return this.personFk;
-    }
-
-    public void setPersonFk(int personFk) {
-        this.personFk = personFk;
-    }
-
-    public int getAccessFk() {
-        return this.accessFk;
-    }
-
-    public void setAccessFk(int accessFk) {
-        this.accessFk = accessFk;
     }
 
     public Date getCheckIn() {

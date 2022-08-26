@@ -1,0 +1,5 @@
+DROP TABLE weeklies;
+DROP TABLE registers;
+DROP TABLE persons;
+DROP TABLE accesses;
+DROP TABLE dependencies;

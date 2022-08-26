@@ -22,19 +22,32 @@ public class PersonController {
     private PersonService personService;
 
     @RequestMapping(value = "/{id}")
-    public Person getPerson(@PathVariable String id) {
-        return null;
+    public ResponseEntity<Person> getPerson(@PathVariable int id) {
+        Person p = this.personService.getOne(id);
+
+        ResponseEntity<Person> response = p != null ? ResponseEntity.ok().body(p)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return response;
     }
 
     @GetMapping
     public ResponseEntity<List<Person>> getAllPerson() {
+        List<Person> persons = personService.getAll();
+
         ResponseEntity<List<Person>> response =
-                new ResponseEntity<>(personService.getAll(), HttpStatus.OK);
+                persons.size() > 0 ? ResponseEntity.ok().body(persons)
+                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
     @PostMapping
-    public Person postPerson(@RequestBody Person person) {
-        return personService.insert(person);
+    public ResponseEntity<Person> postPerson(@RequestBody Person person) {
+        Person p = personService.insert(person);
+
+        ResponseEntity<Person> response =
+                p != null ? ResponseEntity.ok().body(p) : new ResponseEntity<>(HttpStatus.CREATED);
+
+        return response;
     }
 }

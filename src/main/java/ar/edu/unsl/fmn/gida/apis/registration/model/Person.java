@@ -6,7 +6,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -19,9 +18,6 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // @Column(nullable = false)
-    // private int dependencyFk;
-
     // ================================ attributes ================================
     @Column(nullable = false, length = 30)
     private String lastName;
@@ -29,7 +25,7 @@ public class Person {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10, unique = true)
     private String dni;
 
     // ================================== extras ==================================
@@ -38,7 +34,6 @@ public class Person {
 
     // ============================ model associations ============================
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dependency_id")
     private Dependency dependency;
 
     // =============================== constructors ===============================

@@ -21,9 +21,6 @@ public class Weekly {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private int personFk;
-
     // ================================ attributes ================================
     @Column(nullable = false)
     private boolean monday;
@@ -72,14 +69,6 @@ public class Weekly {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPersonFk() {
-        return this.personFk;
-    }
-
-    public void setPersonFk(int personFk) {
-        this.personFk = personFk;
     }
 
     public boolean isMonday() {

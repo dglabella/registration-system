@@ -31,7 +31,7 @@ public class Access {
     private boolean active;
 
     // ============================ model associations ============================
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "access", fetch = FetchType.LAZY)
     private List<Register> registers;
 
     // =============================== constructors ===============================
