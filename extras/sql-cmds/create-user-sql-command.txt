@@ -1,0 +1,15 @@
+//create user
+create user 'username'@'localhost' identified by 'password';
+
+//grant all privileges to a user
+grant all privileges on databasename.* to 'username'@'localhost';
+flush privileges;
+
+//query all user from all databases (root)
+select user from mysql.user;
+
+//delete user
+drop user username@localhost
+
+//change user's password
+alter user 'username'@'localhost' identified by 'newpassword';

@@ -3,7 +3,6 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 
@@ -13,10 +12,15 @@ public class PersonService {
     @Autowired
     private PersonRepository personRepository;
 
+    public Person getOne(int id) {
+        Person p;
+        p = personRepository.findById(id).orElse(null);
+        return p;
+    }
+
     public List<Person> getAll() {
         return personRepository.findAll();
     }
-
 
     public Person insert(Person person) {
         Person p = personRepository.save(person);

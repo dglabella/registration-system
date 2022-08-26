@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,10 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "persons")
-public class Person {
+@Table(name = "registers")
+public class Register {
     // =================================== keys ===================================
     @Id
     @Column
@@ -19,14 +22,13 @@ public class Person {
     private int id;
 
     // ================================ attributes ================================
-    @Column(nullable = false, length = 30)
-    private String lastName;
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date checkIn;
 
-    @Column(nullable = false, length = 30)
-    private String name;
-
-    @Column(nullable = false, length = 10, unique = true)
-    private String dni;
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date checkOut;
 
     // ================================== extras ==================================
     @Column(nullable = false)
@@ -34,10 +36,13 @@ public class Person {
 
     // ============================ model associations ============================
     @ManyToOne(fetch = FetchType.LAZY)
-    private Dependency dependency;
+    private Person person;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Access access;
 
     // =============================== constructors ===============================
-    public Person() {}
+    public Register() {}
 
     // ============================ getters and setters ===========================
     public int getId() {
@@ -48,28 +53,20 @@ public class Person {
         this.id = id;
     }
 
-    public String getLastName() {
-        return this.lastName;
+    public Date getCheckIn() {
+        return this.checkIn;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setCheckIn(Date checkIn) {
+        this.checkIn = checkIn;
     }
 
-    public String getName() {
-        return this.name;
+    public Date getCheckOut() {
+        return this.checkOut;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDni() {
-        return this.dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setCheckOut(Date checkOut) {
+        this.checkOut = checkOut;
     }
 
     public boolean isActive() {
@@ -80,11 +77,19 @@ public class Person {
         this.active = active;
     }
 
-    public Dependency getDependency() {
-        return this.dependency;
+    public Person getPerson() {
+        return this.person;
     }
 
-    public void setDependency(Dependency dependency) {
-        this.dependency = dependency;
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public Access getAccess() {
+        return this.access;
+    }
+
+    public void setAccess(Access access) {
+        this.access = access;
     }
 }
