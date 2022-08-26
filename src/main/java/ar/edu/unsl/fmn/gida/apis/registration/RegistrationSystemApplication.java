@@ -12,6 +12,7 @@ public class RegistrationSystemApplication {
 		public final static String accesses = "accesses";
 		public final static String dependencies = "dependencies";
 		public final static String weeklies = "weeklies";
+		public final static String users = "users";
 	}
 
 	public static void main(String[] args) {

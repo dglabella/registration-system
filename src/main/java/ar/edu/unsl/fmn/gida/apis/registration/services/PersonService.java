@@ -26,4 +26,12 @@ public class PersonService {
         Person p = personRepository.save(person);
         return p;
     }
+
+    public Person update(Person person) {
+        return null;
+    }
+
+    public Person delete(int id) {
+        return null;
+    }
 }
