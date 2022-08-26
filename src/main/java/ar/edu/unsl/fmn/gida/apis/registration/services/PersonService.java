@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
@@ -13,8 +14,13 @@ public class PersonService {
     private PersonRepository personRepository;
 
     public Person getOne(int id) {
-        Person p;
-        p = personRepository.findById(id).orElse(null);
+        Person p = null;
+        Optional<Person> optional = personRepository.findById(id);
+
+        if (optional.isPresent()) {
+            p = optional.get();
+        }
+
         return p;
     }
 
@@ -28,10 +34,12 @@ public class PersonService {
     }
 
     public Person update(Person person) {
-        return null;
+        Person p = personRepository.save(person);
+        return p;
     }
 
     public Person delete(int id) {
+        // establecer query propia en el repository para baja logica en cascada
         return null;
     }
 }
