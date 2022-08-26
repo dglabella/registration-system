@@ -1,0 +1,20 @@
+- variables and methods names: camelCase.
+
+- Service: all services shares 5 methods:.
+    public Entity getOne(int id);.
+    public List<Entity> getAll();.
+    public Entity insert(Entity entity);.
+    public Entity update(Entity entity);.
+    public Entity delete(int id);.
+
+- Controllers methods names: (replace 'Entity' or 'Entities' for the model Class name) .
+    GET one resource: getEntity.
+    GET all resources: getAllEntities.
+    POST one resource: postEntity.
+    PUT one resource: updateEntity.
+    DELETE one resource: deleteEntity.
+
+- Models: no need to add explicit variables to store foreings key.
+    Respect the default orderd when create.
+
+Respect the default ordered when create (Use Person class as reference).

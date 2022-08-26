@@ -34,7 +34,7 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Person>> getAllPerson() {
+    public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> persons = personService.getAll();
 
         ResponseEntity<List<Person>> response =
