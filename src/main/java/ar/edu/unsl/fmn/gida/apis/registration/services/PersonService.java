@@ -39,7 +39,6 @@ public class PersonService {
     }
 
     public Person delete(int id) {
-        // establecer query propia en el repository para baja logica en cascada
         return null;
     }
 }

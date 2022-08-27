@@ -26,6 +26,12 @@ public class User {
     @Column(nullable = false, length = 10, unique = true)
     private String dni;
 
+    @Column(nullable = false, length = 20, unique = true)
+    private String userName;
+
+    @Column(nullable = false, length = 20)
+    private String password;
+
     // ================================== extras ==================================
     @Column(nullable = false)
     private boolean active;
@@ -66,6 +72,22 @@ public class User {
 
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isActive() {
