@@ -1,0 +1,39 @@
+===========
+Syntactics:
+===========
+- variables and methods names: camelCase.
+
+- Service: all services shares 5 methods:.
+    public Entity getOne(int id);.
+    public List<Entity> getAll();.
+    public Entity insert(Entity entity);.
+    public Entity update(Entity entity);.
+    public Entity delete(int id);.
+
+- Controllers methods names: (replace 'Entity' or 'Entities' for the model Class name) .
+    GET one resource: getEntity.
+    GET all resources: getAllEntities.
+    POST one resource: postEntity.
+    PUT one resource: updateEntity.
+    DELETE one resource: deleteEntity.
+
+- Models: no need to add explicit variables to store foreings key.
+
+Respect the default variables/methods disposition when create another POJO in the model 
+(Use Person class as reference).
+
+=================
+Responsabilities:
+=================
+
+Controllers: handle proper responses according to the services.
+
+Services: handle bussines logic / uses cases.
+
+Repositories: Customize queries if needed.
+
+=========
+Database:
+=========
+- tables should be named based on the class model name but in plural.
+- column names: inferred with the class.

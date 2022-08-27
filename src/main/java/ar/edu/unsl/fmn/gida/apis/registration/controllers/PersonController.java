@@ -34,7 +34,7 @@ public class PersonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Person>> getAllPerson() {
+    public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> persons = personService.getAll();
 
         ResponseEntity<List<Person>> response =
@@ -48,7 +48,8 @@ public class PersonController {
         Person p = personService.insert(person);
 
         ResponseEntity<Person> response =
-                p != null ? ResponseEntity.ok().body(p) : new ResponseEntity<>(HttpStatus.CREATED);
+                p != null ? new ResponseEntity<Person>(p, HttpStatus.CREATED)
+                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return response;
     }
