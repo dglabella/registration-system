@@ -53,12 +53,12 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> updatePerson() {
+    public ResponseEntity<User> updateUser() {
         return null;
     }
 
     @DeleteMapping
-    public ResponseEntity<User> deletePerson() {
+    public ResponseEntity<User> deleteUser() {
         return null;
     }
 }
