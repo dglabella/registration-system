@@ -45,11 +45,11 @@ public class Weekly {
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date validity;
+    private Date start;
 
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expiration;
+    private Date end;
 
     // ================================== extras ==================================
     @Column(nullable = false)
@@ -127,20 +127,20 @@ public class Weekly {
         this.sunday = sunday;
     }
 
-    public Date getValidity() {
-        return this.validity;
+    public Date getStart() {
+        return this.start;
     }
 
-    public void setValidity(Date validity) {
-        this.validity = validity;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public Date getExpiration() {
-        return this.expiration;
+    public Date getEnd() {
+        return this.end;
     }
 
-    public void setExpiration(Date expiration) {
-        this.expiration = expiration;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
     public boolean isActive() {
