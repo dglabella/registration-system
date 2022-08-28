@@ -32,6 +32,9 @@ public class User {
     @Column(nullable = false, length = 20)
     private String password;
 
+    @Column(nullable = false, length = 20)
+    private String privileges;
+
     // ================================== extras ==================================
     @Column(nullable = false)
     private boolean active;
@@ -96,5 +99,13 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getPrivileges() {
+        return this.privileges;
+    }
+
+    public void setPrivileges(String privileges) {
+        this.privileges = privileges;
     }
 }
