@@ -14,7 +14,7 @@ public class User {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     // ================================ attributes ================================
     @Column(nullable = false, length = 30)
@@ -32,6 +32,9 @@ public class User {
     @Column(nullable = false, length = 20)
     private String password;
 
+    @Column(nullable = false, length = 20)
+    private String privileges;
+
     // ================================== extras ==================================
     @Column(nullable = false)
     private boolean active;
@@ -42,11 +45,11 @@ public class User {
     public User() {}
 
     // ============================ getters and setters ===========================
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -96,5 +99,13 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getPrivileges() {
+        return this.privileges;
+    }
+
+    public void setPrivileges(String privileges) {
+        this.privileges = privileges;
     }
 }

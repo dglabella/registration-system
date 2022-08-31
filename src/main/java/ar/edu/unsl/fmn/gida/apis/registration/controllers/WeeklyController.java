@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,52 +14,52 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
-import ar.edu.unsl.fmn.gida.apis.registration.model.User;
-import ar.edu.unsl.fmn.gida.apis.registration.services.UserService;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
+import ar.edu.unsl.fmn.gida.apis.registration.services.WeeklyService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.users)
-public class UserController {
+@RequestMapping(value = RegistrationSystemApplication.Endpoints.weeklies)
+public class WeeklyController {
 
     @Autowired
-    private UserService userService;
+    private WeeklyService weeklyService;
 
     @RequestMapping(value = "/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
-        User user = this.userService.getOne(id);
+    public ResponseEntity<Weekly> getWeekly(@PathVariable int id) {
+        Weekly w = this.weeklyService.getOne(id);
 
-        ResponseEntity<User> response = user != null ? ResponseEntity.ok().body(user)
+        ResponseEntity<Weekly> response = w != null ? ResponseEntity.ok().body(w)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return response;
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAll();
+    public ResponseEntity<List<Weekly>> getAllWeeklies() {
+        List<Weekly> weeklies = weeklyService.getAll();
 
-        ResponseEntity<List<User>> response = users.size() > 0 ? ResponseEntity.ok().body(users)
+        ResponseEntity<List<Weekly>> response = weeklies.size() > 0 ? ResponseEntity.ok().body(weeklies)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
     @PostMapping
-    public ResponseEntity<User> postUser(@RequestBody User user) {
-        User u = userService.insert(user);
+    public ResponseEntity<Weekly> postWeekly(@RequestBody Weekly weekly) {
+        Weekly w = weeklyService.insert(weekly);
 
-        ResponseEntity<User> response = u != null ? new ResponseEntity<User>(u, HttpStatus.CREATED)
+        ResponseEntity<Weekly> response = w != null ? new ResponseEntity<Weekly>(w, HttpStatus.CREATED)
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return response;
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser() {
+    public ResponseEntity<Weekly> updateWeekly() {
         return null;
     }
 
     @DeleteMapping
-    public ResponseEntity<User> deleteUser() {
+    public ResponseEntity<Weekly> deleteWeekly() {
         return null;
     }
 }

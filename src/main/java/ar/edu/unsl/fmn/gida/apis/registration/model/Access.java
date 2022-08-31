@@ -17,7 +17,7 @@ public class Access {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     // ================================ attributes ================================
     @Column(nullable = false, length = 30)
@@ -38,11 +38,11 @@ public class Access {
     public Access() {}
 
     // ============================ getters and setters ===========================
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
