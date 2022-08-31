@@ -18,10 +18,10 @@ public class User {
 
     // ================================ attributes ================================
     @Column(nullable = false, length = 30)
-    private String lastName;
+    private String personLastName;
 
     @Column(nullable = false, length = 30)
-    private String name;
+    private String personName;
 
     @Column(nullable = false, length = 10, unique = true)
     private String dni;
@@ -50,23 +50,23 @@ public class User {
         this.id = id;
     }
 
-    public String getLastName() {
-        return this.lastName;
-    }
+    public String getPersonLastName() {
+		return personLastName;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setPersonLastName(String personLastName) {
+		this.personLastName = personLastName;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	public String getPersonName() {
+		return personName;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setPersonName(String personName) {
+		this.personName = personName;
+	}
 
-    public String getDni() {
+	public String getDni() {
         return this.dni;
     }
 
