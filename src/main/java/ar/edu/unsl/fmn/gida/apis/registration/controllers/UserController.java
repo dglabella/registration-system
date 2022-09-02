@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.services.UserService;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.CustomResponseEntity;
 
 @RestController
 @RequestMapping(value = RegistrationSystemApplication.Endpoints.users)
@@ -24,11 +25,14 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
+    public CustomResponseEntity<User> getUser(@PathVariable int id) {
         User user = this.userService.getOne(id);
 
-        ResponseEntity<User> response = user != null ? ResponseEntity.ok().body(user)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        CustomResponseEntity<User> response = user != null
+                ? (CustomResponseEntity<User>) new CustomResponseEntity<User>(HttpStatus.OK,
+                        CustomResponseEntity.OK, user)
+                : new CustomResponseEntity<User>(HttpStatus.NOT_FOUND,
+                        CustomResponseEntity.NOT_FOUND);
 
         return response;
     }
