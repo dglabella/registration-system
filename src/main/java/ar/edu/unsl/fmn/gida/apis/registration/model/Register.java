@@ -11,17 +11,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "registers")
 public class Register {
     // =================================== keys ===================================
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // ================================ attributes ================================
+    @NotNull
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkIn;
@@ -32,7 +33,7 @@ public class Register {
 
     // ================================== extras ==================================
     @Column(nullable = false)
-    private boolean active;
+    private boolean active = true;
 
     // ============================ model associations ============================
     @ManyToOne(fetch = FetchType.LAZY)

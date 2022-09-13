@@ -9,15 +9,12 @@ import org.springframework.stereotype.Service;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.validators.UserValidator;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    private UserValidator userValidator;
 
     public List<User> getAll() {
         return userRepository.findByActiveTrue();
@@ -38,32 +35,43 @@ public class UserService {
 
     public User insert(User user) {
         User u = null;
-
-        // if (this.userValidator.validate(user)) {
-        // // save
-        // } else {
-        // // throw error and get message
-        // }
-
-        // try {
-        u = userRepository.save(user);
-        // } catch (DataIntegrityViolationException exception) {
-        // exception.printStackTrace();
-        // throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-        // HttpStatus.BAD_REQUEST);
-        // }
+        try {
+            u = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        }
 
         return u;
     }
 
-    public User update(User user) {
+    public User update(int id, User user) {
         User u = null;
-        if (user.getId() != null) {
-            // has to have id if it is going to be updated, otherwise there is no distiction between
-            // insert and update
-            u = userRepository.save(user);
+        Optional<User> optional = this.userRepository.findById(id);
+
+        if (optional.isPresent()) {
+            if (optional.get().isActive()) {
+                try {
+                    user.setId(optional.get().getId());
+                    u = userRepository.save(user);
+                } catch (DataIntegrityViolationException exception) {
+                    exception.printStackTrace();
+                    throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                            HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+            } else {
+                // this error should not happen in a typical situation
+                throw new ErrorResponse(
+                        "cannot update user with id " + id + " because is not active",
+                        HttpStatus.NOT_FOUND);
+            }
+        } else {
+            // this error should not happen in a typical situation
+            throw new ErrorResponse(
+                    "cannot update user with id " + id + " because it doesn't exist",
+                    HttpStatus.NOT_FOUND);
         }
-        // return null means error: "you can't update user if you don't tell me which one..."
         return u;
     }
 

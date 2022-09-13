@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.persons)
+@RequestMapping(value = Endpoint.persons)
 public class PersonController {
 
     @Autowired

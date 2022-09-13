@@ -2,7 +2,6 @@ package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
 import javax.validation.Valid;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,13 +12,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.services.UserService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.users)
+@RequestMapping(value = Endpoint.users)
 public class UserController {
 
     @Autowired
@@ -37,17 +36,17 @@ public class UserController {
 
     @PostMapping
     public User postUser(@Valid @RequestBody User user) {
-        return userService.insert(user);
+        return this.userService.insert(user);
     }
 
-    @PutMapping
-    public User updateUser(@RequestBody User user) {
-        throw new ErrorResponse("update user operation not implemented yet...",
-                HttpStatus.SERVICE_UNAVAILABLE);
+    @PutMapping(value = "{id}")
+    public User updateUser(@PathVariable int id, @Valid @RequestBody User user) {
+        return this.userService.update(id, user);
     }
 
     @DeleteMapping
     public User deleteUser() {
-        throw new NotYetImplementedException("delete user operation not implemented yet...");
+        throw new ErrorResponse("delete user operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }

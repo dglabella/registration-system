@@ -6,26 +6,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "dependencies")
 public class Dependency {
     // =================================== keys ===================================
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // ================================ attributes ================================
+    @NotBlank
+    @Size(max = 30, message = "must be between 1 and 30 chars")
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = true, length = 100)
+    @Size(max = 100, message = "must be between 0 and 100 chars")
+    @Column(length = 100)
     private String description;
 
     // ================================== extras ==================================
     @Column(nullable = false)
-    private boolean active;
+    private boolean active = true;
 
     // ============================ model associations ============================
 

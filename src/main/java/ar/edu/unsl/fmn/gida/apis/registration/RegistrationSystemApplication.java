@@ -8,16 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class RegistrationSystemApplication {
-
-	public class Endpoints {
-		public final static String persons = "persons";
-		public final static String registers = "registers";
-		public final static String accesses = "accesses";
-		public final static String dependencies = "dependencies";
-		public final static String weeklies = "weeklies";
-		public final static String users = "users";
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(RegistrationSystemApplication.class, args);
 	}
@@ -31,7 +21,6 @@ public class RegistrationSystemApplication {
 				// .allowedMethods("GET", "POST", "PUT", "DELETE")
 				// .maxAge(3600);
 			}
-
 		};
 	}
 }

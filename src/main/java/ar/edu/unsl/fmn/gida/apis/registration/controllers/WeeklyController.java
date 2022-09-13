@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.services.WeeklyService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.weeklies)
+@RequestMapping(value = Endpoint.weeklies)
 public class WeeklyController {
 
     @Autowired
@@ -38,8 +37,9 @@ public class WeeklyController {
     public ResponseEntity<List<Weekly>> getAllWeeklies() {
         List<Weekly> weeklies = weeklyService.getAll();
 
-        ResponseEntity<List<Weekly>> response = weeklies.size() > 0 ? ResponseEntity.ok().body(weeklies)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<List<Weekly>> response =
+                weeklies.size() > 0 ? ResponseEntity.ok().body(weeklies)
+                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
@@ -47,8 +47,9 @@ public class WeeklyController {
     public ResponseEntity<Weekly> postWeekly(@RequestBody Weekly weekly) {
         Weekly w = weeklyService.insert(weekly);
 
-        ResponseEntity<Weekly> response = w != null ? new ResponseEntity<Weekly>(w, HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        ResponseEntity<Weekly> response =
+                w != null ? new ResponseEntity<Weekly>(w, HttpStatus.CREATED)
+                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return response;
     }
