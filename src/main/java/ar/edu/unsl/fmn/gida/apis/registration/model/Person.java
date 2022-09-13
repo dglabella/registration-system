@@ -33,7 +33,7 @@ public class Person {
     private boolean active;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Dependency dependency;
 
     // =============================== constructors ===============================

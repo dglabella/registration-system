@@ -3,11 +3,9 @@ package ar.edu.unsl.fmn.gida.apis.registration.model;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -56,8 +54,6 @@ public class Weekly {
     private boolean active;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Person person;
 
     // =============================== constructors ===============================
     public Weekly() {}
@@ -149,13 +145,5 @@ public class Weekly {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Person getPerson() {
-        return this.person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 }

@@ -29,12 +29,28 @@ public class PersonService {
     }
 
     public Person insert(Person person) {
-        Person p = personRepository.save(person);
+        Person p = null;
+        Optional<Person> optional = this.personRepository.findById(person.getId());
+
+        if (!optional.isPresent()) {
+            p = personRepository.save(person);
+        }
+
         return p;
     }
 
     public Person update(Person person) {
-        Person p = personRepository.save(person);
+        Person p = null;
+        Optional<Person> optional = this.personRepository.findById(person.getId());
+        if (optional.isPresent()) {
+
+        }
+
+        if (person.getId() != null) {
+            p = personRepository.save(person);
+        } else {
+            p = null;
+        }
         return p;
     }
 

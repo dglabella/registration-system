@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -17,6 +18,7 @@ public class User {
     private Integer id;
 
     // ================================ attributes ================================
+    @NotNull
     @Column(nullable = false, length = 30)
     private String personLastName;
 
@@ -54,22 +56,22 @@ public class User {
     }
 
     public String getPersonLastName() {
-		return personLastName;
-	}
+        return personLastName;
+    }
 
-	public void setPersonLastName(String personLastName) {
-		this.personLastName = personLastName;
-	}
+    public void setPersonLastName(String personLastName) {
+        this.personLastName = personLastName;
+    }
 
-	public String getPersonName() {
-		return personName;
-	}
+    public String getPersonName() {
+        return personName;
+    }
 
-	public void setPersonName(String personName) {
-		this.personName = personName;
-	}
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
 
-	public String getDni() {
+    public String getDni() {
         return this.dni;
     }
 

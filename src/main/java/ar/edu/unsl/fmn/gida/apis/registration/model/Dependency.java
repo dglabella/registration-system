@@ -1,13 +1,10 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -31,8 +28,6 @@ public class Dependency {
     private boolean active;
 
     // ============================ model associations ============================
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dependency")
-    private List<Person> persons;
 
     // =============================== constructors ===============================
     public Dependency() {}
@@ -68,13 +63,5 @@ public class Dependency {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<Person> getPersons() {
-        return this.persons;
-    }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
     }
 }

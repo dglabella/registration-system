@@ -30,9 +30,7 @@ public class Access {
     @Column(nullable = false)
     private boolean active;
 
-    // ============================ model associations ============================
-    @OneToMany(mappedBy = "access", fetch = FetchType.LAZY)
-    private List<Register> registers;
+    // ============================ model associations ============================;
 
     // =============================== constructors ===============================
     public Access() {}
@@ -68,13 +66,5 @@ public class Access {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<Register> getRegisters() {
-        return this.registers;
-    }
-
-    public void setRegisters(List<Register> registers) {
-        this.registers = registers;
     }
 }
