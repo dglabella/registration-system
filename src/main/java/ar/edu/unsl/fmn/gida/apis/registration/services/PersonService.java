@@ -48,7 +48,7 @@ public class PersonService {
             person = optional.get();
         }
         else{
-            throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND)
+            throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -72,16 +72,27 @@ public class PersonService {
 
     public Person update(int id, Person person) {
         Person p = null;
-        Optional<Person> optional = this.personRepository.findById(person.getId());
+
+        Optional<Person> optional = personRepository.findByIdAndActiveIsTrue(id);
         if (optional.isPresent()) {
-
-        }
-
-        if (person.getId() != null) {
-            p = personRepository.save(person);
+            try{
+                person.setId(id);
+                personRepository.save(person);
+            
+            } catch (DataIntegrityViolationException exception) {
+                exception.printStackTrace();
+                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        
         } else {
-            p = null;
+            // this error should not happen in a typical situation
+            throw new ErrorResponse(
+                    "cannot update person with id " + id + " because it doesn't exist",
+                    HttpStatus.NOT_FOUND);
         }
+
+    
         return p;
     }
 
