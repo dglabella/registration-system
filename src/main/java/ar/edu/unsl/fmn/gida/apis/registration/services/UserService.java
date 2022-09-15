@@ -48,23 +48,16 @@ public class UserService {
 
     public User update(int id, User user) {
         User u = null;
-        Optional<User> optional = this.userRepository.findById(id);
+        Optional<User> optional = this.userRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
-            if (optional.get().isActive()) {
-                try {
-                    user.setId(optional.get().getId());
-                    u = userRepository.save(user);
-                } catch (DataIntegrityViolationException exception) {
-                    exception.printStackTrace();
-                    throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                            HttpStatus.UNPROCESSABLE_ENTITY);
-                }
-            } else {
-                // this error should not happen in a typical situation
-                throw new ErrorResponse(
-                        "cannot update user with id " + id + " because is not active",
-                        HttpStatus.NOT_FOUND);
+            try {
+                user.setId(id);
+                u = userRepository.save(user);
+            } catch (DataIntegrityViolationException exception) {
+                exception.printStackTrace();
+                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
             }
         } else {
             // this error should not happen in a typical situation

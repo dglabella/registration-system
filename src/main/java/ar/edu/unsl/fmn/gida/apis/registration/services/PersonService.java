@@ -10,6 +10,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 
+
 @Service
 public class PersonService {
 
@@ -29,6 +30,30 @@ public class PersonService {
         return p;
     }
 
+    public List<Person> getName(String name) {
+        List<Person> persons = personRepository.findByNameAndActiveTrue(name);
+        return persons;
+    }
+
+    public List<Person> getLastName(String lastName) {
+        List<Person> persons= personRepository.findByLastNameAndActiveTrue(lastName);
+        return persons;
+    }
+
+    public Person getDNI(String dni) {
+        Person person = null;
+        Optional<Person> optional = personRepository.findByDniAndActiveTrue(dni);
+
+        if (optional.isPresent()) {
+            person = optional.get();
+        }
+        else{
+            throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND);
+        }
+
+        return person;
+    }
+
     public List<Person> getAll() {
         return personRepository.findAllByActiveTrue();
     }
@@ -42,22 +67,32 @@ public class PersonService {
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
-
         return p;
     }
 
     public Person update(int id, Person person) {
         Person p = null;
-        Optional<Person> optional = this.personRepository.findById(person.getId());
+
+        Optional<Person> optional = personRepository.findByIdAndActiveIsTrue(id);
         if (optional.isPresent()) {
-
-        }
-
-        if (person.getId() != null) {
-            p = personRepository.save(person);
+            try{
+                person.setId(id);
+                personRepository.save(person);
+            
+            } catch (DataIntegrityViolationException exception) {
+                exception.printStackTrace();
+                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        
         } else {
-            p = null;
+            // this error should not happen in a typical situation
+            throw new ErrorResponse(
+                    "cannot update person with id " + id + " because it doesn't exist",
+                    HttpStatus.NOT_FOUND);
         }
+
+    
         return p;
     }
 
