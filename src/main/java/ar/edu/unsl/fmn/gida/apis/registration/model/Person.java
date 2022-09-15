@@ -5,11 +5,9 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,6 +21,9 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    // @Column(nullable = false)
+    // private Integer dependency_fk;
 
     // ================================ attributes ================================
     @NotBlank
@@ -46,8 +47,7 @@ public class Person {
     private boolean active = true;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Dependency dependency;
+
 
     @Column
     @Enumerated
@@ -98,19 +98,6 @@ public class Person {
         this.active = active;
     }
 
-    public Dependency getDependency() {
-        return this.dependency;
-    }
 
-    public void setDependency(Dependency dependency) {
-        this.dependency = dependency;
-    }
 
-    public List<Role> getRoles() {
-        return this.roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 }
