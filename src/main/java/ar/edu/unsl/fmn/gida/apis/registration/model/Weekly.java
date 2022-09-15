@@ -51,6 +51,7 @@ public class Weekly {
     private Date end;
 
     // ================================== extras ==================================
+    @NotNull
     @Column(nullable = false)
     private boolean active = true;
 

@@ -2,15 +2,17 @@ package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
 
@@ -39,6 +41,7 @@ public class Person {
     private String dni;
 
     // ================================== extras ==================================
+    @NotNull
     @Column(nullable = false)
     private boolean active = true;
 
@@ -46,7 +49,9 @@ public class Person {
     @ManyToOne(fetch = FetchType.EAGER)
     private Dependency dependency;
 
-    @OneToMany
+    @Column
+    @Enumerated
+    @ElementCollection(targetClass = Role.class)
     private List<Role> roles;
 
     // =============================== constructors ===============================

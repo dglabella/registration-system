@@ -32,6 +32,7 @@ public class Register {
     private Date checkOut;
 
     // ================================== extras ==================================
+    @NotNull
     @Column(nullable = false)
     private boolean active = true;
 

@@ -16,10 +16,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAll() {
-        return userRepository.findByActiveTrue();
-    }
-
     public User getOne(int id) {
         User u = null;
         Optional<User> optional = userRepository.findByIdAndActiveTrue(id);
@@ -31,6 +27,10 @@ public class UserService {
         }
 
         return u;
+    }
+
+    public List<User> getAll() {
+        return userRepository.findAllByActiveTrue();
     }
 
     public User insert(User user) {

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Privilege;
 
@@ -59,6 +60,7 @@ public class User {
 
     // active initial value = false. The user must be activated manually from DB by an ADMIN until
     // an automatic mechanism is developed.
+    @NotNull
     @Column(nullable = false)
     private boolean active = false;
 
