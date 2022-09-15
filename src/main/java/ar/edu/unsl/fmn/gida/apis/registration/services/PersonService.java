@@ -3,7 +3,10 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 
@@ -16,60 +19,69 @@ public class PersonService {
 
     public Person getOne(int id) {
         Person p = null;
-        Optional<Person> optional = personRepository.findById(id);
+        Optional<Person> optional = personRepository.findByIdAndActiveIsTrue(id);
 
         if (optional.isPresent()) {
             p = optional.get();
+        } else {
+            throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
         }
 
         return p;
     }
 
     public List<Person> getName(String name) {
-        List<Person> p = null;
-        Optional<List<Person>> optional = personRepository.findByName(name);
-
-        if (optional.isPresent()) {
-            p = optional.get();
-        }
-
-        return p;
+        List<Person> persons = personRepository.findByNameAndActiveTrue(name);
+        return persons;
     }
 
     public List<Person> getLastName(String lastName) {
-        List<Person> p = null;
-        Optional<List<Person>> optional = personRepository.findByLastName(lastName);
-
-        if (optional.isPresent()) {
-            p = optional.get();
-        }
-
-        return p;
+        List<Person> persons= personRepository.findByLastNameAndActiveTrue(lastName);
+        return persons;
     }
 
-    public List<Person> getDNI(String dni) {
-        List<Person> p = null;
-        Optional<List<Person>> optional = personRepository.findByDni(dni);
+    public Person getDNI(String dni) {
+        Person person = null;
+        Optional<Person> optional = personRepository.findByDniAndActiveTrue(dni);
 
         if (optional.isPresent()) {
-            p = optional.get();
+            person = optional.get();
+        }
+        else{
+            throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND)
         }
 
-        return p;
+        return person;
     }
 
     public List<Person> getAll() {
-        return personRepository.findAll();
+        return personRepository.findAllByActiveTrue();
     }
 
     public Person insert(Person person) {
-        
-        Person p = personRepository.save(person);
+        Person p = null;
+        try {
+            p = personRepository.save(person);
+        } catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         return p;
     }
 
-    public Person update(Person person) {
-        Person p = personRepository.save(person);
+    public Person update(int id, Person person) {
+        Person p = null;
+        Optional<Person> optional = this.personRepository.findById(person.getId());
+        if (optional.isPresent()) {
+
+        }
+
+        if (person.getId() != null) {
+            p = personRepository.save(person);
+        } else {
+            p = null;
+        }
         return p;
     }
 

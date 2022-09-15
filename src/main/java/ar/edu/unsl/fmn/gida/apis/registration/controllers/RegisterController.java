@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.registers)
+@RequestMapping(value = Endpoint.registers)
 public class RegisterController {
 
     @Autowired
@@ -38,8 +38,9 @@ public class RegisterController {
     public ResponseEntity<List<Register>> getAllRegister() {
         List<Register> registers = registerService.getAll();
 
-        ResponseEntity<List<Register>> response = registers.size() > 0 ? ResponseEntity.ok().body(registers)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<List<Register>> response =
+                registers.size() > 0 ? ResponseEntity.ok().body(registers)
+                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
@@ -47,8 +48,9 @@ public class RegisterController {
     public ResponseEntity<Register> postRegister(@RequestBody Register register) {
         Register r = registerService.insert(register);
 
-        ResponseEntity<Register> response = r != null ? new ResponseEntity<Register>(r, HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        ResponseEntity<Register> response =
+                r != null ? new ResponseEntity<Register>(r, HttpStatus.CREATED)
+                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return response;
     }

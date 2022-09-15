@@ -1,21 +1,24 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
+import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
 
 @Entity
 @Table(name = "persons")
 public class Person {
     // =================================== keys ===================================
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -23,23 +26,33 @@ public class Person {
     // private Integer dependency_fk;
 
     // ================================ attributes ================================
+    @NotBlank
+    @Size(max = 30, message = "must be between 1 and 30 chars")
     @Column(nullable = false, length = 30)
     private String lastName;
 
+    @NotBlank
+    @Size(max = 30, message = "must be between 1 and 30 chars")
     @Column(nullable = false, length = 30)
     private String name;
 
+    @NotBlank
+    @Size(max = 30, message = "must be between 1 and 30 chars")
     @Column(nullable = false, length = 10, unique = true)
     private String dni;
 
     // ================================== extras ==================================
+    @NotNull
     @Column(nullable = false)
-    private boolean active;
+    private boolean active = true;
 
     // ============================ model associations ============================
-    // @ManyToOne
-    // @JoinColumn(name="dependency_id", nullable=false)
-    // private Dependency dependency;
+
+
+    @Column
+    @Enumerated
+    @ElementCollection(targetClass = Role.class)
+    private List<Role> roles;
 
     // =============================== constructors ===============================
     public Person() {}
@@ -85,11 +98,6 @@ public class Person {
         this.active = active;
     }
 
-    // public Dependency getDependency() {
-    //     return this.dependency;
-    // }
 
-    // public void setDependency(Dependency dependency) {
-    //     this.dependency = dependency;
-    // }
+
 }
