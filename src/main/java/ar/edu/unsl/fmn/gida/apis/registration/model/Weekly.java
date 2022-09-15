@@ -3,46 +3,45 @@ package ar.edu.unsl.fmn.gida.apis.registration.model;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "weeklies")
 public class Weekly {
     // =================================== keys ===================================
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // ================================ attributes ================================
     @Column(nullable = false)
-    private boolean monday;
+    private boolean monday = true;
 
     @Column(nullable = false)
-    private boolean tuesday;
+    private boolean tuesday = true;
 
     @Column(nullable = false)
-    private boolean wednesday;
+    private boolean wednesday = true;
 
     @Column(nullable = false)
-    private boolean thursday;
+    private boolean thursday = true;
 
     @Column(nullable = false)
-    private boolean friday;
+    private boolean friday = true;
 
     @Column(nullable = false)
-    private boolean saturday;
+    private boolean saturday = false;
 
     @Column(nullable = false)
-    private boolean sunday;
+    private boolean sunday = false;
 
+    @NotNull
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
@@ -52,12 +51,11 @@ public class Weekly {
     private Date end;
 
     // ================================== extras ==================================
+    @NotNull
     @Column(nullable = false)
-    private boolean active;
+    private boolean active = true;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Person person;
 
     // =============================== constructors ===============================
     public Weekly() {}
@@ -149,13 +147,5 @@ public class Weekly {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Person getPerson() {
-        return this.person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 }

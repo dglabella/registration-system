@@ -1,6 +1,0 @@
-go to project root folder and then:
-
-git branch -m main master-backup
-git fetch origin
-git branch -u origin/master-backup master-backup
-git remote set-head origin -a

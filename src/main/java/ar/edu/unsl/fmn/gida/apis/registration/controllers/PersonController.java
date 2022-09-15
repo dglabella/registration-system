@@ -1,9 +1,9 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,55 +12,45 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.persons)
+@RequestMapping(value = Endpoint.persons)
 public class PersonController {
-
     @Autowired
     private PersonService personService;
 
-    @RequestMapping(value = "/{id}")
-    public ResponseEntity<Person> getPerson(@PathVariable int id) {
-        Person p = this.personService.getOne(id);
-
-        ResponseEntity<Person> response = p != null ? ResponseEntity.ok().body(p)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        return response;
+    @GetMapping(value = "/{id}")
+    public Person getPerson(@PathVariable int id) {
+        Person person = this.personService.getOne(id);
+        return person;
     }
 
     @GetMapping
-    public ResponseEntity<List<Person>> getAllPersons() {
+    public List<Person> getAllPersons() {
         List<Person> persons = personService.getAll();
-
-        ResponseEntity<List<Person>> response =
-                persons.size() > 0 ? ResponseEntity.ok().body(persons)
-                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return response;
+        return persons;
     }
 
     @PostMapping
-    public ResponseEntity<Person> postPerson(@RequestBody Person person) {
+    public Person postPerson(@Valid @RequestBody Person person) {
         Person p = personService.insert(person);
-
-        ResponseEntity<Person> response =
-                p != null ? new ResponseEntity<Person>(p, HttpStatus.CREATED)
-                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return response;
+        return p;
     }
 
-    @PutMapping
-    public ResponseEntity<Person> updatePerson() {
-        return null;
+    @PutMapping(value = "/{id}")
+    public Person updatePerson(@PathVariable int id, @Valid @RequestBody Person person) {
+        Person p = personService.update(id, person);
+        return p;
     }
 
     @DeleteMapping
-    public ResponseEntity<Person> deletePerson() {
-        return null;
+    public Person deletePerson() {
+        throw new ErrorResponse("delete person operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }
+

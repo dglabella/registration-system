@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 import ar.edu.unsl.fmn.gida.apis.registration.services.DependencyService;
 
 @RestController
-@RequestMapping(value = RegistrationSystemApplication.Endpoints.dependencies)
+@RequestMapping(value = Endpoint.dependencies)
 public class DependencyController {
 
     @Autowired
@@ -38,8 +38,9 @@ public class DependencyController {
     public ResponseEntity<List<Dependency>> getAllDependencies() {
         List<Dependency> dependencies = dependencyService.getAll();
 
-        ResponseEntity<List<Dependency>> response = dependencies.size() > 0 ? ResponseEntity.ok().body(dependencies)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<List<Dependency>> response =
+                dependencies.size() > 0 ? ResponseEntity.ok().body(dependencies)
+                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
@@ -47,8 +48,9 @@ public class DependencyController {
     public ResponseEntity<Dependency> postDependcncy(@RequestBody Dependency dependency) {
         Dependency d = dependencyService.insert(dependency);
 
-        ResponseEntity<Dependency> response = d != null ? new ResponseEntity<Dependency>(d, HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        ResponseEntity<Dependency> response =
+                d != null ? new ResponseEntity<Dependency>(d, HttpStatus.CREATED)
+                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return response;
     }
