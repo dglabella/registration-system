@@ -30,13 +30,13 @@ public class PersonService {
         return p;
     }
 
-    public List<Person> getName(String name) {
+    public List<Person> getOne(String name) {
         List<Person> persons = personRepository.findByNameAndActiveTrue(name);
         return persons;
     }
 
     public List<Person> getLastName(String lastName) {
-        List<Person> persons= personRepository.findByLastNameAndActiveTrue(lastName);
+        List<Person> persons = personRepository.findByLastNameAndActiveTrue(lastName);
         return persons;
     }
 
@@ -46,8 +46,7 @@ public class PersonService {
 
         if (optional.isPresent()) {
             person = optional.get();
-        }
-        else{
+        } else {
             throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND);
         }
 
@@ -75,16 +74,14 @@ public class PersonService {
 
         Optional<Person> optional = personRepository.findByIdAndActiveIsTrue(id);
         if (optional.isPresent()) {
-            try{
+            try {
                 person.setId(id);
                 personRepository.save(person);
-            
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
-        
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
@@ -92,7 +89,6 @@ public class PersonService {
                     HttpStatus.NOT_FOUND);
         }
 
-    
         return p;
     }
 
