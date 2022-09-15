@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 
+
 @Service
 public class PersonService {
 
@@ -24,11 +25,45 @@ public class PersonService {
         return p;
     }
 
+    public List<Person> getName(String name) {
+        List<Person> p = null;
+        Optional<List<Person>> optional = personRepository.findByName(name);
+
+        if (optional.isPresent()) {
+            p = optional.get();
+        }
+
+        return p;
+    }
+
+    public List<Person> getLastName(String lastName) {
+        List<Person> p = null;
+        Optional<List<Person>> optional = personRepository.findByLastName(lastName);
+
+        if (optional.isPresent()) {
+            p = optional.get();
+        }
+
+        return p;
+    }
+
+    public List<Person> getDNI(String dni) {
+        List<Person> p = null;
+        Optional<List<Person>> optional = personRepository.findByDni(dni);
+
+        if (optional.isPresent()) {
+            p = optional.get();
+        }
+
+        return p;
+    }
+
     public List<Person> getAll() {
         return personRepository.findAll();
     }
 
     public Person insert(Person person) {
+        
         Person p = personRepository.save(person);
         return p;
     }

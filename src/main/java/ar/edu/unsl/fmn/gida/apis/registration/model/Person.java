@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -17,6 +18,9 @@ public class Person {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    // @Column(nullable = false)
+    // private Integer dependency_fk;
 
     // ================================ attributes ================================
     @Column(nullable = false, length = 30)
@@ -33,8 +37,9 @@ public class Person {
     private boolean active;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Dependency dependency;
+    // @ManyToOne
+    // @JoinColumn(name="dependency_id", nullable=false)
+    // private Dependency dependency;
 
     // =============================== constructors ===============================
     public Person() {}
@@ -80,11 +85,11 @@ public class Person {
         this.active = active;
     }
 
-    public Dependency getDependency() {
-        return this.dependency;
-    }
+    // public Dependency getDependency() {
+    //     return this.dependency;
+    // }
 
-    public void setDependency(Dependency dependency) {
-        this.dependency = dependency;
-    }
+    // public void setDependency(Dependency dependency) {
+    //     this.dependency = dependency;
+    // }
 }
