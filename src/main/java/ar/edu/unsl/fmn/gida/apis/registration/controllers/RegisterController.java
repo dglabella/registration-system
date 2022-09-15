@@ -25,13 +25,9 @@ public class RegisterController {
     private RegisterService registerService;
 
     @RequestMapping(value = "/{id}")
-    public ResponseEntity<Register> getRegister(@PathVariable int id) {
+    public Register getRegister(@PathVariable int id) {
         Register r = this.registerService.getOne(id);
-
-        ResponseEntity<Register> response = r != null ? ResponseEntity.ok().body(r)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        return response;
+        return r;
     }
 
     @GetMapping
