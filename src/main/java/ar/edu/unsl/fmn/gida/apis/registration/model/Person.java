@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -35,10 +36,9 @@ public class Person {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 10, unique = true)
-    private String dni;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    private Integer dni;
 
     // ================================== extras ==================================
     @NotNull
@@ -46,10 +46,14 @@ public class Person {
     private boolean active = true;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Dependency dependency;
 
-    @Column
+    @NotNull
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    private Weekly currentWeekly;
+
     @Enumerated
     @ElementCollection(targetClass = Role.class)
     private List<Role> roles;
@@ -82,11 +86,11 @@ public class Person {
         this.name = name;
     }
 
-    public String getDni() {
+    public Integer getDni() {
         return this.dni;
     }
 
-    public void setDni(String dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 

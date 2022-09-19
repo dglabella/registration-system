@@ -9,11 +9,12 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
-    Optional<Person> findByDniAndActiveTrue(String dni);
     Optional<Person> findByIdAndActiveIsTrue(int id);
+    Optional<Person> findByDniAndActiveTrue(String dni);
 
     List<Person> findByNameAndActiveTrue(String name);
     List<Person> findByLastNameAndActiveTrue(String lastName);
 
     List<Person> findAllByActiveTrue();
 }
+
