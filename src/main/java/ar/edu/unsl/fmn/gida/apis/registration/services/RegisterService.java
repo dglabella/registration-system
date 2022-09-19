@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +43,38 @@ public class RegisterService {
     }
 
     public Register insert(Register register) {
-        Register r = registerRepository.save(register);
+        Register r = null;
+        try{
+            r = registerRepository.save(register);
+        }catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         return r;
     }
 
-    public Register update(Register register) {
-        Register r = registerRepository.save(register);
+    public Register update(int id, Register register) {
+        Register r = null;
+
+        Optional<Register> optional = registerRepository.findByIdAndActiveIsTrue(id);
+        if (optional.isPresent()) {
+            try{
+                register.setId(id);
+                registerRepository.save(register);
+            
+            } catch (DataIntegrityViolationException exception) {
+                exception.printStackTrace();
+                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        
+        } else {
+            // this error should not happen in a typical situation
+            throw new ErrorResponse(
+                    "cannot update register with id " + id + " because it doesn't exist",
+                    HttpStatus.NOT_FOUND);
+        }
         return r;
     }
 

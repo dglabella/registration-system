@@ -17,10 +17,13 @@ public class RegistrationSystemApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/users").allowedOrigins("http://localhost:3000");
-				// .allowedMethods("GET", "POST", "PUT", "DELETE")
-				// .maxAge(3600);
+					registry.addMapping("/dependencies").allowedOrigins("http://localhost:3000");
+					registry.addMapping("/users").allowedOrigins("http://localhost:3000");
+					registry.addMapping("/persons").allowedOrigins("http://localhost:3000");
+							//.allowedMethods("GET", "POST", "PUT", "DELETE")
+							//.maxAge(3600);
 			}
-		};
+
+	};
 	}
 }
