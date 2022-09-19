@@ -35,13 +35,13 @@ public class PersonController {
         return p;
     }
 
-    @GetMapping("/getLastName/{lastName}")
+    @GetMapping("/{lastName}")
     public List<Person> getPersonLastName(@PathVariable(name = "lastName") String lastName) {
         List<Person> p = this.personService.getLastName(lastName);
         return p;
     }
 
-    @GetMapping("/getDNI/{dni}")
+    @GetMapping("/{dni}")
     public Person getPersonDNI(@PathVariable(name = "dni") String dni) {
         Person p = this.personService.getDNI(dni);
         return p;
