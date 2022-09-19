@@ -38,8 +38,9 @@ public class RegisterController {
     }
 
     @PostMapping
-    public Register postRegister(@Valid @RequestBody Register register) {
-        Register r = registerService.insert(register);
+    public Register postRegister(@Valid @RequestBody String encryptedData) {
+        ///qr 
+        Register r = registerService.insert(encryptedData);
         return r;
     }
 
