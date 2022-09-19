@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
