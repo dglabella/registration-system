@@ -1,7 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
-
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 
@@ -31,33 +32,26 @@ public class RegisterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Register>> getAllRegister() {
+    public List<Register> getAllRegister() {
         List<Register> registers = registerService.getAll();
-
-        ResponseEntity<List<Register>> response =
-                registers.size() > 0 ? ResponseEntity.ok().body(registers)
-                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return response;
+        return registers;
     }
 
     @PostMapping
-    public ResponseEntity<Register> postRegister(@RequestBody Register register) {
+    public Register postRegister(@Valid @RequestBody Register register) {
         Register r = registerService.insert(register);
-
-        ResponseEntity<Register> response =
-                r != null ? new ResponseEntity<Register>(r, HttpStatus.CREATED)
-                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return response;
+        return r;
     }
 
-    @PutMapping
-    public ResponseEntity<Register> updateRegister() {
-        return null;
+    @PutMapping(value = "/{id}")
+    public Register updateRegister(@PathVariable int id, @Valid @RequestBody Register register) {
+        Register r = registerService.update(id, register);
+        return r;
     }
 
     @DeleteMapping
     public ResponseEntity<Register> deleteRegister() {
-        return null;
+        throw new ErrorResponse("delete register operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }

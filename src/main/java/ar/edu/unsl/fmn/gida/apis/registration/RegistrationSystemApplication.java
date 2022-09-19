@@ -28,6 +28,7 @@ public class RegistrationSystemApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
+
 				registry.addMapping("/" + Endpoint.dependencies)
 						.allowedOrigins("http://localhost:3000");
 				registry.addMapping("/" + Endpoint.users).allowedOrigins("http://localhost:3000");
@@ -35,6 +36,7 @@ public class RegistrationSystemApplication {
 				// .allowedMethods("GET", "POST", "PUT", "DELETE")
 				// .maxAge(3600);
 			}
-		};
+
+	};
 	}
 }

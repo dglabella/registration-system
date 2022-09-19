@@ -1,6 +1,9 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 import ar.edu.unsl.fmn.gida.apis.registration.services.AccessService;
 
@@ -34,33 +38,26 @@ public class AccessController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Access>> getAllAccesses() {
+    public List<Access> getAllAccesses() {
         List<Access> accesses = accessService.getAll();
-
-        ResponseEntity<List<Access>> response =
-                accesses.size() > 0 ? ResponseEntity.ok().body(accesses)
-                        : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return response;
+        return accesses;
     }
 
     @PostMapping
-    public ResponseEntity<Access> postAccess(@RequestBody Access access) {
+    public Access postAccess(@Valid @RequestBody Access access) {
         Access a = accessService.insert(access);
-
-        ResponseEntity<Access> response =
-                a != null ? new ResponseEntity<Access>(a, HttpStatus.CREATED)
-                        : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return response;
+        return a;
     }
 
-    @PutMapping
-    public ResponseEntity<Access> updateAccess() {
-        return null;
+    @PutMapping(value = "/{id}")
+    public Access updateAccess(@PathVariable int id, @Valid @RequestBody Access access) {
+        Access a = accessService.update(id, access);
+        return a;
     }
 
     @DeleteMapping
-    public ResponseEntity<Access> deleteAccess() {
-        return null;
+    public Access deleteAccess() {
+        throw new ErrorResponse("delete access operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }
