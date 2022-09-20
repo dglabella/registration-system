@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
@@ -30,28 +31,28 @@ public class PersonController {
     }
 
     @GetMapping("/{name}")
-    public List<Person> getPersonName(@PathVariable String name) {
-        List<Person> p = this.personService.getOne(name);
+    public List<Person> getPersonName(@RequestParam String name) {
+        List<Person> p = this.personService.getAllWithName(name);
         return p;
     }
 
     @GetMapping("/{lastName}")
-    public List<Person> getPersonLastName(@PathVariable(name = "lastName") String lastName) {
-        List<Person> p = this.personService.getLastName(lastName);
+    public List<Person> getPersonLastName(@RequestParam String lastName) {
+        List<Person> p = this.personService.getAllWithLastName(lastName);
         return p;
     }
 
     @GetMapping("/{dni}")
-    public Person getPersonDNI(@PathVariable(name = "dni") String dni) {
-        Person p = this.personService.getDNI(dni);
+    public Person getPersonDNI(@RequestParam int dni) {
+        Person p = this.personService.getOneByDni(dni);
         return p;
     }
 
-    // @GetMapping
-    // public List<Person> getAllPersons() {
-    // List<Person> persons = personService.getAll();
-    // return persons;
-    // }
+    @GetMapping
+    public List<Person> getAllPersons() {
+        List<Person> persons = personService.getAll();
+        return persons;
+    }
 
     @PostMapping
     public Person postPerson(@Valid @RequestBody Person person) {

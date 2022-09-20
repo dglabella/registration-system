@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -9,8 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -51,9 +53,11 @@ public class Person {
     private Dependency dependency;
 
     @NotNull
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    private Weekly currentWeekly;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "person_id")
+    private List<Weekly> weeklies;
 
+    @NotNull
     @Enumerated
     @ElementCollection(targetClass = Role.class)
     private List<Role> roles;
@@ -108,6 +112,14 @@ public class Person {
 
     public void setDependency(Dependency dependency) {
         this.dependency = dependency;
+    }
+
+    public List<Weekly> getWeeklies() {
+        return this.weeklies;
+    }
+
+    public void setWeeklies(List<Weekly> weeklies) {
+        this.weeklies = weeklies;
     }
 
     public List<Role> getRoles() {

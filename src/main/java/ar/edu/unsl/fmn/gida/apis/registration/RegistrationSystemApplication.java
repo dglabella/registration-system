@@ -37,6 +37,6 @@ public class RegistrationSystemApplication {
 				// .maxAge(3600);
 			}
 
-	};
+		};
 	}
 }

@@ -18,31 +18,29 @@ public class PersonService {
     private PersonRepository personRepository;
 
     public Person getOne(int id) {
-        Person p = null;
+        Person person = null;
         Optional<Person> optional = personRepository.findByIdAndActiveIsTrue(id);
 
         if (optional.isPresent()) {
-            p = optional.get();
+            person = optional.get();
         } else {
             throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
         }
 
-        return p;
+        return person;
     }
 
-    public List<Person> getOne(String name) {
-        List<Person> persons = personRepository.findByNameAndActiveTrue(name);
-        return persons;
+    public List<Person> getAllWithName(String name) {
+        return this.personRepository.findAllByNameAndActiveTrue(name);
     }
 
-    public List<Person> getLastName(String lastName) {
-        List<Person> persons = personRepository.findByLastNameAndActiveTrue(lastName);
-        return persons;
+    public List<Person> getAllWithLastName(String lastName) {
+        return this.personRepository.findAllByLastNameAndActiveTrue(lastName);
     }
 
-    public Person getDNI(String dni) {
+    public Person getOneByDni(int dni) {
         Person person = null;
-        Optional<Person> optional = personRepository.findByDniAndActiveTrue(dni);
+        Optional<Person> optional = this.personRepository.findByDniAndActiveTrue(dni);
 
         if (optional.isPresent()) {
             person = optional.get();

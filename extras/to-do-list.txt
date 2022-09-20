@@ -1,3 +1,5 @@
 1 - exist a jpa annotation for cascade logical deletion ?
 
 2 - are JOIN Queries working? (need test)
+
+3 - generates new QR privilege only ADMIN
