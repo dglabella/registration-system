@@ -23,13 +23,13 @@ public class User {
     // ================================ attributes ================================
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 30)
-    private String personLastName;
+    @Column(name= "last_name",nullable = false, length = 30)
+    private String userLastName;
 
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 30)
-    private String personName;
+    @Column(name= "name",nullable = false, length = 30)
+    private String userName;
 
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
@@ -46,7 +46,7 @@ public class User {
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
     @Column(nullable = false, length = 20, unique = true)
-    private String userName;
+    private String account;
 
     @NotBlank
     @Size(min = 8, max = 20, message = "must be between 8 and 20 chars")
@@ -78,20 +78,20 @@ public class User {
         this.id = id;
     }
 
-    public String getPersonLastName() {
-        return personLastName;
+    public String getUserLastName() {
+        return this.userLastName;
     }
 
-    public void setPersonLastName(String personLastName) {
-        this.personLastName = personLastName;
+    public void setUserLastName(String userLastName) {
+        this.userLastName = userLastName;
     }
 
-    public String getPersonName() {
-        return personName;
+    public String getUserName() {
+        return this.userName;
     }
 
-    public void setPersonName(String personName) {
-        this.personName = personName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getDni() {
@@ -110,12 +110,12 @@ public class User {
         this.email = email;
     }
 
-    public String getUserName() {
-        return this.userName;
+    public String getAccount() {
+        return this.account;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPassword() {

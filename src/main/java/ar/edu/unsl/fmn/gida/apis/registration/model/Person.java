@@ -28,12 +28,12 @@ public class Person {
     // ================================ attributes ================================
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 30)
-    private String lastName;
+    @Column(name= "last_name", nullable = false, length = 30)
+    private String personLastName;
 
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 30)
+    @Column(name= "name",nullable = false, length = 30)
     private String personName;
 
     @NotNull
@@ -70,20 +70,20 @@ public class Person {
         this.id = id;
     }
 
-    public String getLastName() {
-        return this.lastName;
+    public String getPersonLastName() {
+        return this.personLastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setPersonLastName(String personLastName) {
+        this.personLastName = personLastName;
     }
 
-    public String getName() {
-        return this.name;
+    public String getPersonName() {
+        return this.personName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPersonName(String personName) {
+        this.personName = personName;
     }
 
     public Integer getDni() {

@@ -21,8 +21,8 @@ public class Dependency {
     // ================================ attributes ================================
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 30)
-    private String name;
+    @Column(name= "name",nullable = false, length = 30)
+    private String dependencyName;
 
     @Size(max = 100, message = "must be between 0 and 100 chars")
     @Column(length = 100)
@@ -47,12 +47,12 @@ public class Dependency {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getDependencyName() {
+        return this.dependencyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDependencyName(String dependencyName) {
+        this.dependencyName = dependencyName;
     }
 
     public String getDescription() {
