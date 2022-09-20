@@ -34,7 +34,7 @@ public class Person {
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
     @Column(nullable = false, length = 30)
-    private String name;
+    private String personName;
 
     @NotNull
     @Column(nullable = false, unique = true)
