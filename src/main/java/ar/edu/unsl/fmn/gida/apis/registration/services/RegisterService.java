@@ -47,7 +47,7 @@ public class RegisterService {
         try{
             ///Descritar dato
             
-            //r = registerRepository.save(register);
+            r = registerRepository.save(new Register());
         }catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
