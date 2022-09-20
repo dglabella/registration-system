@@ -31,10 +31,9 @@ public class User {
     @Column(name= "name",nullable = false, length = 30)
     private String userName;
 
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 10, unique = true)
-    private String dni;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    private Integer dni;
 
     @NotBlank
     @Size(max = 60, message = "cannot exceed 60 chars")
@@ -94,11 +93,11 @@ public class User {
         this.userName = userName;
     }
 
-    public String getDni() {
+    public Integer getDni() {
         return this.dni;
     }
 
-    public void setDni(String dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 
