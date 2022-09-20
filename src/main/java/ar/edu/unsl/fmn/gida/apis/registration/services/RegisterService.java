@@ -42,10 +42,12 @@ public class RegisterService {
         return r;
     }
 
-    public Register insert(Register register) {
+    public Register insert(String encryptedData) {
         Register r = null;
         try{
-            r = registerRepository.save(register);
+            ///Descritar dato
+            
+            r = registerRepository.save(new Register());
         }catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),

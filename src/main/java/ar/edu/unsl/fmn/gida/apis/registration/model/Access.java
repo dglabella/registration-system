@@ -21,8 +21,8 @@ public class Access {
     // ================================ attributes ================================
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 30)
-    private String name;
+    @Column(name= "name",nullable = false, length = 30)
+    private String accesseName;
 
     @Size(max = 100, message = "must be between 0 and 100 chars")
     @Column(length = 100)
@@ -47,12 +47,12 @@ public class Access {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getAccesseName() {
+        return this.accesseName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAccesseName(String accesseName) {
+        this.accesseName = accesseName;
     }
 
     public String getDescription() {
