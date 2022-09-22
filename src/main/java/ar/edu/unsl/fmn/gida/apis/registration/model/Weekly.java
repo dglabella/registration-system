@@ -1,6 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.util.Date;
+import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "weeklies")
@@ -21,6 +25,10 @@ public class Weekly {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull
+    @Column(nullable = false)
+    private Integer personFk;
 
     // ================================ attributes ================================
     @Column(nullable = false)
@@ -59,9 +67,10 @@ public class Weekly {
     private boolean active = true;
 
     // ============================ model associations ============================
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_id")
+    @JsonBackReference
+    @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Person person;
 
     // =============================== constructors ===============================
@@ -74,6 +83,14 @@ public class Weekly {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getPersonFk() {
+        return this.personFk;
+    }
+
+    public void setPersonFk(Integer personFk) {
+        this.personFk = personFk;
     }
 
     public boolean isMonday() {
@@ -162,5 +179,19 @@ public class Weekly {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Weekly)) {
+            return false;
+        }
+        Weekly weekly = (Weekly) o;
+        return Objects.equals(personFk, weekly.personFk) && monday == weekly.monday
+                && tuesday == weekly.tuesday && wednesday == weekly.wednesday
+                && thursday == weekly.thursday && friday == weekly.friday
+                && saturday == weekly.saturday && sunday == weekly.sunday;
     }
 }

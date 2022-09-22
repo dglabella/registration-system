@@ -23,12 +23,12 @@ public class User {
     // ================================ attributes ================================
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "last_name",nullable = false, length = 30)
+    @Column(name = "last_name", nullable = false, length = 30)
     private String userLastName;
 
     @NotBlank
     @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "name",nullable = false, length = 30)
+    @Column(name = "name", nullable = false, length = 30)
     private String userName;
 
     @NotBlank

@@ -1,6 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,22 +32,19 @@ public class PersonController {
         return person;
     }
 
-    @GetMapping("/{name}")
-    public List<Person> getPersonName(@RequestParam String name) {
-        List<Person> p = this.personService.getAllWithName(name);
-        return p;
-    }
+    @GetMapping(value = "/search")
+    public List<Person> search(@RequestParam Map<String, String> map) {
+        List<Person> persons = new ArrayList<>();
 
-    @GetMapping("/{lastName}")
-    public List<Person> getPersonLastName(@RequestParam String lastName) {
-        List<Person> p = this.personService.getAllWithLastName(lastName);
-        return p;
-    }
+        if (map.containsKey("dni")) {
+            persons.add(this.personService.getOneByDni(Integer.parseInt(map.get("dni"))));
+        } else if (map.containsKey("name")) {
+            persons = this.personService.getAllWithName(map.get("name"));
+        } else if (map.containsKey("lastName")) {
+            persons = this.personService.getAllWithLastName(map.get("lastName"));
+        }
 
-    @GetMapping("/{dni}")
-    public Person getPersonDNI(@RequestParam int dni) {
-        Person p = this.personService.getOneByDni(dni);
-        return p;
+        return persons;
     }
 
     @GetMapping
