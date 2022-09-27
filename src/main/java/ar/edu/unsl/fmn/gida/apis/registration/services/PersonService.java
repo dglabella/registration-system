@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
-import ar.edu.unsl.fmn.gida.apis.registration.repositories.DependencyRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.DependencyValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.Validator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.WeeklyValidator;
 
 
 @Service
@@ -28,12 +20,9 @@ public class PersonService {
 
     @Autowired
     private PersonRepository personRepository;
+
     @Autowired
     private WeeklyRepository weeklyRepository;
-
-    private PersonValidator personValidator = new PersonValidator();
-    private DependencyValidator dependencyValidator = new DependencyValidator();
-    private WeeklyValidator weeklyValidator = new WeeklyValidator();
 
     public Person getOne(int id) {
         Person person = null;

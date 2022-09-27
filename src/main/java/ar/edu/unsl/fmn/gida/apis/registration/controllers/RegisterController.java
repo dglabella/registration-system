@@ -38,14 +38,14 @@ public class RegisterController {
     }
 
     @PostMapping
-    public Register postRegister( @RequestBody String encryptedData) {
-        ///qr 
+    public Register postRegister(@RequestBody String encryptedData) {
+        /// qr
         Register r = registerService.insert(encryptedData);
         return r;
     }
 
     @PutMapping(value = "/{id}")
-    public Register updateRegister(@PathVariable int id, @Valid @RequestBody Register register) {
+    public Register updateRegister(@PathVariable int id, @RequestBody Register register) {
         Register r = registerService.update(id, register);
         return r;
     }

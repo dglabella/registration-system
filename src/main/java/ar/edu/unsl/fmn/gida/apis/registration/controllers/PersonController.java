@@ -3,7 +3,6 @@ package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,13 +53,13 @@ public class PersonController {
     }
 
     @PostMapping
-    public Person postPerson(@Valid @RequestBody Person person) {
+    public Person postPerson(@RequestBody Person person) {
         Person p = personService.insert(person);
         return p;
     }
 
     @PutMapping(value = "/{id}")
-    public Person updatePerson(@PathVariable int id, @Valid @RequestBody Person person) {
+    public Person updatePerson(@PathVariable int id, @RequestBody Person person) {
         Person p = personService.update(id, person);
         return p;
     }
@@ -71,4 +70,3 @@ public class PersonController {
                 HttpStatus.NOT_IMPLEMENTED);
     }
 }
-
