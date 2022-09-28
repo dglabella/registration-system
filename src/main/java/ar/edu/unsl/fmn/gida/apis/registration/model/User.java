@@ -25,7 +25,7 @@ public class User {
     @Column(name = "name", nullable = Constraints.User.NAME_NULLABLE,
             length = Constraints.User.NAME_MAX_LENGHT)
     private String userName;
-
+    
     @Column(nullable = Constraints.User.NAME_NULLABLE, unique = Constraints.User.DNI_UNIQUE,
             length = Constraints.User.DNI_MAX_LENGHT)
     private String dni;
@@ -82,11 +82,11 @@ public class User {
         this.userName = userName;
     }
 
-    public String getDni() {
+    public Integer getDni() {
         return this.dni;
     }
 
-    public void setDni(String dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
 
