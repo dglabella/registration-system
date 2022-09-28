@@ -37,13 +37,13 @@ public class WeeklyController {
     }
 
     @PostMapping
-    public Weekly postWeekly(@Valid @RequestBody Weekly weekly) {
+    public Weekly postWeekly(@RequestBody Weekly weekly) {
         Weekly w = weeklyService.insert(weekly);
         return w;
     }
 
     @PutMapping(value = "/{id}")
-    public Weekly updateWeekly(@PathVariable int id, @Valid @RequestBody Weekly weekly) {
+    public Weekly updateWeekly(@PathVariable int id, @RequestBody Weekly weekly) {
         Weekly w = weeklyService.update(id, weekly);
         return w;
     }
@@ -51,6 +51,6 @@ public class WeeklyController {
     @DeleteMapping
     public Weekly deleteWeekly() {
         throw new ErrorResponse("delete person operation not implemented yet...",
-        HttpStatus.NOT_IMPLEMENTED);
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }

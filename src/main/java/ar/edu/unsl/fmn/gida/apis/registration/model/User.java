@@ -6,11 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Privilege;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "users")
@@ -21,45 +18,37 @@ public class User {
     private Integer id;
 
     // ================================ attributes ================================
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "last_name",nullable = false, length = 30)
+    @Column(name = "last_name", nullable = Constraints.User.LAST_NAME_NULLABLE,
+            length = Constraints.User.LAST_NAME_MAX_LENGHT)
     private String userLastName;
 
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "name",nullable = false, length = 30)
+    @Column(name = "name", nullable = Constraints.User.NAME_NULLABLE,
+            length = Constraints.User.NAME_MAX_LENGHT)
     private String userName;
+    
+    @Column(nullable = Constraints.User.NAME_NULLABLE, unique = Constraints.User.DNI_UNIQUE,
+            length = Constraints.User.DNI_MAX_LENGHT)
+    private String dni;
 
-    @NotNull
-    @Column(nullable = false, unique = true)
-    private Integer dni;
-
-    @NotBlank
-    @Size(max = 60, message = "cannot exceed 60 chars")
-    @Email(message = "not a valid email",
-            regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$|^$")
-    @Column(nullable = false, length = 60)
+    @Column(nullable = Constraints.User.EMAIL_NULLABLE, unique = Constraints.User.EMAIL_UNIQUE,
+            length = Constraints.User.EMAIL_MAX_LENGHT)
     private String email;
 
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(nullable = Constraints.User.ACCOUNT_NULLABLE, unique = Constraints.User.ACCOUNT_UNIQUE,
+            length = Constraints.User.ACCOUNT_MAX_LENGHT)
     private String account;
 
-    @NotBlank
-    @Size(min = 8, max = 20, message = "must be between 8 and 20 chars")
-    @Column(nullable = false, length = 20)
+    @Column(nullable = Constraints.User.PASSWORD_NULLABLE,
+            length = Constraints.User.PASSWORD_MAX_LENGHT)
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = Constraints.User.PRIVILEGE_NULLABLE)
     private Privilege privileges = Privilege.USER;
 
     // ================================== extras ==================================
 
     // active initial value = false. The user must be activated manually from DB by an ADMIN until
     // an automatic mechanism is developed.
-    @NotNull
     @Column(nullable = false)
     private boolean active = false;
 
@@ -131,11 +120,6 @@ public class User {
 
     public void setPrivileges(Privilege privileges) {
         this.privileges = privileges;
-    }
-
-
-    public boolean isActive() {
-        return this.active;
     }
 
     public void setActive(boolean active) {

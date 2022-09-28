@@ -9,6 +9,10 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 
 @Repository
 public interface WeeklyRepository extends JpaRepository<Weekly, Integer> {
+
     Optional<Weekly> findByIdAndActiveIsTrue(int id);
+
+    Optional<Weekly> findByPersonFkAndEndIsNullAndActiveIsTrue(int personFk);
+
     List<Weekly> findAllByActiveTrue();
 }

@@ -1,3 +1,7 @@
 1 - exist a jpa annotation for cascade logical deletion ?
 
-2 - are JOIN Queries working? (need test)
+2 - generates new QR privilege only ADMIN
+
+3 - Map inside controller method signature, is possible multiples (key, value) in URI ?
+
+4 - @Transactional how it really works, search info.

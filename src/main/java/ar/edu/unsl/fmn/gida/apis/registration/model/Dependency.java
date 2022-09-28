@@ -6,9 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "dependencies")
@@ -19,17 +16,13 @@ public class Dependency {
     private Integer id;
 
     // ================================ attributes ================================
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "name",nullable = false, length = 30)
+    @Column(name = "name", nullable = false, unique = true, length = 60)
     private String dependencyName;
 
-    @Size(max = 100, message = "must be between 0 and 100 chars")
-    @Column(length = 100)
+    @Column(length = 200)
     private String description;
 
     // ================================== extras ==================================
-    @NotNull
     @Column(nullable = false)
     private boolean active = true;
 
@@ -61,10 +54,6 @@ public class Dependency {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isActive() {
-        return this.active;
     }
 
     public void setActive(boolean active) {

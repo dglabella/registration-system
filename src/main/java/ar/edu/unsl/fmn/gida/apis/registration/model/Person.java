@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -9,12 +10,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Transient;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
 
 @Entity
@@ -25,37 +24,34 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
+    private Integer dependencyFk;
+
     // ================================ attributes ================================
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "last_name", nullable = false, length = 30)
+    @Column(name = "last_name", nullable = false, length = 60)
     private String personLastName;
 
-    @NotBlank
-    @Size(max = 30, message = "must be between 1 and 30 chars")
-    @Column(name= "name",nullable = false, length = 30)
+    @Column(name = "name", nullable = false, length = 60)
     private String personName;
 
-    @NotNull
     @Column(nullable = false, unique = true)
-    private Integer dni;
+    private String dni;
 
     // ================================== extras ==================================
-    @NotNull
     @Column(nullable = false)
     private boolean active = true;
 
     // ============================ model associations ============================
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "dependencyFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Dependency dependency;
 
-    @NotNull
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @Transient
     private Weekly currentWeekly;
 
     @Enumerated
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
     private List<Role> roles;
 
     // =============================== constructors ===============================
@@ -68,6 +64,14 @@ public class Person {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getDependencyFk() {
+        return this.dependencyFk;
+    }
+
+    public void setDependencyFk(Integer dependencyFk) {
+        this.dependencyFk = dependencyFk;
     }
 
     public String getPersonLastName() {
@@ -86,16 +90,12 @@ public class Person {
         this.personName = personName;
     }
 
-    public Integer getDni() {
+    public String getDni() {
         return this.dni;
     }
 
-    public void setDni(Integer dni) {
+    public void setDni(String dni) {
         this.dni = dni;
-    }
-
-    public boolean isActive() {
-        return this.active;
     }
 
     public void setActive(boolean active) {
@@ -108,6 +108,14 @@ public class Person {
 
     public void setDependency(Dependency dependency) {
         this.dependency = dependency;
+    }
+
+    public Weekly getCurrentWeekly() {
+        return this.currentWeekly;
+    }
+
+    public void setCurrentWeekly(Weekly currentWeekly) {
+        this.currentWeekly = currentWeekly;
     }
 
     public List<Role> getRoles() {

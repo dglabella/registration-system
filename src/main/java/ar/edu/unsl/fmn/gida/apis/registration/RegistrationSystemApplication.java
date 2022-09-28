@@ -13,7 +13,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.utils.files.ConfigFileInterpreter;
 public class RegistrationSystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RegistrationSystemApplication.class, args);
-
 		// ConfigFileInterpreter configFileInterpreter = new ConfigFileInterpreter(
 		// System.getProperty("user.dir") + "\\src\\main\\resources\\configs.CONF");
 		// try {
@@ -37,6 +36,6 @@ public class RegistrationSystemApplication {
 				// .maxAge(3600);
 			}
 
-	};
+		};
 	}
 }

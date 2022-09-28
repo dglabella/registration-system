@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 import ar.edu.unsl.fmn.gida.apis.registration.services.DependencyService;
 
@@ -57,11 +58,13 @@ public class DependencyController {
 
     @PutMapping
     public ResponseEntity<Dependency> updateDependency() {
-        return null;
+        throw new ErrorResponse("update dependency operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 
     @DeleteMapping
     public ResponseEntity<Dependency> deleteDependency() {
-        return null;
+        throw new ErrorResponse("delete dependency operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }

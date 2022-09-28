@@ -1,17 +1,18 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "registers")
@@ -21,8 +22,13 @@ public class Register {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
+    private Integer personFk;
+
+    @Column(nullable = false)
+    private Integer accessFk;
+
     // ================================ attributes ================================
-    @NotNull
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkIn;
@@ -32,15 +38,18 @@ public class Register {
     private Date checkOut;
 
     // ================================== extras ==================================
-    @NotNull
     @Column(nullable = false)
     private boolean active = true;
 
     // ============================ model associations ============================
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Person person;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accessFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Access access;
 
     // =============================== constructors ===============================
@@ -69,10 +78,6 @@ public class Register {
 
     public void setCheckOut(Date checkOut) {
         this.checkOut = checkOut;
-    }
-
-    public boolean isActive() {
-        return this.active;
     }
 
     public void setActive(boolean active) {

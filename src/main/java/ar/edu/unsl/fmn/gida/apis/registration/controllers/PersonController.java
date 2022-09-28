@@ -1,7 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
@@ -29,38 +31,35 @@ public class PersonController {
         return person;
     }
 
-    @GetMapping("/{name}")
-    public List<Person> getPersonName(@PathVariable String name) {
-        List<Person> p = this.personService.getOne(name);
-        return p;
+    @GetMapping(value = "/search")
+    public List<Person> search(@RequestParam Map<String, String> map) {
+        List<Person> persons = new ArrayList<>();
+
+        if (map.containsKey("dni")) {
+            persons.add(this.personService.getOneByDni(Integer.parseInt(map.get("dni"))));
+        } else if (map.containsKey("name")) {
+            persons = this.personService.getAllWithName(map.get("name"));
+        } else if (map.containsKey("lastName")) {
+            persons = this.personService.getAllWithLastName(map.get("lastName"));
+        }
+
+        return persons;
     }
 
-    @GetMapping("/{lastName}")
-    public List<Person> getPersonLastName(@PathVariable(name = "lastName") String lastName) {
-        List<Person> p = this.personService.getLastName(lastName);
-        return p;
+    @GetMapping
+    public List<Person> getAllPersons() {
+        List<Person> persons = personService.getAll();
+        return persons;
     }
-
-    @GetMapping("/{dni}")
-    public Person getPersonDNI(@PathVariable(name = "dni") String dni) {
-        Person p = this.personService.getDNI(dni);
-        return p;
-    }
-
-    // @GetMapping
-    // public List<Person> getAllPersons() {
-    // List<Person> persons = personService.getAll();
-    // return persons;
-    // }
 
     @PostMapping
-    public Person postPerson(@Valid @RequestBody Person person) {
+    public Person postPerson(@RequestBody Person person) {
         Person p = personService.insert(person);
         return p;
     }
 
     @PutMapping(value = "/{id}")
-    public Person updatePerson(@PathVariable int id, @Valid @RequestBody Person person) {
+    public Person updatePerson(@PathVariable int id, @RequestBody Person person) {
         Person p = personService.update(id, person);
         return p;
     }
@@ -71,4 +70,3 @@ public class PersonController {
                 HttpStatus.NOT_IMPLEMENTED);
     }
 }
-

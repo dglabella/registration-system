@@ -44,13 +44,13 @@ public class AccessController {
     }
 
     @PostMapping
-    public Access postAccess(@Valid @RequestBody Access access) {
+    public Access postAccess(@RequestBody Access access) {
         Access a = accessService.insert(access);
         return a;
     }
 
     @PutMapping(value = "/{id}")
-    public Access updateAccess(@PathVariable int id, @Valid @RequestBody Access access) {
+    public Access updateAccess(@PathVariable int id, @RequestBody Access access) {
         Access a = accessService.update(id, access);
         return a;
     }
