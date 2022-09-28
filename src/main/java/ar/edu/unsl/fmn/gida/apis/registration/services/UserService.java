@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.UserValidator;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private UserValidator validator = new UserValidator(new CustomExpressionValidator());
 
     public User getOne(int id) {
         User u = null;
@@ -34,6 +38,8 @@ public class UserService {
     }
 
     public User insert(User user) {
+        this.validator.validate(user);
+
         User u = null;
         try {
             u = userRepository.save(user);

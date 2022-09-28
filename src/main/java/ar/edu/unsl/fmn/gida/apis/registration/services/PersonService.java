@@ -131,7 +131,6 @@ public class PersonService {
                     person.getCurrentWeekly().setPersonFk(person.getId());
                     this.weeklyRepository.save(person.getCurrentWeekly());
                 } else {
-
                     person.getCurrentWeekly().setPersonFk(person.getId());
                     this.personRepository.save(person);
                     this.weeklyRepository.save(person.getCurrentWeekly());
