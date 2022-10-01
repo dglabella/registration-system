@@ -39,4 +39,43 @@ public interface Constraints {
     public class Person {
         // public static final int
     }
+
+    public class Dependency{
+        public static final int NAME_MIN_LENGHT = 1;//para name dependency
+        public static final int NAME_MAX_LENGHT = 60;
+        public static final boolean NAME_NULLABLE = false;
+        public static final boolean NAME_UNIQUE = true;
+
+        public static final int DESCRIPTION_MIN_LENGHT = 1;//para descritpion dependency
+        public static final int DESCRIPTION_MAX_LENGHT = 200;
+        
+        public static final boolean ACTIVE_NULLABLE = false;
+        
+    }
+
+    public class Weekly{
+        public static final boolean PERSONFK_NULLABLE = false;
+
+        public static final boolean MONDAY_NULLABLE = false;
+        public static final boolean TUESDAY_NULLABLE = false;
+        public static final boolean WEDNESDAY_NULLABLE = false;
+        public static final boolean THURDAY_NULLABLE = false;
+        public static final boolean FRIDAY_NULLABLE = false;
+        public static final boolean SATURDAY_NULLABLE = false;
+        public static final boolean SUNDAY_NULLABLE = false;
+
+        public static final boolean START_NULLABLE = false;
+        public static final boolean END_NULLABLE = true;
+        
+    }
+
+    public class Access{
+        public static final boolean ACCESSNAME_NULLABLE = false;
+        public static final int ACCESSNAME_MIN_LENGHT = 1;
+        public static final int ACCESSNAME_MAX_LENGHT = 60;
+
+        public static final int DESCRIPTION_MIN_LENGHT = 1;
+        public static final int DESCRIPTION_MAX_LENGHT = 200;
+
+    }
 }
