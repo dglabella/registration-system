@@ -82,11 +82,11 @@ public class User {
         this.userName = userName;
     }
 
-    public Integer getDni() {
+    public String getDni() {
         return this.dni;
     }
 
-    public void setDni(Integer dni) {
+    public void setDni(String dni) {
         this.dni = dni;
     }
 

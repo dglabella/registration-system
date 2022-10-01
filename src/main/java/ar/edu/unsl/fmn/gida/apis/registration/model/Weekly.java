@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
+
 @Entity
 @Table(name = "weeklies")
 public class Weekly {
@@ -22,36 +24,36 @@ public class Weekly {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.PERSONFK_NULLABLE)
     private Integer personFk;
 
     // ================================ attributes ================================
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.MONDAY_NULLABLE)
     private boolean monday = true;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.TUESDAY_NULLABLE)
     private boolean tuesday = true;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.WEDNESDAY_NULLABLE)
     private boolean wednesday = true;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.THURDAY_NULLABLE)
     private boolean thursday = true;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.FRIDAY_NULLABLE)
     private boolean friday = true;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.SATURDAY_NULLABLE)
     private boolean saturday = false;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.SUNDAY_NULLABLE)
     private boolean sunday = false;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Weekly.START_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
 
-    @Column(nullable = true)
+    @Column(nullable = Constraints.Weekly.END_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
     private Date end;
 
