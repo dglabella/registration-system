@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "persons")
@@ -24,17 +25,19 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Person.DEPENDENCY_FK_NULLABEL)
     private Integer dependencyFk;
 
     // ================================ attributes ================================
-    @Column(name = "last_name", nullable = false, length = 60)
+    @Column(name = "last_name", nullable = Constraints.Person.LAST_NAME_NULLABLE,
+            length = Constraints.Person.LAST_NAME_MAX_LENGHT)
     private String personLastName;
 
-    @Column(name = "name", nullable = false, length = 60)
+    @Column(name = "name", nullable = Constraints.Person.NAME_NULLABLE,
+            length = Constraints.Person.NAME_MAX_LENGHT)
     private String personName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = Constraints.Person.DNI_NULLABLE, unique = Constraints.Person.DNI_UNIQUE)
     private String dni;
 
     // ================================== extras ==================================

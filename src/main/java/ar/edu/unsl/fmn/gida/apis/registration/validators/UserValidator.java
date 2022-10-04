@@ -17,8 +17,6 @@ public class UserValidator implements Validator<User> {
                 /**
                  * check nullability
                  */
-                if (user.getId() == null)
-                        throw new ErrorResponse("user id must not be null", HttpStatus.BAD_REQUEST);
 
                 if (!(this.expresionValidator.isPresent(user.getUserName())
                                 || Constraints.User.NAME_NULLABLE))
@@ -114,13 +112,26 @@ public class UserValidator implements Validator<User> {
                         throw new ErrorResponse(
                                         "invalid user email: must be a valid email (anything@example.com)",
                                         HttpStatus.BAD_REQUEST);
-        }
 
-        private void validateAssociations(User entity) {}
+                if (!this.expresionValidator.isAccountValid(user.getAccount()))
+                        throw new ErrorResponse(
+                                        "invalid user account: must follow the next specificatios: "
+                                                        + "1- Begin with a letter (uppercase or lowercase) or a digit. "
+                                                        + "2- Ends with a letter (uppercase or lowercase) or a digit. "
+                                                        + "3- can contain letters (uppercase or lowercase) or digits. "
+                                                        + "4- can contain: .(dot), -(hyphen), _(underscore). "
+                                                        + "5- cannot contain .(dot), -(hyphen), _(underscore) one after the other.",
+                                        HttpStatus.BAD_REQUEST);
+
+                if (!this.expresionValidator.isPasswordValid(user.getPassword()))
+                        throw new ErrorResponse(
+                                        "invalid user passowrd: must follow the next specificatios: "
+                                                        + "the string must contain only alphanumeric characters.",
+                                        HttpStatus.BAD_REQUEST);
+        }
 
         @Override
         public void validate(User entity) {
                 this.validateClassFields(entity);
-                this.validateAssociations(entity);
         }
 }

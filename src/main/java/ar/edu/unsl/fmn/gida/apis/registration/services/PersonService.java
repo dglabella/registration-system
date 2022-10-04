@@ -13,6 +13,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
 
 
 @Service
@@ -23,6 +25,8 @@ public class PersonService {
 
     @Autowired
     private WeeklyRepository weeklyRepository;
+
+    private PersonValidator personValidator;
 
     public Person getOne(int id) {
         Person person = null;
@@ -96,6 +100,9 @@ public class PersonService {
 
     @Transactional
     public Person insert(Person person) {
+        this.personValidator = new PersonValidator(new CustomExpressionValidator());
+        this.personValidator.validate(person);
+
         Person p = null;
 
         try {
@@ -112,6 +119,8 @@ public class PersonService {
 
     @Transactional
     public Person update(int id, Person person) {
+        this.personValidator = new PersonValidator(new CustomExpressionValidator());
+        this.personValidator.validate(person);
         Weekly w = null;
 
         Optional<Person> optional1 = this.personRepository.findByIdAndActiveIsTrue(id);
