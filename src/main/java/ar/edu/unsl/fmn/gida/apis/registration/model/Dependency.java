@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "dependencies")
@@ -16,14 +17,14 @@ public class Dependency {
     private Integer id;
 
     // ================================ attributes ================================
-    @Column(name = "name", nullable = false, unique = true, length = 60)
+    @Column(name = "name", nullable = Constraints.Dependency.NAME_NULLABLE, unique = Constraints.Dependency.NAME_UNIQUE, length = Constraints.Dependency.NAME_MAX_LENGHT)
     private String dependencyName;
 
-    @Column(length = 200)
+    @Column(length = Constraints.Dependency.DESCRIPTION_MAX_LENGHT)
     private String description;
 
     // ================================== extras ==================================
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Dependency.ACTIVE_NULLABLE)
     private boolean active = true;
 
     // ============================ model associations ============================
