@@ -18,6 +18,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
 
 
 @Service
+@Transactional
 public class PersonService {
 
     @Autowired
@@ -26,7 +27,7 @@ public class PersonService {
     @Autowired
     private WeeklyRepository weeklyRepository;
 
-    private PersonValidator personValidator;
+    private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
     public Person getOne(int id) {
         Person person = null;
@@ -98,10 +99,12 @@ public class PersonService {
         return persons;
     }
 
-    @Transactional
+
     public Person insert(Person person) {
-        this.personValidator = new PersonValidator(new CustomExpressionValidator());
         this.personValidator.validate(person);
+        this.personValidator.closeValidation();
+        PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
+        personValidator.validate(person);
 
         Person p = null;
 
@@ -117,10 +120,10 @@ public class PersonService {
         return p;
     }
 
-    @Transactional
     public Person update(int id, Person person) {
-        this.personValidator = new PersonValidator(new CustomExpressionValidator());
-        this.personValidator.validate(person);
+        PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
+        personValidator.validate(person);
+
         Weekly w = null;
 
         Optional<Person> optional1 = this.personRepository.findByIdAndActiveIsTrue(id);

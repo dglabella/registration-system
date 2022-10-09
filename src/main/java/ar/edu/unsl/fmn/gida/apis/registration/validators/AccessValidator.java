@@ -1,54 +1,41 @@
 package ar.edu.unsl.fmn.gida.apis.registration.validators;
 
-import org.springframework.http.HttpStatus;
-
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
-public class AccessValidator implements Validator<Access> {
+public class AccessValidator extends Validator<Access> {
 
-    private CustomExpressionValidator expresionValidator;
-
-    public AccessValidator(CustomExpressionValidator expresionValidator) {
-        this.expresionValidator = expresionValidator;
+    public AccessValidator(ExpressionValidator expresionValidator) {
+        super(expresionValidator);
     }
 
-    private void validateClassFields(Access access) {
+    @Override
+    public void fieldsValidation(Access entity) {
         /**
          * check nullability
          */
-        if (access.getId() == null)
-            throw new ErrorResponse("Access id must not be null", HttpStatus.BAD_REQUEST);
-        
-        if (!(this.expresionValidator.isPresent(access.getAccesseName())
-                            || Constraints.Access.ACCESSNAME_NULLABLE))
-                    throw new ErrorResponse("Access name is required", HttpStatus.BAD_REQUEST);
+        if (entity.getId() == null)
+            this.sendError("access id must not be null");
+
+        if (!(this.getExpressionValidator().isPresent(entity.getAccesseName())
+                || Constraints.Access.ACCESSNAME_NULLABLE))
+            this.sendError("access name is required");
+
         /**
          * check size
          */
 
-        if (!(Constraints.Access.ACCESSNAME_MIN_LENGHT < access.getAccesseName().length()
-                    && access.getAccesseName().length() < Constraints.Access.ACCESSNAME_MAX_LENGHT))
-            throw new ErrorResponse("invalid access name: must contain between "
-                            + Constraints.Access.ACCESSNAME_MIN_LENGHT + " and "
-                            + Constraints.Access.ACCESSNAME_MAX_LENGHT + " characters",
-                            HttpStatus.BAD_REQUEST);
-        
-        if (!(access.getAccesseName().length() < Constraints.Access.DESCRIPTION_MAX_LENGHT))
-            throw new ErrorResponse("invalid access description: must contain "
-                            + Constraints.Access.DESCRIPTION_MAX_LENGHT + " characters",
-                            HttpStatus.BAD_REQUEST);
+        if (!(Constraints.Access.ACCESSNAME_MIN_LENGHT < entity.getAccesseName().length()
+                && entity.getAccesseName().length() < Constraints.Access.ACCESSNAME_MAX_LENGHT))
+            this.sendError("invalid access name: must contain between "
+                    + Constraints.Access.ACCESSNAME_MIN_LENGHT + " and "
+                    + Constraints.Access.ACCESSNAME_MAX_LENGHT + " characters");
 
-    }   
-
-    private void validateAssociations(Access access) {}
+        if (!(entity.getAccesseName().length() < Constraints.Access.DESCRIPTION_MAX_LENGHT))
+            this.sendError("invalid access description: must contain "
+                    + Constraints.Access.DESCRIPTION_MAX_LENGHT + " characters");
+    }
 
     @Override
-    public void validate(Access access) {
-        // TODO Auto-generated method stub
-        this.validateClassFields(access);
-        this.validateAssociations(access);
-    }
-    
+    public void associationValidation(Access entity) {}
 }

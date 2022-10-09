@@ -35,7 +35,6 @@ public class RegistrationSystemApplication {
 				// .allowedMethods("GET", "POST", "PUT", "DELETE")
 				// .maxAge(3600);
 			}
-
 		};
 	}
 }

@@ -1,108 +1,86 @@
 package ar.edu.unsl.fmn.gida.apis.registration.validators;
 
-import org.springframework.http.HttpStatus;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
-public class PersonValidator implements Validator<Person> {
-
-    private boolean fieldsValidated = false;
-
-    private CustomExpressionValidator expresionValidator;
+public class PersonValidator extends Validator<Person> {
 
     private WeeklyValidator weeklyValidator;
 
-    public PersonValidator(CustomExpressionValidator expresionValidator) {
-        this.expresionValidator = expresionValidator;
-        this.weeklyValidator = new WeeklyValidator(expresionValidator);
+    public PersonValidator(ExpressionValidator expresionValidator) {
+        super(expresionValidator);
+        this.weeklyValidator = new WeeklyValidator(expresionValidator, this);
     }
 
-    private void validateClassFields(Person person) {
+    @Override
+    public void fieldsValidation(Person entity) {
         /**
          * check nullability
          */
-        if (person.getDependencyFk() == null)
-            throw new ErrorResponse("person dependency id is required", HttpStatus.BAD_REQUEST);
+        if (entity.getDependencyFk() == null)
+            this.sendError("person dependency id is required");
 
-        if (!(this.expresionValidator.isPresent(person.getPersonName())
+        if (!(this.getExpressionValidator().isPresent(entity.getPersonName())
                 || Constraints.Person.NAME_NULLABLE))
-            throw new ErrorResponse("person name is required", HttpStatus.BAD_REQUEST);
+            this.sendError("person name is required");
 
-        if (!(this.expresionValidator.isPresent(person.getPersonLastName())
+        if (!(this.getExpressionValidator().isPresent(entity.getPersonLastName())
                 || Constraints.Person.LAST_NAME_NULLABLE))
-            throw new ErrorResponse("person last name is required", HttpStatus.BAD_REQUEST);
+            this.sendError("person last name is required");
 
-
-        if (!(this.expresionValidator.isPresent(person.getDni())
+        if (!(this.getExpressionValidator().isPresent(entity.getDni())
                 || Constraints.Person.DNI_NULLABLE))
-            throw new ErrorResponse("person dni is required", HttpStatus.BAD_REQUEST);
+            this.sendError("person dni is required");
 
-        if (person.getCurrentWeekly() == null)
-            throw new ErrorResponse("person current weekly is required", HttpStatus.BAD_REQUEST);
+        if (entity.getCurrentWeekly() == null)
+            this.sendError("person current weekly is required");
 
-        if (person.getRoles().size() == 0)
-            throw new ErrorResponse("person requires at least one role", HttpStatus.BAD_REQUEST);
+        if (entity.getRoles().size() == 0)
+            this.sendError("person requires at least one role");
 
         /**
          * check size
          */
-        if (!(Constraints.Person.NAME_MIN_LENGHT < person.getPersonName().length()
-                && person.getPersonName().length() < Constraints.Person.NAME_MAX_LENGHT))
-            throw new ErrorResponse(
-                    "invalid person name: must contain between "
-                            + Constraints.Person.NAME_MIN_LENGHT + " and "
-                            + Constraints.Person.NAME_MAX_LENGHT + " characters",
-                    HttpStatus.BAD_REQUEST);
+        if (!(Constraints.Person.NAME_MIN_LENGHT < entity.getPersonName().length()
+                && entity.getPersonName().length() < Constraints.Person.NAME_MAX_LENGHT))
+            this.sendError("invalid person name: must contain between "
+                    + Constraints.Person.NAME_MIN_LENGHT + " and "
+                    + Constraints.Person.NAME_MAX_LENGHT + " characters");
 
-        if (!(Constraints.Person.LAST_NAME_MIN_LENGHT < person.getPersonLastName().length()
-                && person.getPersonLastName().length() < Constraints.Person.LAST_NAME_MAX_LENGHT))
-            throw new ErrorResponse(
-                    "invalid person last name: must contain between "
-                            + Constraints.Person.LAST_NAME_MIN_LENGHT + " and "
-                            + Constraints.Person.LAST_NAME_MAX_LENGHT + " characters",
-                    HttpStatus.BAD_REQUEST);
+        if (!(Constraints.Person.LAST_NAME_MIN_LENGHT < entity.getPersonLastName().length()
+                && entity.getPersonLastName().length() < Constraints.Person.LAST_NAME_MAX_LENGHT))
+            this.sendError("invalid person last name: must contain between "
+                    + Constraints.Person.LAST_NAME_MIN_LENGHT + " and "
+                    + Constraints.Person.LAST_NAME_MAX_LENGHT + " characters");
 
-        if (!(Constraints.Person.DNI_MIN_LENGHT < person.getDni().length()
-                && person.getDni().length() < Constraints.Person.DNI_MAX_LENGHT))
-            throw new ErrorResponse(
+        if (!(Constraints.Person.DNI_MIN_LENGHT < entity.getDni().length()
+                && entity.getDni().length() < Constraints.Person.DNI_MAX_LENGHT))
+            this.sendError(
                     "invalid person dni: must contain between " + Constraints.Person.DNI_MIN_LENGHT
-                            + " and " + Constraints.Person.DNI_MAX_LENGHT + " characters",
-                    HttpStatus.BAD_REQUEST);
+                            + " and " + Constraints.Person.DNI_MAX_LENGHT + " characters");
 
         /**
          * check pattern
          */
-        if (!this.expresionValidator.composedName(person.getPersonName()))
-            throw new ErrorResponse("invalid person name: must have only valids chararcters",
-                    HttpStatus.BAD_REQUEST);
+        if (!this.getExpressionValidator().composedName(entity.getPersonName()))
+            this.sendError("invalid person name: must have only valids chararcters");
 
-        if (!this.expresionValidator.composedName(person.getPersonLastName()))
-            throw new ErrorResponse("invalid person last name: must have only valids chararcters",
-                    HttpStatus.BAD_REQUEST);
+        if (!this.getExpressionValidator().composedName(entity.getPersonLastName()))
+            this.sendError("invalid person last name: must have only valids chararcters");
 
-        if (!this.expresionValidator.onlyNumbers(person.getDni()))
-            throw new ErrorResponse("invalid person dni: only numbers allowed",
-                    HttpStatus.BAD_REQUEST);
+        if (!this.getExpressionValidator().onlyNumbers(entity.getDni()))
+            this.sendError("invalid person dni: only numbers allowed");
 
-        for (Role role : person.getRoles()) {
+        for (Role role : entity.getRoles()) {
             if (!(0 <= role.ordinal() && role.ordinal() <= Constraints.Person.ROLE_LAST_ORDINAL))
-                throw new ErrorResponse("invalid person role: there is no role defined for ordinal "
-                        + role.ordinal(), HttpStatus.BAD_REQUEST);
+                this.sendError("invalid person role: there is no role defined for ordinal "
+                        + role.ordinal());
         }
-    }
-
-    private void validateAssociations(Person person) {
-        this.weeklyValidator.validate(person.getCurrentWeekly());
     }
 
     @Override
-    public void validate(Person entity) {
-        if (!this.fieldsValidated) {
-            this.validateClassFields(entity);
-            this.fieldsValidated = true;
-            this.validateAssociations(entity);
-        }
+    public void associationValidation(Person entity) {
+        this.weeklyValidator.validate(entity.getCurrentWeekly());
     }
 }
