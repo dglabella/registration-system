@@ -110,4 +110,9 @@ public class UserValidator extends Validator<User> {
 
     @Override
     public void associationValidation(User entity) {}
+
+    @Override
+    public void close() {
+        this.closeFieldsValidation();
+    }
 }

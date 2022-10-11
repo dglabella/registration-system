@@ -18,11 +18,11 @@ public class WeeklyValidator extends Validator<Weekly> {
         /**
          * check nullability
          */
-        if (entity.getId() == null)
-            this.sendError("weekly id must not be null");
-
-        if (entity.getPersonFk() == null)/// PREGUNTAR YA QUE PERSONFK ES PARTE DE UNA ASOCIACION
-            this.sendError("weekly personfk must not be null");
+        // if (entity.getId() == null)
+        // this.sendError("weekly id must not be null");
+        //
+        // if (entity.getPersonFk() == null)
+        // this.sendError("weekly person fk must not be null");
 
         if (!(this.getExpressionValidator()
                 .isPresent(String.format("%1$tY-%1$tm-%1$td", entity.getStart()))
@@ -33,5 +33,11 @@ public class WeeklyValidator extends Validator<Weekly> {
     @Override
     public void associationValidation(Weekly entity) {
         this.personValidator.validate(entity.getPerson());
+    }
+
+    @Override
+    public void close() {
+        this.closeFieldsValidation();
+        this.personValidator.closeFieldsValidation();
     }
 }

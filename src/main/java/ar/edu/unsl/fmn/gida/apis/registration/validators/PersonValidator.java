@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.validators;
 
-import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
@@ -36,7 +35,7 @@ public class PersonValidator extends Validator<Person> {
         if (entity.getCurrentWeekly() == null)
             this.sendError("person current weekly is required");
 
-        if (entity.getRoles().size() == 0)
+        if (entity.getRoles() == null || entity.getRoles().size() == 0)
             this.sendError("person requires at least one role");
 
         /**
@@ -64,23 +63,23 @@ public class PersonValidator extends Validator<Person> {
          * check pattern
          */
         if (!this.getExpressionValidator().composedName(entity.getPersonName()))
-            this.sendError("invalid person name: must have only valids chararcters");
+            this.sendError("invalid person name: must have only valids characters");
 
         if (!this.getExpressionValidator().composedName(entity.getPersonLastName()))
-            this.sendError("invalid person last name: must have only valids chararcters");
+            this.sendError("invalid person last name: must have only valids characters");
 
         if (!this.getExpressionValidator().onlyNumbers(entity.getDni()))
             this.sendError("invalid person dni: only numbers allowed");
-
-        for (Role role : entity.getRoles()) {
-            if (!(0 <= role.ordinal() && role.ordinal() <= Constraints.Person.ROLE_LAST_ORDINAL))
-                this.sendError("invalid person role: there is no role defined for ordinal "
-                        + role.ordinal());
-        }
     }
 
     @Override
     public void associationValidation(Person entity) {
         this.weeklyValidator.validate(entity.getCurrentWeekly());
+    }
+
+    @Override
+    public void close() {
+        this.closeFieldsValidation();
+        this.weeklyValidator.closeFieldsValidation();
     }
 }

@@ -38,4 +38,9 @@ public class AccessValidator extends Validator<Access> {
 
     @Override
     public void associationValidation(Access entity) {}
+
+    @Override
+    public void close() {
+        this.closeFieldsValidation();
+    }
 }

@@ -27,8 +27,6 @@ public class PersonService {
     @Autowired
     private WeeklyRepository weeklyRepository;
 
-    private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
-
     public Person getOne(int id) {
         Person person = null;
         Optional<Person> optional1 = this.personRepository.findByIdAndActiveIsTrue(id);
@@ -99,13 +97,8 @@ public class PersonService {
         return persons;
     }
 
-
     public Person insert(Person person) {
-        this.personValidator.validate(person);
-        this.personValidator.closeValidation();
-        PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
-        personValidator.validate(person);
-
+        new PersonValidator(new CustomExpressionValidator()).validate(person);
         Person p = null;
 
         try {
@@ -121,9 +114,7 @@ public class PersonService {
     }
 
     public Person update(int id, Person person) {
-        PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
-        personValidator.validate(person);
-
+        new PersonValidator(new CustomExpressionValidator()).validate(person);
         Weekly w = null;
 
         Optional<Person> optional1 = this.personRepository.findByIdAndActiveIsTrue(id);

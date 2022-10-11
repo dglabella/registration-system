@@ -3,9 +3,6 @@ package ar.edu.unsl.fmn.gida.apis.registration.validators;
 import org.springframework.http.HttpStatus;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 
-/**
- * The validation object should be instanciated in service layer.
- */
 public abstract class Validator<T> {
 
     private boolean validated = false;
@@ -41,15 +38,28 @@ public abstract class Validator<T> {
      */
     public abstract void associationValidation(T entity);
 
+    /**
+     * Call this method in order to re use the validator. Once the validation process is done, this
+     * method should be called in order to reset the validation process. The underlying
+     * implementation should call the closeValidation() method for all associated validators in this
+     * validator. @see {@link #closeValidation()}
+     * 
+     * This method can be ignored if the validation process is used once per validator intance.
+     */
+    public abstract void close();
+
     public void validate(T entity) {
-        if (this.validated) {
+        if (!this.validated) {
             this.fieldsValidation(entity);
             this.validated = true;
             this.associationValidation(entity);
         }
     }
 
-    public void closeValidation() {
+    /**
+     * This method tells this validator that the entity fields were already validated.
+     */
+    public void closeFieldsValidation() {
         this.validated = false;
     }
 }

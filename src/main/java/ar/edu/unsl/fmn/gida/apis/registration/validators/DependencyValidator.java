@@ -40,4 +40,9 @@ public class DependencyValidator extends Validator<Dependency> {
 
     @Override
     public void associationValidation(Dependency entity) {}
+
+    @Override
+    public void close() {
+        this.closeFieldsValidation();
+    }
 }

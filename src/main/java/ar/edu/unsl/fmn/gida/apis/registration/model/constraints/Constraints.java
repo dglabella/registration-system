@@ -51,8 +51,6 @@ public interface Constraints {
         public static final int DNI_MAX_LENGHT = 15;
         public static final boolean DNI_NULLABLE = false;
         public static final boolean DNI_UNIQUE = true;
-
-        public static final int ROLE_LAST_ORDINAL = Role.VISITOR.ordinal();
     }
 
     public class Dependency {
