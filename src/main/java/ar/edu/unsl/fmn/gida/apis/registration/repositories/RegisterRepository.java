@@ -11,5 +11,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 @Repository
 public interface RegisterRepository extends JpaRepository<Register, Integer> {
     List<Register> findAllByPersonIdAndActiveTrue(int id);
+
     Optional<Register> findByIdAndActiveIsTrue(int id);
+
+    Optional<Register> findByPersonFkAndCheckOutIsNullAndActiveIsTrue(int personFk);
 }

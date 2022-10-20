@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "accesses")
@@ -16,10 +17,12 @@ public class Access {
     private Integer id;
 
     // ================================ attributes ================================
-    @Column(name = "name", nullable = false, length = 60)
-    private String accesseName;
+    @Column(name = "name", nullable = Constraints.Access.NAME_NULLABLE,
+            length = Constraints.Access.NAME_MAX_LENGHT)
+    private String accessName;
 
-    @Column(length = 200)
+    @Column(nullable = Constraints.Access.DESCRIPTION_NULLABLE,
+            length = Constraints.Access.DESCRIPTION_MAX_LENGHT)
     private String description;
 
     // ================================== extras ==================================
@@ -40,12 +43,12 @@ public class Access {
         this.id = id;
     }
 
-    public String getAccesseName() {
-        return this.accesseName;
+    public String getAccessName() {
+        return this.accessName;
     }
 
-    public void setAccesseName(String accesseName) {
-        this.accesseName = accesseName;
+    public void setAccessName(String accesseName) {
+        this.accessName = accesseName;
     }
 
     public String getDescription() {

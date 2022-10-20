@@ -1,13 +1,14 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.files;
+package ar.edu.unsl.fmn.gida.apis.registration.utils.datainterpreters;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.FileInterpreterException;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.InterpretationException;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.Configuration;
 
-public class ConfigFileInterpreter implements FileInterpreter {
+public class ConfigFileInterpreter implements Interpreter<Configuration> {
 
     private static final String SEPARATOR = "::";
     private static final int PREFIX_VALUE = 0;
@@ -76,7 +77,7 @@ public class ConfigFileInterpreter implements FileInterpreter {
     }
 
     @Override
-    public void interpret() throws FileInterpreterException {
+    public Configuration interpret(String data) throws InterpretationException {
         Scanner scanner;
         try {
             scanner = new Scanner(file);
@@ -88,5 +89,7 @@ public class ConfigFileInterpreter implements FileInterpreter {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 }

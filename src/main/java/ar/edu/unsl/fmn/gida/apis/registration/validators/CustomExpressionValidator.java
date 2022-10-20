@@ -2,7 +2,7 @@ package ar.edu.unsl.fmn.gida.apis.registration.validators;
 
 import java.util.regex.Pattern;
 
-public class CustomExpressionValidator {
+public class CustomExpressionValidator implements ExpressionValidator {
 
     private Pattern pattern;
 
@@ -40,14 +40,28 @@ public class CustomExpressionValidator {
     public boolean isEmail(String string) {
         pattern = Pattern.compile(
                 "(^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$|^$)?");
-
         return pattern.matcher(string).matches();
     }
 
     public boolean composedName(String string) {
         pattern = Pattern.compile(
                 "^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$");
+        return pattern.matcher(string).matches();
+    }
 
+    public boolean isAccountValid(String string) {
+        pattern = Pattern.compile("^([a-zA-Z0-9]+[_.-]?)*[a-zA-Z0-9]+$");
+        return pattern.matcher(string).matches();
+    }
+
+    public boolean isPasswordValid(String string) {
+        pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+        return pattern.matcher(string).matches();
+    }
+
+    @Override
+    public boolean isDatetime(String string) {
+        pattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{4}$");
         return pattern.matcher(string).matches();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.AccessRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.AccessValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 
 @Service
 public class AccessService {
@@ -22,7 +24,7 @@ public class AccessService {
 
         if (optional.isPresent()) {
             a = optional.get();
-        }else {
+        } else {
             throw new ErrorResponse("there is no access with id: " + id, HttpStatus.NOT_FOUND);
         }
 
@@ -34,6 +36,7 @@ public class AccessService {
     }
 
     public Access insert(Access access) {
+        new AccessValidator(new CustomExpressionValidator()).validate(access);
         Access a = null;
         try {
             a = accessRepository.save(access);
@@ -49,16 +52,16 @@ public class AccessService {
         Access a = null;
         Optional<Access> optional = accessRepository.findByIdAndActiveIsTrue(id);
         if (optional.isPresent()) {
-            try{
+            try {
                 access.setId(id);
                 accessRepository.save(access);
-            
+
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
-        
+
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(

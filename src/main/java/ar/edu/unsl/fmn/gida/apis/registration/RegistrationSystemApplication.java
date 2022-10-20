@@ -6,13 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.FileInterpreterException;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.files.ConfigFileInterpreter;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.InterpretationException;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.datainterpreters.ConfigFileInterpreter;
 
 @SpringBootApplication
 public class RegistrationSystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RegistrationSystemApplication.class, args);
+
 		// ConfigFileInterpreter configFileInterpreter = new ConfigFileInterpreter(
 		// System.getProperty("user.dir") + "\\src\\main\\resources\\configs.CONF");
 		// try {
@@ -35,7 +36,6 @@ public class RegistrationSystemApplication {
 				// .allowedMethods("GET", "POST", "PUT", "DELETE")
 				// .maxAge(3600);
 			}
-
 		};
 	}
 }

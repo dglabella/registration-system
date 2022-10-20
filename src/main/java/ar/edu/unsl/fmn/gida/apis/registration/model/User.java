@@ -25,7 +25,7 @@ public class User {
     @Column(name = "name", nullable = Constraints.User.NAME_NULLABLE,
             length = Constraints.User.NAME_MAX_LENGHT)
     private String userName;
-    
+
     @Column(nullable = Constraints.User.NAME_NULLABLE, unique = Constraints.User.DNI_UNIQUE,
             length = Constraints.User.DNI_MAX_LENGHT)
     private String dni;

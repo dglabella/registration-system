@@ -36,7 +36,7 @@ public class PersonController {
         List<Person> persons = new ArrayList<>();
 
         if (map.containsKey("dni")) {
-            persons.add(this.personService.getOneByDni(Integer.parseInt(map.get("dni"))));
+            persons.add(this.personService.getOneByDni(map.get("dni")));
         } else if (map.containsKey("name")) {
             persons = this.personService.getAllWithName(map.get("name"));
         } else if (map.containsKey("lastName")) {

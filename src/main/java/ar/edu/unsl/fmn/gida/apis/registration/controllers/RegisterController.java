@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,16 +37,15 @@ public class RegisterController {
     }
 
     @PostMapping
-    public Register postRegister(@RequestBody String encryptedData) {
-        /// qr
-        Register r = registerService.insert(encryptedData);
+    public Register postRegister(@RequestBody Register register) {
+        Register r = registerService.insert(register);
         return r;
     }
 
     @PutMapping(value = "/{id}")
     public Register updateRegister(@PathVariable int id, @RequestBody Register register) {
-        Register r = registerService.update(id, register);
-        return r;
+        throw new ErrorResponse("cannot update a register, illegal operation ",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 
     @DeleteMapping
