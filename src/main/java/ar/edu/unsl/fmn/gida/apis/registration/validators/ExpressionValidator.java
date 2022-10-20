@@ -37,4 +37,13 @@ public interface ExpressionValidator {
      * @return true if match the specifictions.
      */
     boolean isPasswordValid(String string);
+
+    /**
+     * Checks if a string follows a datetime pattern. Example: 2022-10-14T17:27:55.6850
+     * (yyyy-MM-dd'T'HH:mm:ss.SSSX format)
+     *
+     * @param string The string to check.
+     * @return true if match the specifications.
+     */
+    boolean isDatetime(String string);
 }

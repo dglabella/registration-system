@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "registers")
@@ -40,6 +41,9 @@ public class Register {
     // ================================== extras ==================================
     @Column(nullable = false)
     private boolean active = true;
+
+    @Transient
+    private String encryptedData;
 
     // ============================ model associations ============================
     @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
@@ -84,6 +88,14 @@ public class Register {
         this.active = active;
     }
 
+    public String getEncryptedData() {
+        return this.encryptedData;
+    }
+
+    public void setEncryptedData(String encryptedData) {
+        this.encryptedData = encryptedData;
+    }
+
     public Person getPerson() {
         return this.person;
     }
@@ -98,5 +110,21 @@ public class Register {
 
     public void setAccess(Access access) {
         this.access = access;
+    }
+
+    public Integer getPersonFk() {
+        return this.personFk;
+    }
+
+    public void setPersonFk(Integer personFk) {
+        this.personFk = personFk;
+    }
+
+    public Integer getAccessFk() {
+        return this.accessFk;
+    }
+
+    public void setAccessFk(Integer accessFk) {
+        this.accessFk = accessFk;
     }
 }

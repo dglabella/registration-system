@@ -18,15 +18,7 @@ public class WeeklyValidator extends Validator<Weekly> {
         /**
          * check nullability
          */
-        // if (entity.getId() == null)
-        // this.sendError("weekly id must not be null");
-        //
-        // if (entity.getPersonFk() == null)
-        // this.sendError("weekly person fk must not be null");
-
-        if (!(this.getExpressionValidator()
-                .isPresent(String.format("%1$tY-%1$tm-%1$td", entity.getStart()))
-                || Constraints.Weekly.START_NULLABLE))
+        if (entity.getStart() == null && !Constraints.Weekly.START_NULLABLE)
             this.sendError("weekly start date is required");
     }
 

@@ -5,3 +5,7 @@
 3 - Map inside controller method signature, is possible multiples (key, value) in URI ?
 
 4 - @Transactional how it really works, search info.
+
+5 - weekly validator: pattern validation start timestamp
+
+6 - log file for errors

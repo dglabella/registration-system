@@ -42,9 +42,10 @@ public abstract class Validator<T> {
      * Call this method in order to re use the validator. Once the validation process is done, this
      * method should be called in order to reset the validation process. The underlying
      * implementation should call the closeValidation() method for all associated validators in this
-     * validator. @see {@link #closeValidation()}
+     * validator. This method can be ignored if the validation process is used once per validator
+     * intance.
      * 
-     * This method can be ignored if the validation process is used once per validator intance.
+     * @see {@link #closeValidation()}
      */
     public abstract void close();
 

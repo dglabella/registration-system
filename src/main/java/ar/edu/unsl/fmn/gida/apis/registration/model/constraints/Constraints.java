@@ -1,7 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model.constraints;
 
-import ar.edu.unsl.fmn.gida.apis.registration.enums.Role;
-
 public interface Constraints {
 
     public class User {
@@ -83,10 +81,11 @@ public interface Constraints {
     }
 
     public class Access {
-        public static final boolean ACCESSNAME_NULLABLE = false;
-        public static final int ACCESSNAME_MIN_LENGHT = 1;
-        public static final int ACCESSNAME_MAX_LENGHT = 60;
+        public static final boolean NAME_NULLABLE = false;
+        public static final int NAME_MIN_LENGHT = 1;
+        public static final int NAME_MAX_LENGHT = 60;
 
+        public static final boolean DESCRIPTION_NULLABLE = true;
         public static final int DESCRIPTION_MIN_LENGHT = 1;
         public static final int DESCRIPTION_MAX_LENGHT = 200;
 

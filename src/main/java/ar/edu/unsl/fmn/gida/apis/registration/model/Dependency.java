@@ -17,7 +17,9 @@ public class Dependency {
     private Integer id;
 
     // ================================ attributes ================================
-    @Column(name = "name", nullable = Constraints.Dependency.NAME_NULLABLE, unique = Constraints.Dependency.NAME_UNIQUE, length = Constraints.Dependency.NAME_MAX_LENGHT)
+    @Column(name = "name", nullable = Constraints.Dependency.NAME_NULLABLE,
+            unique = Constraints.Dependency.NAME_UNIQUE,
+            length = Constraints.Dependency.NAME_MAX_LENGHT)
     private String dependencyName;
 
     @Column(length = Constraints.Dependency.DESCRIPTION_MAX_LENGHT)

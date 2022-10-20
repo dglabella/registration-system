@@ -16,7 +16,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
 
-
 @Service
 @Transactional
 public class PersonService {
@@ -29,14 +28,14 @@ public class PersonService {
 
     public Person getOne(int id) {
         Person person = null;
-        Optional<Person> optional1 = this.personRepository.findByIdAndActiveIsTrue(id);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
 
-        if (optional1.isPresent()) {
-            person = optional1.get();
-            Optional<Weekly> optional2 =
+        if (personOptional.isPresent()) {
+            person = personOptional.get();
+            Optional<Weekly> weeklyOptional =
                     this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveIsTrue(person.getId());
-            if (optional2.isPresent()) {
-                person.setCurrentWeekly(optional2.get());
+            if (weeklyOptional.isPresent()) {
+                person.setCurrentWeekly(weeklyOptional.get());
             } else {
                 throw new ErrorResponse("FATAL ERROR, Corrupt Database Integrity",
                         HttpStatus.INTERNAL_SERVER_ERROR);
@@ -67,16 +66,16 @@ public class PersonService {
         return persons;
     }
 
-    public Person getOneByDni(int dni) {
+    public Person getOneByDni(String dni) {
         Person person = null;
-        Optional<Person> optional = this.personRepository.findByDniAndActiveTrue(dni);
+        Optional<Person> personOptional = this.personRepository.findByDniAndActiveTrue(dni);
 
-        if (optional.isPresent()) {
-            person = optional.get();
-            Optional<Weekly> optional2 =
+        if (personOptional.isPresent()) {
+            person = personOptional.get();
+            Optional<Weekly> weeklyOptional =
                     this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveIsTrue(person.getId());
-            if (optional2.isPresent()) {
-                person.setCurrentWeekly(optional2.get());
+            if (weeklyOptional.isPresent()) {
+                person.setCurrentWeekly(weeklyOptional.get());
             } else {
                 throw new ErrorResponse("FATAL ERROR, Corrupt Database Integrity",
                         HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,11 +99,13 @@ public class PersonService {
     public Person insert(Person person) {
         new PersonValidator(new CustomExpressionValidator()).validate(person);
         Person p = null;
+        Weekly w = null;
 
         try {
             p = this.personRepository.save(person);
             p.getCurrentWeekly().setPersonFk(p.getId());
-            this.weeklyRepository.save(p.getCurrentWeekly());
+            w = this.weeklyRepository.save(p.getCurrentWeekly());
+            p.getCurrentWeekly().setId(w.getId());
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
@@ -117,28 +118,35 @@ public class PersonService {
         new PersonValidator(new CustomExpressionValidator()).validate(person);
         Weekly w = null;
 
-        Optional<Person> optional1 = this.personRepository.findByIdAndActiveIsTrue(id);
-        if (optional1.isPresent()) {
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
+        if (personOptional.isPresent()) {
             try {
                 person.setId(id);
-                Optional<Weekly> optional2 = this.weeklyRepository
+                // get the current weekly
+                Optional<Weekly> weeklyOptional = this.weeklyRepository
                         .findByPersonFkAndEndIsNullAndActiveIsTrue(person.getId());
 
-                if (optional2.isPresent() && !optional2.get().equals(person.getCurrentWeekly())) {
+                if (weeklyOptional.isPresent()) {
+                    if (!weeklyOptional.get().equals(person.getCurrentWeekly())) {
 
-                    w = optional2.get();
-                    w.setEnd(new Date());
-                    w = this.weeklyRepository.save(w);
+                        w = weeklyOptional.get();
+                        w.setEnd(new Date());
+                        // close the old weekly
+                        w = this.weeklyRepository.save(w);
 
-                    this.personRepository.save(person);
-                    person.getCurrentWeekly().setPersonFk(person.getId());
-                    this.weeklyRepository.save(person.getCurrentWeekly());
+                        // now it's okey to update the person
+                        this.personRepository.save(person);
+                        person.getCurrentWeekly().setPersonFk(person.getId());
+                        this.weeklyRepository.save(person.getCurrentWeekly());
+                    } else {
+                        // save only the person if weekly
+                        person.getCurrentWeekly().setPersonFk(person.getId());
+                        this.personRepository.save(person);
+                    }
                 } else {
-                    person.getCurrentWeekly().setPersonFk(person.getId());
-                    this.personRepository.save(person);
-                    this.weeklyRepository.save(person.getCurrentWeekly());
+                    throw new ErrorResponse("FATAL ERROR, Corrupt Database Integrity",
+                            HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
