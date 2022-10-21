@@ -25,10 +25,7 @@ public class RegisterValidator extends Validator<Register> {
     }
 
     @Override
-    public void associationValidation(Register entity) {
-        // this.personValidator.validate(entity.getPerson());
-        // this.accessValidator.validate(entity.getAccess());
-    }
+    public void associationValidation(Register entity) {}
 
     @Override
     public void close() {
