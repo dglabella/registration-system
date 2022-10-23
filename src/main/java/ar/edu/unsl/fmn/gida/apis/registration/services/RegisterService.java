@@ -14,7 +14,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.datainterpreters.PersonDecryptedDataInterpreter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonDecryptedDataInterpreter;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.RegisterValidator;
 

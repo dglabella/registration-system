@@ -1,4 +1,4 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.datainterpreters;
+package ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters;
 
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.InterpretationException;
 

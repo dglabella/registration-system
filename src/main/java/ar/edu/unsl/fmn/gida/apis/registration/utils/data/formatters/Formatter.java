@@ -1,4 +1,4 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.formatters;
+package ar.edu.unsl.fmn.gida.apis.registration.utils.data.formatters;
 
 @FunctionalInterface
 public interface Formatter<Entity> {
