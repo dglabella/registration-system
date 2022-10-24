@@ -18,5 +18,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     List<Person> findAllByPersonLastNameAndActiveTrue(String lastName);
 
     List<Person> findAllByActiveTrue();
-}
 
+    List<Person> findAllByPAGINATEDDDDDDActiveTrue(int page, int quantityPerPage);
+}

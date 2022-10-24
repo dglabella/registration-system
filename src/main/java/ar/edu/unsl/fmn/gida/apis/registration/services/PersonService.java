@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -94,6 +95,22 @@ public class PersonService {
             person.setDependency(null);
 
         return persons;
+    }
+
+    public List<Person> getAll(int page, int quantityPerPage) {
+        // List<Person> persons = this.personRepository.findAllByActiveTrue();
+        // List<Person> ret = new ArrayList<>();
+
+        // for (int i = page * quantityPerPage; i < page * quantityPerPage + quantityPerPage; i++) {
+        // ret.add(persons.get(i));
+        // }
+
+        // for (Person person : persons)
+        // person.setDependency(null);
+
+        // return ret;
+
+        return this.personRepository.findAllByPAGINATEDDDDDDActiveTrue(page, quantityPerPage);
     }
 
     public Person insert(Person person) {
