@@ -47,9 +47,17 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<Person> getAllPersons() {
-        List<Person> persons = personService.getAll();
-        return persons;
+    public List<Person> getAllPersons(@RequestParam Map<String, String> map) {
+        if (!map.containsKey("page") || !map.containsKey("quantity")) {
+            throw new ErrorResponse(
+                    "when request for paginated resources, must be specified page number, and quantity per page.",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        String page = map.get("page");
+        String quantityPerPage = map.get("quantity");
+
+        return this.personService.getAll(Integer.parseInt(page), Integer.parseInt(quantityPerPage));
     }
 
     @PostMapping

@@ -8,17 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.datainterpreters.PersonDecryptedDataInterpreter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonDecryptedDataInterpreter;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.RegisterValidator;
 
 @Service
+@Transactional
 public class RegisterService {
 
     @Autowired
