@@ -16,15 +16,15 @@ public class WeeklyValidator extends Validator<Weekly> {
     @Override
     public void fieldsValidation(Weekly entity) {
         /**
-         * check nullability
+         * there is no check needed.
          */
-        if (entity.getStart() == null && !Constraints.Weekly.START_NULLABLE)
-            this.sendError("weekly start date is required");
     }
 
     @Override
     public void associationValidation(Weekly entity) {
-        this.personValidator.validate(entity.getPerson());
+        /**
+         * there is no check needed.
+         */
     }
 
     @Override

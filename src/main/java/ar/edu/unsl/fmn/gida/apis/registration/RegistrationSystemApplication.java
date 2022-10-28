@@ -18,7 +18,7 @@ public class RegistrationSystemApplication {
 
 	private void createQr() {
 		CustomQRGenerator qrGenerator = new CustomQRGenerator(new CustomCypher());
-		File file = new File(System.getProperty("user.dir") + "/qrs/" + "daniloQR" + ".png");
+		File file = new File(System.getProperty("user.dir") + "/qrs/" + "matthewQr" + ".png");
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			fileOutputStream

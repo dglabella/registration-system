@@ -1,0 +1,40 @@
+POST: localhost:8080/persons
+
+{
+    "dependencyFk": 2,
+    "personLastName": "PUTIN",
+    "personName": "VLADIMIR",
+    "dni": 25267262,
+    "currentWeekly": {
+        "start": "2022-11-28T06:43:58.290-03:00"
+    },
+    "roles":[1,2]
+}
+
+================================================================
+search by:
+
+GET:localhost:8080/persons/search?dni=35069255
+
+================================================================
+PUT: localhost:8080/persons/553
+
+{
+    "dependencyFk": 2,
+    "personLastName": "PUTIN",
+    "personName": "VLADIMIR",
+    "dni": 25267262,
+    "currentWeekly": {
+        "monday":false,
+        "start": "2022-11-28T06:43:58.290+00:00"
+    },
+    "roles":[1,2]
+}
+
+================================================================
+POST: localhost:8080/registers/
+{
+    "accessFk": 5,
+    "encryptedData": "za2mnzTM+UUdISufKQMaRPtF7lmUrLP+0F4hbNeeJpqdEwQmzDyZHqDYi6XgEWfR"
+}
+================================================================

@@ -36,6 +36,7 @@ public interface Constraints {
     public class Person {
 
         public static final boolean DEPENDENCY_FK_NULLABEL = false;
+        public static final boolean CREDENTIAL_FK_NULLABEL = false;
 
         public static final int NAME_MIN_LENGHT = 1;
         public static final int NAME_MAX_LENGHT = 60;

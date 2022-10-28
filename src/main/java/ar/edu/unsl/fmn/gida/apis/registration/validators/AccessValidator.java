@@ -34,7 +34,11 @@ public class AccessValidator extends Validator<Access> {
     }
 
     @Override
-    public void associationValidation(Access entity) {}
+    public void associationValidation(Access entity) {
+        /**
+         * there is no check needed.
+         */
+    }
 
     @Override
     public void close() {

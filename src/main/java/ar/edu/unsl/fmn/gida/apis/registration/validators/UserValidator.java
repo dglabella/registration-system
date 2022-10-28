@@ -109,7 +109,11 @@ public class UserValidator extends Validator<User> {
     }
 
     @Override
-    public void associationValidation(User entity) {}
+    public void associationValidation(User entity) {
+        /**
+         * there is no check needed.
+         */
+    }
 
     @Override
     public void close() {

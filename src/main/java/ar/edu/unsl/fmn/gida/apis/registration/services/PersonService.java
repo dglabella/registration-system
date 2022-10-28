@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,32 +93,28 @@ public class PersonService {
     public List<Person> getAll() {
         List<Person> persons = this.personRepository.findAllByActiveTrue();
 
-        for (Person person : persons)
-            person.setDependency(null);
+        // for (Person person : persons)
+        // person.setDependency(null);
 
         return persons;
     }
 
     public List<Person> getAll(int page, int quantityPerPage) {
-        // List<Person> persons = this.personRepository.findAllByActiveTrue();
-        // List<Person> ret = new ArrayList<>();
-
-        // for (int i = page * quantityPerPage; i < page * quantityPerPage + quantityPerPage; i++) {
-        // ret.add(persons.get(i));
-        // }
-
-        // for (Person person : persons)
-        // person.setDependency(null);
-
-        // return ret;
-
-        return this.personRepository.findAllByPAGINATEDDDDDDActiveTrue(page, quantityPerPage);
+        // Pageable pageable = PageRequest.of(page, quantityPerPage);
+        // List<Person> persons = this.personRepository.findAllByActiveTrue(pageable);
+        return this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
     }
 
     public Person insert(Person person) {
         new PersonValidator(new CustomExpressionValidator()).validate(person);
+
         Person p = null;
         Weekly w = null;
+
+        if (person.getCurrentWeekly() == null) {
+            // setting default weekly
+            person.setCurrentWeekly(new Weekly());
+        }
 
         try {
             p = this.personRepository.save(person);
@@ -151,10 +149,11 @@ public class PersonService {
                         // close the old weekly
                         w = this.weeklyRepository.save(w);
 
-                        // now it's okey to update the person
-                        this.personRepository.save(person);
+                        // now it's okey to update the weekly and the person
                         person.getCurrentWeekly().setPersonFk(person.getId());
-                        this.weeklyRepository.save(person.getCurrentWeekly());
+                        this.weeklyRepository.save(person.getCurrentWeekly());// this is already
+                                                                              // detached
+                        this.personRepository.save(person);
                     } else {
                         // save only the person if weekly
                         person.getCurrentWeekly().setPersonFk(person.getId());

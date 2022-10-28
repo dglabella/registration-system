@@ -43,7 +43,7 @@ public class RegisterService {
         return r;
     }
 
-    public List<Register> getAll() {
+    public List<Register> getAll(String from, String to) {
         return registerRepository.findAll();
     }
 

@@ -6,6 +6,6 @@
 
 4 - @Transactional how it really works, search info.
 
-5 - weekly validator: pattern validation start timestamp
+5 - post weekly: default weekly creation if the api recieve null at "currentWeekly"
 
 6 - log file for errors

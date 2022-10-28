@@ -39,7 +39,11 @@ public class DependencyValidator extends Validator<Dependency> {
     }
 
     @Override
-    public void associationValidation(Dependency entity) {}
+    public void associationValidation(Dependency entity) {
+        /**
+         * there is no check needed.
+         */
+    }
 
     @Override
     public void close() {

@@ -5,6 +5,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -28,6 +30,9 @@ public class Person {
 
     @Column(nullable = Constraints.Person.DEPENDENCY_FK_NULLABEL)
     private Integer dependencyFk;
+
+    @Column(nullable = false)
+    private Integer credentialFk;
 
     // ================================ attributes ================================
     @Column(name = "name", nullable = Constraints.Person.NAME_NULLABLE,
@@ -46,16 +51,23 @@ public class Person {
     private boolean active = true;
 
     // ============================ model associations ============================
+
+    // @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "dependencyFk", referencedColumnName = "id", insertable = false,
             updatable = false)
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Dependency dependency;
 
     @Transient
     @JsonManagedReference
     private Weekly currentWeekly;
 
-    @Enumerated
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "credentialFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    private Credential credential;
+
+    @Enumerated(EnumType.ORDINAL)
     @ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
     private List<Role> roles;
 
@@ -78,6 +90,15 @@ public class Person {
     public void setDependencyFk(Integer dependencyFk) {
         this.dependencyFk = dependencyFk;
     }
+
+    public Integer getCredentialFk() {
+        return this.credentialFk;
+    }
+
+    public void setCredentialFk(Integer credentialFk) {
+        this.credentialFk = credentialFk;
+    }
+
 
     public String getPersonLastName() {
         return this.personLastName;
@@ -121,6 +142,14 @@ public class Person {
 
     public void setCurrentWeekly(Weekly currentWeekly) {
         this.currentWeekly = currentWeekly;
+    }
+
+    public Credential getCredential() {
+        return this.credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
     }
 
     public List<Role> getRoles() {

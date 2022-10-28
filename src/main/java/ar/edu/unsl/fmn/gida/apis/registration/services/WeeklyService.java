@@ -24,7 +24,7 @@ public class WeeklyService {
 
         if (optional.isPresent()) {
             w = optional.get();
-        }else {
+        } else {
             throw new ErrorResponse("there is no weekly with id: " + id, HttpStatus.NOT_FOUND);
         }
 
@@ -51,16 +51,16 @@ public class WeeklyService {
         Weekly w = null;
         Optional<Weekly> optional = weeklyRepository.findByIdAndActiveIsTrue(id);
         if (optional.isPresent()) {
-            try{
+            try {
                 weekly.setId(id);
                 weeklyRepository.save(weekly);
-            
+
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
-        
+
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
