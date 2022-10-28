@@ -20,9 +20,6 @@ public class PersonValidator extends Validator<Person> {
         if (entity.getDependencyFk() == null)
             this.sendError("person dependency id is required");
 
-        if (entity.getCredentialFk() == null)
-            this.sendError("person credential id is required");
-
         if (!(this.getExpressionValidator().isPresent(entity.getPersonName())
                 || Constraints.Person.NAME_NULLABLE))
             this.sendError("person name is required");
