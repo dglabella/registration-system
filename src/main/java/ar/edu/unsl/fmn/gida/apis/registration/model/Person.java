@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -28,11 +27,8 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = Constraints.Person.DEPENDENCY_FK_NULLABEL)
+    @Column(nullable = Constraints.Person.DEPENDENCY_FK_NULLABLE)
     private Integer dependencyFk;
-
-    @Column(nullable = false)
-    private Integer credentialFk;
 
     // ================================ attributes ================================
     @Column(name = "name", nullable = Constraints.Person.NAME_NULLABLE,
@@ -62,9 +58,8 @@ public class Person {
     @JsonManagedReference
     private Weekly currentWeekly;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "credentialFk", referencedColumnName = "id", insertable = false,
-            updatable = false)
+    @Transient
+    @JsonManagedReference
     private Credential credential;
 
     @Enumerated(EnumType.ORDINAL)
@@ -90,15 +85,6 @@ public class Person {
     public void setDependencyFk(Integer dependencyFk) {
         this.dependencyFk = dependencyFk;
     }
-
-    public Integer getCredentialFk() {
-        return this.credentialFk;
-    }
-
-    public void setCredentialFk(Integer credentialFk) {
-        this.credentialFk = credentialFk;
-    }
-
 
     public String getPersonLastName() {
         return this.personLastName;

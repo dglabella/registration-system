@@ -1,29 +1,36 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.sql.Blob;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "credentials")
-public abstract class Credential {
+public class Credential {
     // =================================== keys ===================================
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+
+    @Column(nullable = Constraints.Credential.PERSON_FK_NULLABLE)
+    private Integer personFk;
 
     // ================================ attributes ================================
-    @Column(nullable = false)
-    private int petitionsCounter;
-
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Credential.DATA_NULLABLE,
+            length = Constraints.Credential.DATA_MAX_LENGHT)
     private String data;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Credential.IMG_NULLABLE)
     private Blob img;
 
     // ================================== extras ==================================
@@ -31,25 +38,30 @@ public abstract class Credential {
     private boolean active = true;
 
     // ============================ model associations ============================
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    @JsonBackReference
+    private Person person;
 
     // =============================== constructors ===============================
     public Credential() {}
 
     // ============================ getters and setters ===========================
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getPetitionsCounter() {
-        return this.petitionsCounter;
+    public Integer getPersonFk() {
+        return this.personFk;
     }
 
-    public void setPetitionsCounter(int petitionsCounter) {
-        this.petitionsCounter = petitionsCounter;
+    public void setPersonFk(Integer personFk) {
+        this.personFk = personFk;
     }
 
     public String getData() {
@@ -66,5 +78,17 @@ public abstract class Credential {
 
     public void setImg(Blob img) {
         this.img = img;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Person getPerson() {
+        return this.person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

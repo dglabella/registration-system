@@ -15,7 +15,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonDecryptedDataInterpreter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.RegisterValidator;
 
@@ -27,8 +27,7 @@ public class RegisterService {
     private RegisterRepository registerRepository;
 
     private Cypher cypher = new CustomCypher();
-    private PersonDecryptedDataInterpreter personDecryptedDataInterpreter =
-            new PersonDecryptedDataInterpreter();
+    private PersonConverter personConverter = new PersonConverter();
 
     public Register getOne(int id) {
         Register r = null;
@@ -61,8 +60,8 @@ public class RegisterService {
         Optional<Register> optional;
 
         try {
-            person = this.personDecryptedDataInterpreter
-                    .interpret(this.cypher.decrypt(register.getEncryptedData()));
+            person = this.personConverter
+                    .objectify(this.cypher.decrypt(register.getEncryptedData()));
 
             optional = this.registerRepository
                     .findByPersonFkAndCheckOutIsNullAndActiveIsTrue(person.getId());

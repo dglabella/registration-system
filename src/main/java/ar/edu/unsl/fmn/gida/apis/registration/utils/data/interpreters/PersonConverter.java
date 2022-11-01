@@ -1,9 +1,9 @@
 package ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters;
 
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.InterpretationException;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 
-public class PersonDecryptedDataInterpreter implements Interpreter<Person> {
+public class PersonConverter implements Converter<Person> {
 
     private final String SEPARATOR = "-";
 
@@ -15,7 +15,7 @@ public class PersonDecryptedDataInterpreter implements Interpreter<Person> {
 
 
     @Override
-    public Person interpret(String data) throws InterpretationException {
+    public Person objectify(String data) throws ConvertionException {
         Person person = new Person();
         String[] splitedData = data.split(SEPARATOR);
 
@@ -25,5 +25,12 @@ public class PersonDecryptedDataInterpreter implements Interpreter<Person> {
         person.setPersonName(splitedData[NAME]);
 
         return person;
+    }
+
+
+    @Override
+    public String stringify(Person object) throws ConvertionException {
+        return object.getId() + SEPARATOR + object.getDni() + SEPARATOR + object.getPersonLastName()
+                + SEPARATOR + object.getPersonName();
     }
 }

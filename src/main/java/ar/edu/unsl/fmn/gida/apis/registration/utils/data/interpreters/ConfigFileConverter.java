@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.InterpretationException;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.Configuration;
 
-public class ConfigFileInterpreter implements Interpreter<Configuration> {
+public class ConfigFileConverter implements Converter<Configuration> {
 
     private static final String SEPARATOR = "::";
     private static final int PREFIX_VALUE = 0;
@@ -22,7 +22,7 @@ public class ConfigFileInterpreter implements Interpreter<Configuration> {
 
     private File file;
 
-    public ConfigFileInterpreter(String fileLocation) {
+    public ConfigFileConverter(String fileLocation) {
         this.file = new File(fileLocation);
 
         try {
@@ -77,7 +77,7 @@ public class ConfigFileInterpreter implements Interpreter<Configuration> {
     }
 
     @Override
-    public Configuration interpret(String data) throws InterpretationException {
+    public Configuration objectify(String data) throws ConvertionException {
         Scanner scanner;
         try {
             scanner = new Scanner(file);
@@ -90,6 +90,12 @@ public class ConfigFileInterpreter implements Interpreter<Configuration> {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    @Override
+    public String stringify(Configuration object) throws ConvertionException {
+        // TODO Auto-generated method stub
         return null;
     }
 }

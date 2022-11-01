@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 public class CredentialValidator extends Validator<Credential> {
 
@@ -11,6 +12,12 @@ public class CredentialValidator extends Validator<Credential> {
     @Override
     public void fieldsValidation(Credential entity) {
         // TODO Auto-generated method stub
+        /**
+         * check nullability
+         */
+
+        if (!(entity.getPersonFk() != null || Constraints.Credential.PERSON_FK_NULLABLE))
+            this.sendError("credential person id is required");
 
     }
 
@@ -25,5 +32,4 @@ public class CredentialValidator extends Validator<Credential> {
     public void close() {
         this.closeFieldsValidation();
     }
-
 }

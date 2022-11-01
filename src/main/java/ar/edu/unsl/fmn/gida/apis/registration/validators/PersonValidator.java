@@ -17,7 +17,7 @@ public class PersonValidator extends Validator<Person> {
         /**
          * check nullability
          */
-        if (entity.getDependencyFk() == null)
+        if (!(entity.getDependencyFk() != null || Constraints.Person.DEPENDENCY_FK_NULLABLE))
             this.sendError("person dependency id is required");
 
         if (!(this.getExpressionValidator().isPresent(entity.getPersonName())

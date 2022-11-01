@@ -14,13 +14,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     List<Person> findAllByActiveTrue(Pageable pageable);
 
-    Optional<Person> findByIdAndActiveIsTrue(int id);
+    Optional<Person> findByIdAndActiveIsTrue(Integer id);
 
     Optional<Person> findByDniAndActiveTrue(String dni);
 
     List<Person> findAllByPersonNameAndActiveTrue(String name);
 
     List<Person> findAllByPersonLastNameAndActiveTrue(String lastName);
-
-
 }
