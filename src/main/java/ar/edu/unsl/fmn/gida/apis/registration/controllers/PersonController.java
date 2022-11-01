@@ -31,6 +31,12 @@ public class PersonController {
         return person;
     }
 
+    @GetMapping
+    public List<Person> getAllPersons() {
+        List<Person> ret = this.personService.getAll();
+        return ret;
+    }
+
     @GetMapping(value = "/search")
     public List<Person> search(@RequestParam Map<String, String> map) {
         List<Person> persons = new ArrayList<>();
@@ -46,8 +52,8 @@ public class PersonController {
         return persons;
     }
 
-    @GetMapping
-    public List<Person> getAllPersons(@RequestParam Map<String, String> map) {
+    @GetMapping(value = "/paged")
+    public List<Person> getAllPaginated(@RequestParam Map<String, String> map) {
         if (!map.containsKey("page") || !map.containsKey("quantity")) {
             throw new ErrorResponse(
                     "when request for paginated resources, must be specified page number, and quantity per page.",

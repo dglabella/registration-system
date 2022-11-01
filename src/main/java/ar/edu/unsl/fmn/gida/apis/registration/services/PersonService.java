@@ -1,19 +1,28 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
+import ar.edu.unsl.fmn.gida.apis.registration.repositories.CredentialRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
 
@@ -26,6 +35,9 @@ public class PersonService {
 
     @Autowired
     private WeeklyRepository weeklyRepository;
+
+    @Autowired
+    private CredentialRepository credentialRepository;
 
     public Person getOne(int id) {
         Person person = null;
@@ -90,45 +102,51 @@ public class PersonService {
 
     public List<Person> getAll() {
         List<Person> persons = this.personRepository.findAllByActiveTrue();
-
-        for (Person person : persons)
-            person.setDependency(null);
-
         return persons;
     }
 
     public List<Person> getAll(int page, int quantityPerPage) {
-        // List<Person> persons = this.personRepository.findAllByActiveTrue();
-        // List<Person> ret = new ArrayList<>();
-
-        // for (int i = page * quantityPerPage; i < page * quantityPerPage + quantityPerPage; i++) {
-        // ret.add(persons.get(i));
-        // }
-
-        // for (Person person : persons)
-        // person.setDependency(null);
-
-        // return ret;
-
-        return this.personRepository.findAllByPAGINATEDDDDDDActiveTrue(page, quantityPerPage);
+        // Pageable pageable = PageRequest.of(page, quantityPerPage);
+        // List<Person> persons = this.personRepository.findAllByActiveTrue(pageable);
+        return this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
     }
 
     public Person insert(Person person) {
         new PersonValidator(new CustomExpressionValidator()).validate(person);
-        Person p = null;
-        Weekly w = null;
+
+        Credential credential = null;
+
+        if (person.getCurrentWeekly() == null) {
+            // setting default weekly
+            person.setCurrentWeekly(new Weekly());
+        }
 
         try {
-            p = this.personRepository.save(person);
-            p.getCurrentWeekly().setPersonFk(p.getId());
-            w = this.weeklyRepository.save(p.getCurrentWeekly());
-            p.getCurrentWeekly().setId(w.getId());
-        } catch (DataIntegrityViolationException exception) {
-            exception.printStackTrace();
-            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+            // QR generation code
+            person.setId(this.personRepository.save(person).getId());
+
+            credential = new Credential();
+            credential.setPersonFk(person.getId());
+            credential.setData(new CustomCypher().encrypt(new PersonConverter().stringify(person)));
+            credential.setImg(new SerialBlob(
+                    new CustomQRGenerator().generate(credential.getData(), 350, 350)));
+            // save qr
+            credential = this.credentialRepository.save(credential);
+            person.setCredential(credential);
+
+            person.getCurrentWeekly().setPersonFk(person.getId());
+            person.getCurrentWeekly()
+                    .setId(this.weeklyRepository.save(person.getCurrentWeekly()).getId());
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (SerialException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return p;
+        return person;
     }
 
     public Person update(int id, Person person) {
@@ -151,10 +169,11 @@ public class PersonService {
                         // close the old weekly
                         w = this.weeklyRepository.save(w);
 
-                        // now it's okey to update the person
-                        this.personRepository.save(person);
+                        // now it's okey to update the weekly and the person
                         person.getCurrentWeekly().setPersonFk(person.getId());
-                        this.weeklyRepository.save(person.getCurrentWeekly());
+                        this.weeklyRepository.save(person.getCurrentWeekly());// this is already
+                                                                              // detached
+                        this.personRepository.save(person);
                     } else {
                         // save only the person if weekly
                         person.getCurrentWeekly().setPersonFk(person.getId());

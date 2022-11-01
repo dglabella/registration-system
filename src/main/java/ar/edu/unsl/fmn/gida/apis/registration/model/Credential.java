@@ -1,0 +1,94 @@
+package ar.edu.unsl.fmn.gida.apis.registration.model;
+
+import java.sql.Blob;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
+
+@Entity
+@Table(name = "credentials")
+public class Credential {
+    // =================================== keys ===================================
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = Constraints.Credential.PERSON_FK_NULLABLE)
+    private Integer personFk;
+
+    // ================================ attributes ================================
+    @Column(nullable = Constraints.Credential.DATA_NULLABLE,
+            length = Constraints.Credential.DATA_MAX_LENGHT)
+    private String data;
+
+    @Column(nullable = Constraints.Credential.IMG_NULLABLE)
+    private Blob img;
+
+    // ================================== extras ==================================
+    @Column(nullable = false)
+    private boolean active = true;
+
+    // ============================ model associations ============================
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+            updatable = false)
+    @JsonBackReference
+    private Person person;
+
+    // =============================== constructors ===============================
+    public Credential() {}
+
+    // ============================ getters and setters ===========================
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getPersonFk() {
+        return this.personFk;
+    }
+
+    public void setPersonFk(Integer personFk) {
+        this.personFk = personFk;
+    }
+
+    public String getData() {
+        return this.data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public Blob getImg() {
+        return this.img;
+    }
+
+    public void setImg(Blob img) {
+        this.img = img;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Person getPerson() {
+        return this.person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+}

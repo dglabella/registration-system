@@ -17,7 +17,7 @@ public class PersonValidator extends Validator<Person> {
         /**
          * check nullability
          */
-        if (entity.getDependencyFk() == null)
+        if (!(entity.getDependencyFk() != null || Constraints.Person.DEPENDENCY_FK_NULLABLE))
             this.sendError("person dependency id is required");
 
         if (!(this.getExpressionValidator().isPresent(entity.getPersonName())
@@ -31,9 +31,6 @@ public class PersonValidator extends Validator<Person> {
         if (!(this.getExpressionValidator().isPresent(entity.getDni())
                 || Constraints.Person.DNI_NULLABLE))
             this.sendError("person dni is required");
-
-        if (entity.getCurrentWeekly() == null)
-            this.sendError("person current weekly is required");
 
         if (entity.getRoles() == null || entity.getRoles().size() == 0)
             this.sendError("person requires at least one role");
@@ -74,7 +71,9 @@ public class PersonValidator extends Validator<Person> {
 
     @Override
     public void associationValidation(Person entity) {
-        this.weeklyValidator.validate(entity.getCurrentWeekly());
+        /**
+         * there is no check needed.
+         */
     }
 
     @Override

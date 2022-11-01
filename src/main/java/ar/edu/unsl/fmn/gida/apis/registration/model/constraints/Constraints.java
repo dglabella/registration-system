@@ -34,8 +34,7 @@ public interface Constraints {
     }
 
     public class Person {
-
-        public static final boolean DEPENDENCY_FK_NULLABEL = false;
+        public static final boolean DEPENDENCY_FK_NULLABLE = false;
 
         public static final int NAME_MIN_LENGHT = 1;
         public static final int NAME_MAX_LENGHT = 60;
@@ -89,5 +88,14 @@ public interface Constraints {
         public static final int DESCRIPTION_MIN_LENGHT = 1;
         public static final int DESCRIPTION_MAX_LENGHT = 200;
 
+    }
+
+    public class Credential {
+        public static final boolean PERSON_FK_NULLABLE = false;
+        public static final boolean DATA_NULLABLE = false;
+        public static final int DATA_MIN_LENGHT = 1;
+        public static final int DATA_MAX_LENGHT = 255;
+
+        public static final boolean IMG_NULLABLE = false;
     }
 }

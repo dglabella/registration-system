@@ -51,7 +51,7 @@ public class Weekly {
 
     @Column(nullable = Constraints.Weekly.START_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date start;
+    private Date start = new Date();
 
     @Column(nullable = Constraints.Weekly.END_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
@@ -64,7 +64,7 @@ public class Weekly {
     // ============================ model associations ============================
     @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
             updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JsonBackReference
     private Person person;
 

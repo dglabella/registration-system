@@ -25,7 +25,11 @@ public class RegisterValidator extends Validator<Register> {
     }
 
     @Override
-    public void associationValidation(Register entity) {}
+    public void associationValidation(Register entity) {
+        /**
+         * there is no check needed.
+         */
+    }
 
     @Override
     public void close() {
