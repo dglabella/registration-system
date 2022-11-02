@@ -12,6 +12,13 @@
 
 7 - is findAllByActiveIsTrue or findAllAndActiveIsTrue ?
 
+8 - validation: what about names/lastnames like d'alessandro
+
+9 - if person fields are updated, what about the QR information? should generate another one ?
+
 8 - transient variables should not have setters and getters methods names beginning with "get..." or "set..."?
 
-9 - log file for errors
+9 - check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
+written in caller or in caller or callee?
+
+10 - log file for errors

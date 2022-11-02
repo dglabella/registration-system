@@ -1,12 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +12,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
-import ar.edu.unsl.fmn.gida.apis.registration.repositories.CredentialRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
@@ -34,10 +27,12 @@ public class PersonService {
     private PersonRepository personRepository;
 
     @Autowired
-    private WeeklyRepository weeklyRepository;
+    private WeeklyService weeklyService;
 
     @Autowired
-    private CredentialRepository credentialRepository;
+    private CredentialService credentialService;
+
+    private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
     public Person getOne(int id) {
         Person person = null;
@@ -45,15 +40,7 @@ public class PersonService {
 
         if (personOptional.isPresent()) {
             person = personOptional.get();
-            Optional<Weekly> weeklyOptional =
-                    this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveIsTrue(person.getId());
-            if (weeklyOptional.isPresent()) {
-                person.setCurrentWeekly(weeklyOptional.get());
-            } else {
-                throw new ErrorResponse("FATAL ERROR, Corrupt Database Integrity",
-                        HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
+            person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
         } else {
             throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
         }
@@ -61,43 +48,38 @@ public class PersonService {
         return person;
     }
 
-    public List<Person> getAllWithName(String name) {
-        List<Person> persons = this.personRepository.findAllByPersonNameAndActiveTrue(name);
-
-        for (Person person : persons)
-            person.setDependency(null);
-
-        return persons;
-    }
-
-    public List<Person> getAllWithLastName(String lastName) {
-        List<Person> persons = this.personRepository.findAllByPersonNameAndActiveTrue(lastName);
-
-        for (Person person : persons)
-            person.setDependency(null);
-
-        return persons;
-    }
-
     public Person getOneByDni(String dni) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByDniAndActiveTrue(dni);
+        Optional<Person> personOptional = this.personRepository.findByDniAndActiveIsTrue(dni);
 
         if (personOptional.isPresent()) {
             person = personOptional.get();
-            Optional<Weekly> weeklyOptional =
-                    this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveIsTrue(person.getId());
-            if (weeklyOptional.isPresent()) {
-                person.setCurrentWeekly(weeklyOptional.get());
-            } else {
-                throw new ErrorResponse("FATAL ERROR, Corrupt Database Integrity",
-                        HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
         } else {
             throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND);
         }
 
         return person;
+    }
+
+    public List<Person> getAllWithName(String name) {
+        return this.personRepository.findAllByPersonNameAndActiveIsTrue(name);
+    }
+
+    public List<Person> getAllWithLastName(String lastName) {
+        return this.personRepository.findAllByPersonLastNameAndActiveIsTrue(lastName);
+    }
+
+    public List<Person> getOneByDniApproach(String string) {
+        return this.personRepository.findByDniContainingAndActiveIsTrue(string);
+    }
+
+    public List<Person> getAllWithNameApproach(String string) {
+        return this.personRepository.findAllByPersonNameContainingAndActiveIsTrue(string);
+    }
+
+    public List<Person> getAllWithLastNameApproach(String string) {
+        return this.personRepository.findAllByPersonLastNameContainingAndActiveIsTrue(string);
     }
 
     public List<Person> getAll() {
@@ -112,89 +94,61 @@ public class PersonService {
     }
 
     public Person insert(Person person) {
-        new PersonValidator(new CustomExpressionValidator()).validate(person);
+        this.personValidator.validate(person);
 
         Credential credential = null;
-
-        if (person.getCurrentWeekly() == null) {
-            // setting default weekly
-            person.setCurrentWeekly(new Weekly());
-        }
-
         try {
-            // QR generation code
             person.setId(this.personRepository.save(person).getId());
 
+            // QR generation code
             credential = new Credential();
             credential.setPersonFk(person.getId());
             credential.setData(new CustomCypher().encrypt(new PersonConverter().stringify(person)));
-            credential.setImg(new SerialBlob(
-                    new CustomQRGenerator().generate(credential.getData(), 350, 350)));
+            credential.setImg(new CustomQRGenerator().generate(credential.getData(), 350, 350));
             // save qr
-            credential = this.credentialRepository.save(credential);
-            person.setCredential(credential);
+            person.setCredential(this.credentialService.insert(credential));
 
+            if (person.getCurrentWeekly() == null) {
+                // setting default weekly
+                person.setCurrentWeekly(new Weekly());
+            }
             person.getCurrentWeekly().setPersonFk(person.getId());
-            person.getCurrentWeekly()
-                    .setId(this.weeklyRepository.save(person.getCurrentWeekly()).getId());
+            person.setCurrentWeekly(this.weeklyService.insert(person.getCurrentWeekly()));
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (SerialException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return person;
     }
 
-    public Person update(int id, Person person) {
-        new PersonValidator(new CustomExpressionValidator()).validate(person);
-        Weekly w = null;
+    public Person update(int personId, Person person) {
+        this.personValidator.validate(person);
 
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
+
         if (personOptional.isPresent()) {
+
             try {
-                person.setId(id);
-                // get the current weekly
-                Optional<Weekly> weeklyOptional = this.weeklyRepository
-                        .findByPersonFkAndEndIsNullAndActiveIsTrue(person.getId());
-
-                if (weeklyOptional.isPresent()) {
-                    if (!weeklyOptional.get().equals(person.getCurrentWeekly())) {
-
-                        w = weeklyOptional.get();
-                        w.setEnd(new Date());
-                        // close the old weekly
-                        w = this.weeklyRepository.save(w);
-
-                        // now it's okey to update the weekly and the person
-                        person.getCurrentWeekly().setPersonFk(person.getId());
-                        this.weeklyRepository.save(person.getCurrentWeekly());// this is already
-                                                                              // detached
-                        this.personRepository.save(person);
-                    } else {
-                        // save only the person if weekly
-                        person.getCurrentWeekly().setPersonFk(person.getId());
-                        this.personRepository.save(person);
-                    }
-                } else {
-                    throw new ErrorResponse("FATAL ERROR, Corrupt Database Integrity",
-                            HttpStatus.INTERNAL_SERVER_ERROR);
+                person.setId(personId);
+                if (person.getCurrentWeekly() != null) {
+                    person.getCurrentWeekly().setPersonFk(personId);
+                    this.weeklyService.insert(person.getCurrentWeekly());
                 }
+                this.personRepository.save(person);
+
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
+
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
-                    "cannot update person with id " + id + " because it doesn't exist",
+                    "cannot update person with id " + personId + " because it doesn't exist",
                     HttpStatus.NOT_FOUND);
         }
-
         return person;
     }
 

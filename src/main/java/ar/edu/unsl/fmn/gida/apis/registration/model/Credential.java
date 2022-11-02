@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-import java.sql.Blob;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -30,8 +30,9 @@ public class Credential {
             length = Constraints.Credential.DATA_MAX_LENGHT)
     private String data;
 
+    @Lob
     @Column(nullable = Constraints.Credential.IMG_NULLABLE)
-    private Blob img;
+    private byte[] img;
 
     // ================================== extras ==================================
     @Column(nullable = false)
@@ -72,11 +73,11 @@ public class Credential {
         this.data = data;
     }
 
-    public Blob getImg() {
+    public byte[] getImg() {
         return this.img;
     }
 
-    public void setImg(Blob img) {
+    public void setImg(byte[] img) {
         this.img = img;
     }
 

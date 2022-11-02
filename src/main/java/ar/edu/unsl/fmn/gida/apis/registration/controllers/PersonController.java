@@ -37,33 +37,59 @@ public class PersonController {
         return ret;
     }
 
-    @GetMapping(value = "/search")
-    public List<Person> search(@RequestParam Map<String, String> map) {
+    @GetMapping(value = "/paged")
+    public List<Person> getAll(@RequestParam Map<String, String> map) {
         List<Person> persons = new ArrayList<>();
 
-        if (map.containsKey("dni")) {
-            persons.add(this.personService.getOneByDni(map.get("dni")));
-        } else if (map.containsKey("name")) {
-            persons = this.personService.getAllWithName(map.get("name"));
-        } else if (map.containsKey("lastName")) {
-            persons = this.personService.getAllWithLastName(map.get("lastName"));
+        if (!map.containsKey("page")) {
+            throw new ErrorResponse("must specify at least a page number", HttpStatus.BAD_REQUEST);
+        } else if (!map.containsKey("quantity")) {
+            if (Integer.parseInt(map.get("page")) < 0) {
+                throw new ErrorResponse("page number must not be less than zero",
+                        HttpStatus.BAD_REQUEST);
+            } else {
+                persons.addAll(this.personService.getAll(Integer.parseInt(map.get("page")), 20));
+            }
+        } else {
+            if (Integer.parseInt(map.get("quantity")) < 0) {
+                throw new ErrorResponse("quantity number must not be less than zero",
+                        HttpStatus.BAD_REQUEST);
+            }
+            persons.addAll(this.personService.getAll(Integer.parseInt(map.get("page")),
+                    Integer.parseInt(map.get("quantity"))));
         }
 
         return persons;
     }
 
-    @GetMapping(value = "/paged")
-    public List<Person> getAllPaginated(@RequestParam Map<String, String> map) {
-        if (!map.containsKey("page") || !map.containsKey("quantity")) {
-            throw new ErrorResponse(
-                    "when request for paginated resources, must be specified page number, and quantity per page.",
-                    HttpStatus.BAD_REQUEST);
+    @GetMapping(value = "/dni/{dni}")
+    public Person getPersonByDni(@PathVariable String dni) {
+        return this.personService.getOneByDni(dni);
+    }
+
+    @GetMapping(value = "/name/{name}")
+    public List<Person> getPersonByName(@PathVariable String name) {
+        return this.personService.getAllWithName(name);
+    }
+
+    @GetMapping(value = "/lastName/{lastName}")
+    public List<Person> getPersonByLastName(@PathVariable String lastName) {
+        return this.personService.getAllWithLastName(lastName);
+    }
+
+    @GetMapping(value = "/search")
+    public List<Person> search(@RequestParam Map<String, String> map) {
+        List<Person> persons = new ArrayList<>();
+
+        if (map.containsKey("dni")) {
+            persons = this.personService.getOneByDniApproach(map.get("dni"));
+        } else if (map.containsKey("name")) {
+            persons = this.personService.getAllWithNameApproach(map.get("name"));
+        } else if (map.containsKey("lastName")) {
+            persons = this.personService.getAllWithLastNameApproach(map.get("lastName"));
         }
 
-        String page = map.get("page");
-        String quantityPerPage = map.get("quantity");
-
-        return this.personService.getAll(Integer.parseInt(page), Integer.parseInt(quantityPerPage));
+        return persons;
     }
 
     @PostMapping

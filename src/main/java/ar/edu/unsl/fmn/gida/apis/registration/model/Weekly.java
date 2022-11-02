@@ -51,7 +51,7 @@ public class Weekly {
 
     @Column(nullable = Constraints.Weekly.START_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date start = new Date();
+    private Date start;
 
     @Column(nullable = Constraints.Weekly.END_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)

@@ -10,7 +10,7 @@ public class UserValidator extends Validator<User> {
     }
 
     @Override
-    public void fieldsValidation(User entity) {
+    public void validate(User entity) {
         /**
          * check nullability
          */
@@ -106,17 +106,5 @@ public class UserValidator extends Validator<User> {
         if (!this.getExpressionValidator().isPasswordValid(entity.getPassword()))
             this.sendError("invalid user passowrd: must follow the next specificatios: "
                     + "the string must contain only alphanumeric characters.");
-    }
-
-    @Override
-    public void associationValidation(User entity) {
-        /**
-         * there is no check needed.
-         */
-    }
-
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
     }
 }

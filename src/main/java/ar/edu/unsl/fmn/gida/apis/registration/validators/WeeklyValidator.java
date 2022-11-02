@@ -3,33 +3,27 @@ package ar.edu.unsl.fmn.gida.apis.registration.validators;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
+
 public class WeeklyValidator extends Validator<Weekly> {
 
-    private PersonValidator personValidator;
-
-    public WeeklyValidator(ExpressionValidator expresionValidator,
-            PersonValidator personValidator) {
+    public WeeklyValidator(ExpressionValidator expresionValidator) {
         super(expresionValidator);
-        this.personValidator = personValidator;
     }
 
     @Override
-    public void fieldsValidation(Weekly entity) {
+    public void validate(Weekly entity) {
         /**
-         * there is no check needed.
+         * check nullability
          */
-    }
+        if (!(entity.getPersonFk() != null || Constraints.Weekly.PERSONFK_NULLABLE))
+            this.sendError("weekly person id is required");
 
-    @Override
-    public void associationValidation(Weekly entity) {
         /**
-         * there is no check needed.
+         * check size
          */
-    }
 
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
-        this.personValidator.closeFieldsValidation();
+        /**
+         * check pattern
+         */
     }
 }

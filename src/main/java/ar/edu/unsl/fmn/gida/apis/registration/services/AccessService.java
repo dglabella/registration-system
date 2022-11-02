@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.AccessRepository;
@@ -13,6 +14,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.validators.AccessValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 
 @Service
+@Transactional
 public class AccessService {
 
     @Autowired

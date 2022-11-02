@@ -5,15 +5,12 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 public class PersonValidator extends Validator<Person> {
 
-    private WeeklyValidator weeklyValidator;
-
     public PersonValidator(ExpressionValidator expresionValidator) {
         super(expresionValidator);
-        this.weeklyValidator = new WeeklyValidator(expresionValidator, this);
     }
 
     @Override
-    public void fieldsValidation(Person entity) {
+    public void validate(Person entity) {
         /**
          * check nullability
          */
@@ -67,18 +64,5 @@ public class PersonValidator extends Validator<Person> {
 
         if (!this.getExpressionValidator().onlyNumbers(entity.getDni()))
             this.sendError("invalid person dni: only numbers allowed");
-    }
-
-    @Override
-    public void associationValidation(Person entity) {
-        /**
-         * there is no check needed.
-         */
-    }
-
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
-        this.weeklyValidator.closeFieldsValidation();
     }
 }
