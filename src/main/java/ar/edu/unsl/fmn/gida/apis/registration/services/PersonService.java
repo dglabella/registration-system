@@ -128,13 +128,13 @@ public class PersonService {
         Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
 
         if (personOptional.isPresent()) {
+
             try {
                 person.setId(personId);
                 if (person.getCurrentWeekly() != null) {
                     person.getCurrentWeekly().setPersonFk(personId);
-                    this.weeklyService.update(personId, person.getCurrentWeekly());
+                    this.weeklyService.insert(person.getCurrentWeekly());
                 }
-
                 this.personRepository.save(person);
 
             } catch (DataIntegrityViolationException exception) {
@@ -142,6 +142,7 @@ public class PersonService {
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
+
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(

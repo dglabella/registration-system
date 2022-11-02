@@ -33,22 +33,35 @@ PUT: localhost:8080/persons/553
     "personLastName": "PUTIN",
     "personName": "VLADIMIR",
     "dni": 25267262,
-    "currentWeekly": {
-        "monday":false,
-        "start": "2022-11-28T06:43:58.290+00:00"
-    },
     "roles":[1,2]
 }
 
 OR
+
 {
     "dependencyFk": 2,
     "personLastName": "PUTIN",
     "personName": "VLADIMIR",
     "dni": 25267262,
+    "currentWeekly": {
+        "monday":false,
+    },
     "roles":[1,2]
 }
 
+OR
+
+{
+    "dependencyFk": 2,
+    "personLastName": "PUTIN",
+    "personName": "VLADIMIR",
+    "dni": 25267262,
+    "currentWeekly": {
+        "monday":false,
+        "start": "2022-11-2T06:43:58.290+00:00"
+    },
+    "roles":[1,2]
+}
 ================================================================
 POST: localhost:8080/registers
 {
