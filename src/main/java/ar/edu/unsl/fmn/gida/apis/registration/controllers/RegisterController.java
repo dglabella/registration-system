@@ -32,7 +32,7 @@ public class RegisterController {
         return r;
     }
 
-    @GetMapping
+    @GetMapping(value = "/paged")
     public List<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
         if (!map.containsKey("from") && !map.containsKey("to")) {
             throw new ErrorResponse(
@@ -44,6 +44,26 @@ public class RegisterController {
 
         String from = map.get("from");
         String to = map.get("to");
+
+
+
+        return registers;
+    }
+
+    @GetMapping(value = "person/{id}/paged")
+    public List<Register> getRegistersBetweenDates(@PathVariable int id,
+            @RequestParam Map<String, String> map) {
+        if (!map.containsKey("from") && !map.containsKey("to")) {
+            throw new ErrorResponse(
+                    "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        List<Register> registers = null;
+
+        String from = map.get("from");
+        String to = map.get("to");
+
 
         return registers;
     }

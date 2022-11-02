@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
-import ar.edu.unsl.fmn.gida.apis.registration.responses.PersonPage;
+import ar.edu.unsl.fmn.gida.apis.registration.responses.PersonsPage;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
@@ -41,8 +41,8 @@ public class PersonController {
     }
 
     @GetMapping(value = "/paged")
-    public PersonPage getAll(@RequestParam Map<String, String> map) {
-        PersonPage personPage = new PersonPage();
+    public PersonsPage getAll(@RequestParam Map<String, String> map) {
+        PersonsPage personsPage = new PersonsPage();
         if (!map.containsKey("page")) {
             throw new ErrorResponse("must specify at least a page number", HttpStatus.BAD_REQUEST);
         } else if (!map.containsKey("quantity")) {
@@ -50,9 +50,9 @@ public class PersonController {
                 throw new ErrorResponse("page number must not be less than zero",
                         HttpStatus.BAD_REQUEST);
             } else {
-                personPage.setPageNumber(Integer.parseInt(map.get("page")));
-                personPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
-                personPage.setPersons(
+                personsPage.setPageNumber(Integer.parseInt(map.get("page")));
+                personsPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
+                personsPage.setResouces(
                         this.personService.getAll(Integer.parseInt(map.get("page")), 20));
             }
         } else {
@@ -60,13 +60,13 @@ public class PersonController {
                 throw new ErrorResponse("quantity number must not be less than zero",
                         HttpStatus.BAD_REQUEST);
             }
-            personPage.setPageNumber(Integer.parseInt(map.get("page")));
-            personPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
-            personPage.setPersons(this.personService.getAll(Integer.parseInt(map.get("page")),
+            personsPage.setPageNumber(Integer.parseInt(map.get("page")));
+            personsPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
+            personsPage.setResouces(this.personService.getAll(Integer.parseInt(map.get("page")),
                     Integer.parseInt(map.get("quantity"))));
         }
 
-        return personPage;
+        return personsPage;
     }
 
 

@@ -1,15 +1,15 @@
 package ar.edu.unsl.fmn.gida.apis.registration.responses;
 
 import java.util.List;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 
-public class PersonPage {
+public abstract class Page<T> {
+
     private int pageNumber;
     private int quantityPerPage;
 
-    private List<Person> persons;
+    private List<T> resouces;
 
-    public PersonPage() {}
+    public Page() {}
 
     public int getPageNumber() {
         return this.pageNumber;
@@ -27,11 +27,11 @@ public class PersonPage {
         this.quantityPerPage = quantityPerPage;
     }
 
-    public List<Person> getPersons() {
-        return this.persons;
+    public List<T> getResouces() {
+        return this.resouces;
     }
 
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
+    public void setResouces(List<T> resouces) {
+        this.resouces = resouces;
     }
 }
