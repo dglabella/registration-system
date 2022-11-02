@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
+import ar.edu.unsl.fmn.gida.apis.registration.responses.PersonPage;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
@@ -38,9 +39,8 @@ public class PersonController {
     }
 
     @GetMapping(value = "/paged")
-    public List<Person> getAll(@RequestParam Map<String, String> map) {
-        List<Person> persons = new ArrayList<>();
-
+    public PersonPage getAll(@RequestParam Map<String, String> map) {
+        PersonPage personPage = new PersonPage();
         if (!map.containsKey("page")) {
             throw new ErrorResponse("must specify at least a page number", HttpStatus.BAD_REQUEST);
         } else if (!map.containsKey("quantity")) {
@@ -48,18 +48,23 @@ public class PersonController {
                 throw new ErrorResponse("page number must not be less than zero",
                         HttpStatus.BAD_REQUEST);
             } else {
-                persons.addAll(this.personService.getAll(Integer.parseInt(map.get("page")), 20));
+                personPage.setPageNumber(Integer.parseInt(map.get("page")));
+                personPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
+                personPage.setPersons(
+                        this.personService.getAll(Integer.parseInt(map.get("page")), 20));
             }
         } else {
             if (Integer.parseInt(map.get("quantity")) < 0) {
                 throw new ErrorResponse("quantity number must not be less than zero",
                         HttpStatus.BAD_REQUEST);
             }
-            persons.addAll(this.personService.getAll(Integer.parseInt(map.get("page")),
+            personPage.setPageNumber(Integer.parseInt(map.get("page")));
+            personPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
+            personPage.setPersons(this.personService.getAll(Integer.parseInt(map.get("page")),
                     Integer.parseInt(map.get("quantity"))));
         }
 
-        return persons;
+        return personPage;
     }
 
     @GetMapping(value = "/dni/{dni}")
