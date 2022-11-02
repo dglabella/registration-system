@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "registers")
@@ -23,18 +24,18 @@ public class Register {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Register.PERSON_FK_NULLABLE)
     private Integer personFk;
 
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Register.ACCESS_FK_NULLABLE)
     private Integer accessFk;
 
     // ================================ attributes ================================
-    @Column(nullable = false)
+    @Column(nullable = Constraints.Register.CHECK_IN_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkIn;
 
-    @Column(nullable = true)
+    @Column(nullable = Constraints.Register.CHECK_OUT_NULLABLE)
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkOut;
 

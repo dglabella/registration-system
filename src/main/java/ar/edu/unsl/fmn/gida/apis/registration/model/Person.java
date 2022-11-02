@@ -39,7 +39,8 @@ public class Person {
             length = Constraints.Person.LAST_NAME_MAX_LENGHT)
     private String personLastName;
 
-    @Column(nullable = Constraints.Person.DNI_NULLABLE, unique = Constraints.Person.DNI_UNIQUE)
+    @Column(nullable = Constraints.Person.DNI_NULLABLE, unique = Constraints.Person.DNI_UNIQUE,
+            length = Constraints.Person.DNI_MAX_LENGHT)
     private String dni;
 
     // ================================== extras ==================================

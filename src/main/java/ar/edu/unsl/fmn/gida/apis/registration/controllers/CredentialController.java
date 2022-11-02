@@ -26,7 +26,6 @@ public class CredentialController {
     @GetMapping(value = "/{id}")
     public Credential getCredential(@PathVariable int id) {
         Credential credential = this.credentialService.getOne(id);
-        System.out.println("error aca serializando");
         return credential;
     }
 

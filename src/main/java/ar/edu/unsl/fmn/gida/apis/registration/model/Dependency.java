@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +26,7 @@ public class Dependency {
     private String description;
 
     // ================================== extras ==================================
-    @Column(nullable = Constraints.Dependency.ACTIVE_NULLABLE)
+    @Column(nullable = false)
     private boolean active = true;
 
     // ============================ model associations ============================

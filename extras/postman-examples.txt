@@ -11,10 +11,19 @@ POST: localhost:8080/persons
     "roles":[1,2]
 }
 
+OR
+"dependencyFk": 2,
+    "personLastName": "PUTIN",
+    "personName": "VLADIMIR",
+    "dni": 25267262,
+    "roles":[1,2]
+
 ================================================================
 search by:
 
-GET:localhost:8080/persons/search?dni=35069255
+GET:localhost:8080/persons/search?dni=20887534
+GET:localhost:8080/persons/search?name="VLADIMIR"
+GET:localhost:8080/persons/search?lastName="PUTIN"
 
 ================================================================
 PUT: localhost:8080/persons/553
@@ -31,10 +40,23 @@ PUT: localhost:8080/persons/553
     "roles":[1,2]
 }
 
+OR
+{
+    "dependencyFk": 2,
+    "personLastName": "PUTIN",
+    "personName": "VLADIMIR",
+    "dni": 25267262,
+    "roles":[1,2]
+}
+
 ================================================================
-POST: localhost:8080/registers/
+POST: localhost:8080/registers
 {
     "accessFk": 5,
     "encryptedData": "za2mnzTM+UUdISufKQMaRPtF7lmUrLP+0F4hbNeeJpqdEwQmzDyZHqDYi6XgEWfR"
 }
 ================================================================
+POST: localhost:8080/users
+{
+    
+}

@@ -10,8 +10,7 @@ public class CredentialValidator extends Validator<Credential> {
     }
 
     @Override
-    public void fieldsValidation(Credential entity) {
-        // TODO Auto-generated method stub
+    public void validate(Credential entity) {
         /**
          * check nullability
          */
@@ -19,17 +18,12 @@ public class CredentialValidator extends Validator<Credential> {
         if (!(entity.getPersonFk() != null || Constraints.Credential.PERSON_FK_NULLABLE))
             this.sendError("credential person id is required");
 
-    }
-
-    @Override
-    public void associationValidation(Credential entity) {
         /**
-         * there is no check needed.
+         * check size
          */
-    }
 
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
+        /**
+         * check pattern
+         */
     }
 }

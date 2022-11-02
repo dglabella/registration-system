@@ -10,7 +10,7 @@ public class AccessValidator extends Validator<Access> {
     }
 
     @Override
-    public void fieldsValidation(Access entity) {
+    public void validate(Access entity) {
         /**
          * check nullability
          */
@@ -31,17 +31,5 @@ public class AccessValidator extends Validator<Access> {
             this.sendError("invalid access name: must contain between "
                     + Constraints.Access.NAME_MIN_LENGHT + " and "
                     + Constraints.Access.NAME_MAX_LENGHT + " characters");
-    }
-
-    @Override
-    public void associationValidation(Access entity) {
-        /**
-         * there is no check needed.
-         */
-    }
-
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
     }
 }

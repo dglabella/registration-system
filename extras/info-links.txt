@@ -11,6 +11,7 @@ https://www.baeldung.com/transaction-configuration-with-jpa-and-spring
 https://docs.spring.io/spring-framework/docs/5.1.8.RELEASE/spring-framework-reference/data-access.html#transaction-declarative-annotations
 https://stackoverflow.com/questions/23132822/what-is-the-difference-between-defining-transactional-on-class-vs-method
 https://www.baeldung.com/spring-transactional-propagation-isolation
+https://stackoverflow.com/questions/58207105/spring-transactional-service-what-happens-if-it-calls-another-transactional-s
 
 https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html
 (Attribute Semantics: If no custom rollback rules are configured in this annotation, the transaction will roll back on 

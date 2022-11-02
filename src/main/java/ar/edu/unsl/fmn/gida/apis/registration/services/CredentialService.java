@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.CredentialRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.CredentialValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 
 @Service
 @Transactional
@@ -16,6 +18,9 @@ public class CredentialService {
 
     @Autowired
     private CredentialRepository credentialRepository;
+
+    private CredentialValidator credentialValidator =
+            new CredentialValidator(new CustomExpressionValidator());
 
     public Credential getOne(int id) {
         Credential credential = null;
@@ -33,8 +38,8 @@ public class CredentialService {
     }
 
     public Credential insert(Credential credential) {
-        throw new ErrorResponse("insert credential operation not implemented yet...",
-                HttpStatus.NOT_IMPLEMENTED);
+        this.credentialValidator.validate(credential);
+        return this.credentialRepository.save(credential);
     }
 
     public Credential update(int id, Credential credential) {

@@ -16,9 +16,15 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     Optional<Person> findByIdAndActiveIsTrue(Integer id);
 
-    Optional<Person> findByDniAndActiveTrue(String dni);
+    Optional<Person> findByDniAndActiveIsTrue(String dni);
 
-    List<Person> findAllByPersonNameAndActiveTrue(String name);
+    List<Person> findByDniContainingAndActiveIsTrue(String dniPattern);
 
-    List<Person> findAllByPersonLastNameAndActiveTrue(String lastName);
+    List<Person> findAllByPersonNameAndActiveIsTrue(String name);
+
+    List<Person> findAllByPersonLastNameAndActiveIsTrue(String lastName);
+
+    List<Person> findAllByPersonNameContainingAndActiveIsTrue(String namePattern);
+
+    List<Person> findAllByPersonLastNameContainingAndActiveIsTrue(String lastNamePattern);
 }
