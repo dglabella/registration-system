@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,19 +48,25 @@ public class PersonController {
         return persons;
     }
 
-    @GetMapping
-    public List<Person> getAllPersons(@RequestParam Map<String, String> map) {
-        if (!map.containsKey("page") || !map.containsKey("quantity")) {
-            throw new ErrorResponse(
-                    "when request for paginated resources, must be specified page number, and quantity per page.",
-                    HttpStatus.BAD_REQUEST);
-        }
+    @GetMapping("/paged")
+    public Page <Person> getAllPersons(Pageable pageable) {
+  
 
-        String page = map.get("page");
-        String quantityPerPage = map.get("quantity");
-
-        return this.personService.getAll(Integer.parseInt(page), Integer.parseInt(quantityPerPage));
+        return this.personService.getAll(pageable);
     }
+
+    // public List<Person> getAllPersons(@RequestParam Map<String, String> map) {
+    //     if (!map.containsKey("page") || !map.containsKey("quantity")) {
+    //         throw new ErrorResponse(
+    //                 "when request for paginated resources, must be specified page number, and quantity per page.",
+    //                 HttpStatus.BAD_REQUEST);
+    //     }
+
+    //     String page = map.get("page");
+    //     String quantityPerPage = map.get("quantity");
+
+    //     return this.personService.getAll(Integer.parseInt(page), Integer.parseInt(quantityPerPage));
+    // }
 
     @PostMapping
     public Person postPerson(@RequestBody Person person) {
