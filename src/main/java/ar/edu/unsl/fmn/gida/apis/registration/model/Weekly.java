@@ -64,7 +64,7 @@ public class Weekly {
     // ============================ model associations ============================
     @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
             updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JsonBackReference
     private Person person;
 

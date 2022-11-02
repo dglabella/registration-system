@@ -15,7 +15,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonDecryptedDataInterpreter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.RegisterValidator;
 
@@ -26,9 +26,11 @@ public class RegisterService {
     @Autowired
     private RegisterRepository registerRepository;
 
+    private RegisterValidator registerValidator =
+            new RegisterValidator(new CustomExpressionValidator());
+
     private Cypher cypher = new CustomCypher();
-    private PersonDecryptedDataInterpreter personDecryptedDataInterpreter =
-            new PersonDecryptedDataInterpreter();
+    private PersonConverter personConverter = new PersonConverter();
 
     public Register getOne(int id) {
         Register r = null;
@@ -43,26 +45,26 @@ public class RegisterService {
         return r;
     }
 
-    public List<Register> getAll() {
-        return registerRepository.findAll();
+    public List<Register> getAll(String from, String to) {
+        return this.registerRepository.findAll();
     }
 
     public List<Register> getRegistersFromPerson(int id) {
-        List<Register> r = registerRepository.findAllByPersonIdAndActiveTrue(id);
+        List<Register> r = this.registerRepository.findAllByPersonIdAndActiveTrue(id);
 
         return r;
     }
 
     public Register insert(Register register) {
-        new RegisterValidator(new CustomExpressionValidator()).validate(register);
+        this.registerValidator.validate(register);
         Person person = null;
         Register r1 = new Register();
         Register r2 = null;
         Optional<Register> optional;
 
         try {
-            person = this.personDecryptedDataInterpreter
-                    .interpret(this.cypher.decrypt(register.getEncryptedData()));
+            person = this.personConverter
+                    .objectify(this.cypher.decrypt(register.getEncryptedData()));
 
             optional = this.registerRepository
                     .findByPersonFkAndCheckOutIsNullAndActiveIsTrue(person.getId());
@@ -73,14 +75,14 @@ public class RegisterService {
                 r1.setAccessFk(optional.get().getAccessFk());
                 r1.setCheckIn(optional.get().getCheckIn());
                 r1.setCheckOut(new Date());
-                r1 = registerRepository.save(r1);
+                r1 = this.registerRepository.save(r1);
 
                 if (register.getAccessFk() != optional.get().getAccessFk()) {
                     r2 = new Register();
                     r2.setPersonFk(person.getId());
                     r2.setAccessFk(register.getAccessFk());
                     r2.setCheckIn(new Date());
-                    r2 = registerRepository.save(r2);
+                    r2 = this.registerRepository.save(r2);
                 }
             } else {
                 r1.setPersonFk(person.getId());

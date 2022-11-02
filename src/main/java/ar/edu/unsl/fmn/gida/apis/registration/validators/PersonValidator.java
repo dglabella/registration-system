@@ -5,19 +5,16 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 public class PersonValidator extends Validator<Person> {
 
-    private WeeklyValidator weeklyValidator;
-
     public PersonValidator(ExpressionValidator expresionValidator) {
         super(expresionValidator);
-        this.weeklyValidator = new WeeklyValidator(expresionValidator, this);
     }
 
     @Override
-    public void fieldsValidation(Person entity) {
+    public void validate(Person entity) {
         /**
          * check nullability
          */
-        if (entity.getDependencyFk() == null)
+        if (!(entity.getDependencyFk() != null || Constraints.Person.DEPENDENCY_FK_NULLABLE))
             this.sendError("person dependency id is required");
 
         if (!(this.getExpressionValidator().isPresent(entity.getPersonName())
@@ -31,9 +28,6 @@ public class PersonValidator extends Validator<Person> {
         if (!(this.getExpressionValidator().isPresent(entity.getDni())
                 || Constraints.Person.DNI_NULLABLE))
             this.sendError("person dni is required");
-
-        if (entity.getCurrentWeekly() == null)
-            this.sendError("person current weekly is required");
 
         if (entity.getRoles() == null || entity.getRoles().size() == 0)
             this.sendError("person requires at least one role");
@@ -70,16 +64,5 @@ public class PersonValidator extends Validator<Person> {
 
         if (!this.getExpressionValidator().onlyNumbers(entity.getDni()))
             this.sendError("invalid person dni: only numbers allowed");
-    }
-
-    @Override
-    public void associationValidation(Person entity) {
-        this.weeklyValidator.validate(entity.getCurrentWeekly());
-    }
-
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
-        this.weeklyValidator.closeFieldsValidation();
     }
 }

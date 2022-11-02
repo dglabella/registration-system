@@ -6,6 +6,19 @@
 
 4 - @Transactional how it really works, search info.
 
-5 - weekly validator: pattern validation start timestamp
+5 - post weekly: default weekly creation if the api recieve null at "currentWeekly"
 
-6 - log file for errors
+6 - check integrity with dates in "weelkly"
+
+7 - is findAllByActiveIsTrue or findAllAndActiveIsTrue ?
+
+8 - validation: what about names/lastnames like d'alessandro
+
+9 - if person fields are updated, what about the QR information? should generate another one ?
+
+8 - transient variables should not have setters and getters methods names beginning with "get..." or "set..."?
+
+9 - check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
+written in caller or in caller or callee?
+
+10 - log file for errors

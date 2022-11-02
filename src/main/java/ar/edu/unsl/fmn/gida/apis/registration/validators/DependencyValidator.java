@@ -10,7 +10,7 @@ public class DependencyValidator extends Validator<Dependency> {
     }
 
     @Override
-    public void fieldsValidation(Dependency entity) {
+    public void validate(Dependency entity) {
         /**
          * check nullability
          */
@@ -36,13 +36,5 @@ public class DependencyValidator extends Validator<Dependency> {
             this.sendError("invalid dependency description: must contain between "
                     + Constraints.Dependency.NAME_MIN_LENGHT + " and "
                     + Constraints.Dependency.NAME_MAX_LENGHT + " characters");
-    }
-
-    @Override
-    public void associationValidation(Dependency entity) {}
-
-    @Override
-    public void close() {
-        this.closeFieldsValidation();
     }
 }

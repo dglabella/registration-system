@@ -7,4 +7,5 @@ public class Endpoint {
     public final static String dependencies = "dependencies";
     public final static String weeklies = "weeklies";
     public final static String users = "users";
+    public final static String credentials = "credentials";
 }

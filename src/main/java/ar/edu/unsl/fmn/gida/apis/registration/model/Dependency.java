@@ -26,7 +26,7 @@ public class Dependency {
     private String description;
 
     // ================================== extras ==================================
-    @Column(nullable = Constraints.Dependency.ACTIVE_NULLABLE)
+    @Column(nullable = false)
     private boolean active = true;
 
     // ============================ model associations ============================

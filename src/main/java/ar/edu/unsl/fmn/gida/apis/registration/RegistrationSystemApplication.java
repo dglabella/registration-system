@@ -8,21 +8,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.InterpretationException;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigFileInterpreter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigFileConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 
 @SpringBootApplication
 public class RegistrationSystemApplication {
 
 	private void createQr() {
-		CustomQRGenerator qrGenerator = new CustomQRGenerator(new CustomCypher());
-		File file = new File(System.getProperty("user.dir") + "/qrs/" + "daniloQR" + ".png");
+		Cypher cypher = new CustomCypher();
+		CustomQRGenerator qrGenerator = new CustomQRGenerator();
+		File file = new File(System.getProperty("user.dir") + "/qrs/" + "matthewQr" + ".png");
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
-			fileOutputStream
-					.write(qrGenerator.generate("7243-32775983-BRINGHAMM-MATTHEW", 350, 350));
+			fileOutputStream.write(qrGenerator
+					.generate(cypher.encrypt("7243-32775983-BRINGHAMM-MATTHEW"), 350, 350));
 			fileOutputStream.flush();
 			fileOutputStream.close();
 		} catch (Exception e) {

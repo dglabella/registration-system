@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
@@ -31,8 +33,18 @@ public class RegisterController {
     }
 
     @GetMapping
-    public List<Register> getAllRegister() {
-        List<Register> registers = registerService.getAll();
+    public List<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
+        if (!map.containsKey("from") && !map.containsKey("to")) {
+            throw new ErrorResponse(
+                    "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        List<Register> registers = null;
+
+        String from = map.get("from");
+        String to = map.get("to");
+
         return registers;
     }
 
