@@ -22,13 +22,26 @@ public class CredentialService {
     private CredentialValidator credentialValidator =
             new CredentialValidator(new CustomExpressionValidator());
 
-    public Credential getOne(int id) {
+    public Credential getOne(Integer id) {
         Credential credential = null;
         Optional<Credential> optional = this.credentialRepository.findByIdAndActiveIsTrue(id);
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
             throw new ErrorResponse("there is no credential with id: " + id, HttpStatus.NOT_FOUND);
+        }
+        return credential;
+    }
+
+    public Credential getOneByPersonId(Integer personId) {
+        Credential credential = null;
+        Optional<Credential> optional =
+                this.credentialRepository.findByPersonIdAndActiveIsTrue(personId);
+        if (optional.isPresent()) {
+            credential = optional.get();
+        } else {
+            throw new ErrorResponse("FATAL ERROR: there is no credential with id: " + personId,
+                    HttpStatus.NOT_FOUND);
         }
         return credential;
     }

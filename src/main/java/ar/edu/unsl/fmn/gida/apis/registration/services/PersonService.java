@@ -38,10 +38,10 @@ public class PersonService {
     public Person getOne(int id) {
         Person person = null;
         Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
-
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
+            person.setCredential(this.credentialService.getOne(id));
         } else {
             throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
         }
@@ -90,9 +90,15 @@ public class PersonService {
 
 
     public List<Person> getAll(int page, int quantityPerPage) {
-        // Pageable pageable = PageRequest.of(page, quantityPerPage);
-        // List<Person> persons = this.personRepository.findAllByActiveTrue(pageable);
-        return this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
+        List<Person> persons =
+                this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
+
+        for (Person person : persons) {
+            person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
+            person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+        }
+
+        return persons;
     }
 
     public Person insert(Person person) {

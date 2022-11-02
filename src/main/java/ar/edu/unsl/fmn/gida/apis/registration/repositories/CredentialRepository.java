@@ -12,4 +12,6 @@ public interface CredentialRepository extends JpaRepository<Credential, Integer>
     List<Credential> findAllByActiveIsTrue();
 
     Optional<Credential> findByIdAndActiveIsTrue(Integer id);
+
+    Optional<Credential> findByPersonIdAndActiveIsTrue(Integer personId);
 }
