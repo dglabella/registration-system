@@ -37,20 +37,30 @@ public class PersonController {
         return ret;
     }
 
-    // @GetMapping(value = "/search")
-    // public List<Person> search(@RequestParam Map<String, String> map) {
-    // List<Person> persons = new ArrayList<>();
+    @GetMapping(value = "/paged")
+    public List<Person> getAll(@RequestParam Map<String, String> map) {
+        List<Person> persons = new ArrayList<>();
 
-    // if (map.containsKey("dni")) {
-    // persons.add(this.personService.getOneByDni(map.get("dni")));
-    // } else if (map.containsKey("name")) {
-    // persons = this.personService.getAllWithName(map.get("name"));
-    // } else if (map.containsKey("lastName")) {
-    // persons = this.personService.getAllWithLastName(map.get("lastName"));
-    // }
+        if (!map.containsKey("page")) {
+            throw new ErrorResponse("must specify at least a page number", HttpStatus.BAD_REQUEST);
+        } else if (!map.containsKey("quantity")) {
+            if (Integer.parseInt(map.get("page")) < 0) {
+                throw new ErrorResponse("page number must not be less than zero",
+                        HttpStatus.BAD_REQUEST);
+            } else {
+                persons.addAll(this.personService.getAll(Integer.parseInt(map.get("page")), 20));
+            }
+        } else {
+            if (Integer.parseInt(map.get("quantity")) < 0) {
+                throw new ErrorResponse("quantity number must not be less than zero",
+                        HttpStatus.BAD_REQUEST);
+            }
+            persons.addAll(this.personService.getAll(Integer.parseInt(map.get("page")),
+                    Integer.parseInt(map.get("quantity"))));
+        }
 
-    // return persons;
-    // }
+        return persons;
+    }
 
     @GetMapping(value = "/dni/{dni}")
     public Person getPersonByDni(@PathVariable String dni) {
@@ -68,7 +78,7 @@ public class PersonController {
     }
 
     @GetMapping(value = "/search")
-    public List<Person> approachSearch(@RequestParam Map<String, String> map) {
+    public List<Person> search(@RequestParam Map<String, String> map) {
         List<Person> persons = new ArrayList<>();
 
         if (map.containsKey("dni")) {
@@ -80,11 +90,6 @@ public class PersonController {
         }
 
         return persons;
-    }
-
-    @GetMapping(value = "/page={page},quantity={quantity}")
-    public List<Person> getAllPaginated(@PathVariable int page, @PathVariable int quantity) {
-        return this.personService.getAll(page, quantity);
     }
 
     @PostMapping
