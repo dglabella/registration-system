@@ -56,25 +56,18 @@ public class WeeklyService {
     public Weekly insert(Weekly weekly) {
         // if (weekly != null) {
         this.weeklyValidator.validate(weekly);
-        Weekly w = this.getCurrentWeeklyFromPerson(weekly.getPersonFk());
         try {
-            if (!weekly.equals(w)) {
-                // updates in database
-                w.setEnd(new Date());
-                // then save the new weekly
-                if (weekly.getStart() == null) {
-                    weekly.setStart(new Date());
-                } else {
-                    // check if start date is ok for the new weekly
-                    if (weekly.getStart().compareTo(new Date()) >= 0) {
-                        this.weeklyRepository.save(weekly);
-                    } else {
-                        throw new ErrorResponse(
-                                "cannot insert/update a new weekly with start datetime before the current clock ",
-                                HttpStatus.UNPROCESSABLE_ENTITY);
-                    }
-                }
+            // then save the new weekly
+            if (weekly.getStart() == null) {
+                weekly.setStart(new Date());
+            } else if (weekly.getStart().compareTo(new Date()) < 0) {
+                // check if start date is ok for the new weekly
+                throw new ErrorResponse(
+                        "cannot insert/update a new weekly with start datetime before the current clock ",
+                        HttpStatus.UNPROCESSABLE_ENTITY);
             }
+            this.weeklyRepository.save(weekly);
+
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
@@ -85,8 +78,31 @@ public class WeeklyService {
     }
 
     public Weekly update(Integer personId, Weekly weekly) {
-        throw new ErrorResponse("service restricted by bussines logic reasons",
-                HttpStatus.METHOD_NOT_ALLOWED);
+        // if (weekly != null) {
+        this.weeklyValidator.validate(weekly);
+        Weekly w = this.getCurrentWeeklyFromPerson(weekly.getPersonFk());
+        try {
+            if (!weekly.equals(w)) {
+                // updates in database
+                w.setEnd(new Date());
+                // then save the new weekly
+                if (weekly.getStart() == null) {
+                    weekly.setStart(new Date());
+                } else if (weekly.getStart().compareTo(new Date()) < 0) {
+                    // check if start date is ok for the new weekly
+                    throw new ErrorResponse(
+                            "cannot insert/update a new weekly with start datetime before the current clock ",
+                            HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+                this.weeklyRepository.save(weekly);
+            }
+        } catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        // }
+        return weekly;
     }
 
     public Weekly delete(int id) {

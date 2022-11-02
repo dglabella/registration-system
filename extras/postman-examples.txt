@@ -1,7 +1,31 @@
-POST: localhost:8080/persons
+POST: localhost:8080/accesses/
 
 {
+    "accessName":"RECTORADO",
+    "description":"PUERTA CAJERO"
+}
+
+================================================================
+POST: localhost:8080/dependencies
+
+{
+    "dependencyName": "COMEDOR"
+}
+
+================================================================
+POST: localhost:8080/persons
+{
     "dependencyFk": 2,
+    "personLastName": "SCHAUWSN",
+    "personName": "PABLO",
+    "dni": 30129998,
+    "roles":[1]
+}
+
+OR
+
+{
+    "dependencyFk": 1,
     "personLastName": "PUTIN",
     "personName": "VLADIMIR",
     "dni": 25267262,
@@ -12,62 +36,83 @@ POST: localhost:8080/persons
 }
 
 OR
-"dependencyFk": 2,
-    "personLastName": "PUTIN",
-    "personName": "VLADIMIR",
-    "dni": 25267262,
-    "roles":[1,2]
-
-================================================================
-search by:
-
-GET:localhost:8080/persons/search?dni=20887534
-GET:localhost:8080/persons/search?name="VLADIMIR"
-GET:localhost:8080/persons/search?lastName="PUTIN"
-
-================================================================
-PUT: localhost:8080/persons/553
 
 {
-    "dependencyFk": 2,
-    "personLastName": "PUTIN",
-    "personName": "VLADIMIR",
-    "dni": 25267262,
-    "roles":[1,2]
-}
-
-OR
-
-{
-    "dependencyFk": 2,
-    "personLastName": "PUTIN",
-    "personName": "VLADIMIR",
-    "dni": 25267262,
+    "dependencyFk": 4,
+    "personLastName": "CASTILLA",
+    "personName": "NAHUEL",
+    "dni": 33987451,
     "currentWeekly": {
-        "monday":false,
+        "monday": false,
+        "start": "2022-11-03T19:54:33.331+00:00"
     },
-    "roles":[1,2]
+    "roles":[1]
 }
 
-OR
-
-{
-    "dependencyFk": 2,
-    "personLastName": "PUTIN",
-    "personName": "VLADIMIR",
-    "dni": 25267262,
-    "currentWeekly": {
-        "monday":false,
-        "start": "2022-11-2T06:43:58.290+00:00"
-    },
-    "roles":[1,2]
-}
 ================================================================
 POST: localhost:8080/registers
 {
-    "accessFk": 5,
-    "encryptedData": "za2mnzTM+UUdISufKQMaRPtF7lmUrLP+0F4hbNeeJpqdEwQmzDyZHqDYi6XgEWfR"
+    "accessFk": 4,
+    "encryptedData": "d8vRxfyUD/QpdsOgO0k7cmmQQY6W3cGTJKDz0bWVIi9Voz1C43FMsZyf/WWrdlhY"
 }
+
+================================================================
+PUT: localhost:8080/persons/26
+{
+    "dependencyFk": 4,
+    "personLastName": "CASTILLA",
+    "personName": "NAHUEL",
+    "dni": 33987451,
+    "roles":[1]
+}
+
+OR
+
+{
+    "dependencyFk": 4,
+    "personLastName": "CASTILLA",
+    "personName": "NAHUEL",
+    "dni": 33987451,
+    "currentWeekly": {
+        "monday": true,
+        "tuesday": false
+    },
+    "roles":[1]
+}
+
+OR
+
+{
+    "dependencyFk": 4,
+    "personLastName": "CASTILLA",
+    "personName": "NAHUEL",
+    "dni": 33987451,
+    "currentWeekly": {
+        "monday": true,
+        "tuesday": false,
+        "start": "2022-11-03T19:54:33.331+00:00"
+    },
+    "roles":[1]
+}
+================================================================
+GET: localhost:8080/persons/paged?page=0&quantity=5
+
+get all persons (paged)
+
+================================================================
+approach search:
+GET: localhost:8080/persons/search?lastName=RA
+
+================================================================
+find by:
+
+GET: localhost:8080/persons/dni/20887534
+GET:localhost:8080/persons/name/VLADIMIR
+GET:localhost:8080/persons/lastName/PUTIN
+================================================================
+get QR:
+
+GET: localhost:8080/credentials/23
 ================================================================
 POST: localhost:8080/users
 {
