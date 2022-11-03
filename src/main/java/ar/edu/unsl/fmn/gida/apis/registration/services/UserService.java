@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.UserValidator;
 
@@ -41,9 +42,9 @@ public class UserService {
 
     public User insert(User user) {
         this.validator.validate(user);
-
         User u = null;
         try {
+            user.setPassword(new CustomCypher().encrypt(user.getPassword()));
             u = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();

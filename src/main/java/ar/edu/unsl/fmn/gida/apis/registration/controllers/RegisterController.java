@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.responses.RegistersPage;
 import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 
 @RestController
@@ -33,25 +34,24 @@ public class RegisterController {
     }
 
     @GetMapping(value = "/paged")
-    public List<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
+    public RegistersPage getRegistersBetweenDates(@RequestParam Map<String, String> map) {
         if (!map.containsKey("from") && !map.containsKey("to")) {
             throw new ErrorResponse(
                     "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
                     HttpStatus.BAD_REQUEST);
         }
-
-        List<Register> registers = null;
+        RegistersPage page = new RegistersPage();
 
         String from = map.get("from");
         String to = map.get("to");
 
+        this.registerService.getAll(from, to);
 
-
-        return registers;
+        return page;
     }
 
     @GetMapping(value = "person/{id}/paged")
-    public List<Register> getRegistersBetweenDates(@PathVariable int id,
+    public List<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
             @RequestParam Map<String, String> map) {
         if (!map.containsKey("from") && !map.containsKey("to")) {
             throw new ErrorResponse(

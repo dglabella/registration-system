@@ -28,6 +28,19 @@ POST: localhost:8080/persons
 OR
 
 {
+    "dependencyFk": 4,
+    "personLastName": "CASTILLA",
+    "personName": "NAHUEL",
+    "dni": 33987451,
+    "currentWeekly": {
+        "monday": false,
+    },
+    "roles":[1]
+}
+
+OR
+
+{
     "dependencyFk": 1,
     "personLastName": "PUTIN",
     "personName": "VLADIMIR",
@@ -83,6 +96,20 @@ OR
     "roles":[1]
 }
 
+
+OR
+
+{
+    "dependencyFk": 4,
+    "personLastName": "CASTILLA",
+    "personName": "NAHUEL",
+    "dni": 33987451,
+    "currentWeekly": {
+        "start": "2022-11-03T19:54:33.331+00:00"
+    },
+    "roles":[1]
+}
+
 OR
 
 {
@@ -97,6 +124,7 @@ OR
     },
     "roles":[1]
 }
+
 ================================================================
 GET: localhost:8080/persons/paged?page=0&quantity=5
 
