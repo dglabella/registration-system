@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +22,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 @RestController
 @RequestMapping(value = Endpoint.registers)
 public class RegisterController {
+
+    private final int DEFAULT_QUANTITY_PER_PAGE = 100;
 
     @Autowired
     private RegisterService registerService;
@@ -50,22 +51,32 @@ public class RegisterController {
         return page;
     }
 
-    @GetMapping(value = "person/{id}/paged")
-    public List<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
+    @GetMapping(value = "person/{id}/bewtween")
+    public RegistersPage getRegistersFromPersonBetweenDates(@PathVariable int id,
             @RequestParam Map<String, String> map) {
+        RegistersPage registersPage = new RegistersPage();
+        String from = map.get("from");
+        String to = map.get("to");
+
         if (!map.containsKey("from") && !map.containsKey("to")) {
             throw new ErrorResponse(
                     "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
                     HttpStatus.BAD_REQUEST);
+        } else if (!map.containsKey("page") && !map.containsKey("quantity")) {
+            registersPage.setPageNumber(-1);
+            registersPage.setQuantityPerPage(-1);
+            registersPage.setResouces(this.registerService.getAll(from, to));
+        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
+            registersPage.setPageNumber(Integer.parseInt(map.get("page")));
+            registersPage.setQuantityPerPage(this.DEFAULT_QUANTITY_PER_PAGE);
+            registersPage.setResouces(this.registerService.getAll(from, to));
+        } else if (map.containsKey("page")) {
+
         }
 
-        List<Register> registers = null;
+        this.registerService.getAll(from, to);
 
-        String from = map.get("from");
-        String to = map.get("to");
-
-
-        return registers;
+        return registersPage;
     }
 
     @PostMapping

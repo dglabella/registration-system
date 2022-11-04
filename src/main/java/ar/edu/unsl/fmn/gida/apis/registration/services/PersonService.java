@@ -34,15 +34,16 @@ public class PersonService {
 
     private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
-    public Person getOne(int id) {
+    public Person getOne(int personId) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
-            person.setCredential(this.credentialService.getOne(id));
+            person.setCredential(this.credentialService.getOneByPersonId(personId));
         } else {
-            throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse("there is no person with id: " + personId,
+                    HttpStatus.NOT_FOUND);
         }
 
         return person;

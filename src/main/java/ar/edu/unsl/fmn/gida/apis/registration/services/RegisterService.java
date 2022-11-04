@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +50,18 @@ public class RegisterService {
         return this.registerRepository.findAll();
     }
 
-    public List<Register> getRegistersFromPerson(int id) {
-        List<Register> r = this.registerRepository.findAllByPersonIdAndActiveTrue(id);
+    public List<Register> getRegistersFromPerson(Integer personId) {
+        return this.registerRepository.findAllByPersonIdAndActiveTrue(personId);
+    }
 
-        return r;
+    public List<Register> getRegistersFromPerson(Integer personId, Date from, Date to, int page,
+            int quantityPerPage) {
+
+        // List<Register> r = this.registerRepository.findAllByPersonFkCheckInBetween(personId,
+        // from,
+        // to, PageRequest.of(page, quantityPerPage));
+
+        return null;
     }
 
     public Register insert(Register register) {
