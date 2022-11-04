@@ -80,7 +80,8 @@ public class WeeklyService {
     public Weekly update(Integer personId, Weekly weekly) {
         // if (weekly != null) {
         this.weeklyValidator.validate(weekly);
-        Weekly w = this.getCurrentWeeklyFromPerson(weekly.getPersonFk());
+        Weekly ret = null;
+        Weekly w = this.getCurrentWeeklyFromPerson(personId);
         try {
             if (!weekly.equals(w)) {
                 // updates in database
@@ -94,7 +95,7 @@ public class WeeklyService {
                             "cannot insert/update a new weekly with start datetime before the current clock ",
                             HttpStatus.UNPROCESSABLE_ENTITY);
                 }
-                this.weeklyRepository.save(weekly);
+                ret = this.weeklyRepository.save(weekly);
             }
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
@@ -102,7 +103,7 @@ public class WeeklyService {
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
         // }
-        return weekly;
+        return ret;
     }
 
     public Weekly delete(int id) {

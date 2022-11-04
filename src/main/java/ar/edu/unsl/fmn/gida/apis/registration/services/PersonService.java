@@ -34,15 +34,16 @@ public class PersonService {
 
     private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
-    public Person getOne(int id) {
+    public Person getOne(int personId) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
-            person.setCredential(this.credentialService.getOne(id));
+            person.setCredential(this.credentialService.getOneByPersonId(personId));
         } else {
-            throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse("there is no person with id: " + personId,
+                    HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -130,25 +131,23 @@ public class PersonService {
 
     public Person update(int personId, Person person) {
         this.personValidator.validate(person);
-
+        Person ret = null;
         Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
 
         if (personOptional.isPresent()) {
-
             try {
                 person.setId(personId);
                 if (person.getCurrentWeekly() != null) {
                     person.getCurrentWeekly().setPersonFk(personId);
-                    this.weeklyService.insert(person.getCurrentWeekly());
+                    person.setCurrentWeekly(
+                            this.weeklyService.update(personId, person.getCurrentWeekly()));
                 }
-                this.personRepository.save(person);
-
+                ret = this.personRepository.save(person);
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
-
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
