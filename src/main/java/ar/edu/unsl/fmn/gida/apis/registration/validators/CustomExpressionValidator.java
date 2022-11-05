@@ -9,7 +9,7 @@ public class CustomExpressionValidator implements ExpressionValidator {
     public CustomExpressionValidator() {}
 
     public boolean isPresent(String string) {
-        return string != null && !string.isBlank();
+        return string != null && !string.trim().isEmpty();
     }
 
     public boolean onlyNumbers(String string) {
