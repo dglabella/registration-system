@@ -114,7 +114,6 @@ public class PersonService {
             credential.setImg(new CustomQRGenerator().generate(credential.getData(), 350, 350));
             // save qr
             person.setCredential(this.credentialService.insert(credential));
-
             if (person.getCurrentWeekly() == null) {
                 // setting default weekly
                 person.setCurrentWeekly(new Weekly());
@@ -143,6 +142,12 @@ public class PersonService {
                             this.weeklyService.update(personId, person.getCurrentWeekly()));
                 }
                 ret = this.personRepository.save(person);
+                
+                //CRISTIAN 04-11-2022
+                ret.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
+                ret.setCredential(this.credentialService.getOneByPersonId(personId));
+                // END CRISTIAN 04-11-2022
+       
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
@@ -154,7 +159,10 @@ public class PersonService {
                     "cannot update person with id " + personId + " because it doesn't exist",
                     HttpStatus.NOT_FOUND);
         }
-        return person;
+        //CRISTIAN 04-11-2022
+        	//return person;
+        return ret;
+        // END CRISTIAN 04-11-2022
     }
 
     public Person delete(int id) {

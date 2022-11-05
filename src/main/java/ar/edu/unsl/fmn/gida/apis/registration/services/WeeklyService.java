@@ -62,9 +62,15 @@ public class WeeklyService {
                 weekly.setStart(new Date());
             } else if (weekly.getStart().compareTo(new Date()) < 0) {
                 // check if start date is ok for the new weekly
-                throw new ErrorResponse(
-                        "cannot insert/update a new weekly with start datetime before the current clock ",
+                
+            	//CRISTIAN 04-11-2022
+            	throw new ErrorResponse(
+                        "No es posible insertar/actualizar un calendario con fecha de inicio anterior al día de hoy inclusive",
                         HttpStatus.UNPROCESSABLE_ENTITY);
+            	/*throw new ErrorResponse(
+                        "cannot insert/update a new weekly with start datetime before the current clock ",
+                        HttpStatus.UNPROCESSABLE_ENTITY);*/
+            	//END CRISTIAN 04-11-2022
             }
             this.weeklyRepository.save(weekly);
 
@@ -91,9 +97,14 @@ public class WeeklyService {
                     weekly.setStart(new Date());
                 } else if (weekly.getStart().compareTo(new Date()) < 0) {
                     // check if start date is ok for the new weekly
-                    throw new ErrorResponse(
-                            "cannot insert/update a new weekly with start datetime before the current clock ",
+                	//CRISTIAN 04-11-2022
+                	throw new ErrorResponse(
+                            "No es posible insertar/actualizar un calendario con fecha de inicio anterior al día de hoy inclusive",
                             HttpStatus.UNPROCESSABLE_ENTITY);
+                	/*throw new ErrorResponse(
+                            "cannot insert/update a new weekly with start datetime before the current clock ",
+                            HttpStatus.UNPROCESSABLE_ENTITY);*/
+                	//END CRISTIAN 04-11-2022
                 }
                 ret = this.weeklyRepository.save(weekly);
             }

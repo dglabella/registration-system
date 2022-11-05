@@ -44,19 +44,20 @@ public class RegistrationSystemApplication {
 		// }
 	}
 
-	@Bean
+	/*@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 
-				registry.addMapping("/" + Endpoint.dependencies)
-						.allowedOrigins("http://localhost:3000");
+				registry.addMapping("/" + Endpoint.dependencies).allowedOrigins("http://localhost:3000");
 				registry.addMapping("/" + Endpoint.users).allowedOrigins("http://localhost:3000");
 				registry.addMapping("/" + Endpoint.persons).allowedOrigins("http://localhost:3000");
+				registry.addMapping("/" + Endpoint.persons + "/{*}").allowedOrigins("http://localhost:3000");
+				registry.addMapping("/" + Endpoint.persons + "/paged").allowedOrigins("http://localhost:3000");
 				// .allowedMethods("GET", "POST", "PUT", "DELETE")
 				// .maxAge(3600);
 			}
 		};
-	}
+	}*/
 }
