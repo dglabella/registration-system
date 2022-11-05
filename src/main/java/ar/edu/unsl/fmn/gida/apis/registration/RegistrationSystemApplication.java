@@ -54,7 +54,10 @@ public class RegistrationSystemApplication {
 				registry.addMapping("/" + Endpoint.users).allowedOrigins("http://localhost:3000");
 				registry.addMapping("/" + Endpoint.persons).allowedOrigins("http://localhost:3000");
 				registry.addMapping("/" + Endpoint.persons + "/{*}").allowedOrigins("http://localhost:3000");
+<<<<<<< Updated upstream
 				registry.addMapping("/" + Endpoint.persons + "/paged").allowedOrigins("http://localhost:3000");
+=======
+>>>>>>> Stashed changes
 				// .allowedMethods("GET", "POST", "PUT", "DELETE")
 				// .maxAge(3600);
 			}

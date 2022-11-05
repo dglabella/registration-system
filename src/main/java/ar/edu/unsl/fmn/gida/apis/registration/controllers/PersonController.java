@@ -24,6 +24,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 @RestController
 @RequestMapping(value = Endpoint.persons)
 @CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3001", "http://localhost:3002" })
+
 public class PersonController {
     @Autowired
     private PersonService personService;
