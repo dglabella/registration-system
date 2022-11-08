@@ -158,5 +158,11 @@ POST: localhost:8080/users
     "password":"7ah777Aves"
 }
 ================================================================
+pedido cristian
+
+localhost:8080/persons/paged?page=2&quantity=10&name="pepe"
+localhost:8080/persons/paged?page=2&quantity=10&lastName="perez"
+localhost:8080/persons/paged?page=2&quantity=10&dni="10945877"
+localhost:8080/persons/paged?page=2&quantity=10
 
 ================================================================

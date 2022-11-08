@@ -2,6 +2,7 @@ package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
-import ar.edu.unsl.fmn.gida.apis.registration.responses.RegistersPage;
 import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 
 @RestController
 @RequestMapping(value = Endpoint.registers)
 public class RegisterController {
 
+    private final int DEFAULT_PAGE_NUMBER = 0;
     private final int DEFAULT_QUANTITY_PER_PAGE = 100;
 
     @Autowired
@@ -35,26 +36,29 @@ public class RegisterController {
     }
 
     @GetMapping(value = "/paged")
-    public RegistersPage getRegistersBetweenDates(@RequestParam Map<String, String> map) {
+    public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
         if (!map.containsKey("from") && !map.containsKey("to")) {
             throw new ErrorResponse(
                     "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
                     HttpStatus.BAD_REQUEST);
         }
-        RegistersPage page = new RegistersPage();
+
+        Page<Register> page = null;
 
         String from = map.get("from");
         String to = map.get("to");
 
-        this.registerService.getAll(from, to);
+        this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+                this.DEFAULT_QUANTITY_PER_PAGE);
 
         return page;
     }
 
     @GetMapping(value = "person/{id}/bewtween")
-    public RegistersPage getRegistersFromPersonBetweenDates(@PathVariable int id,
+    public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
             @RequestParam Map<String, String> map) {
-        RegistersPage registersPage = new RegistersPage();
+        Page<Register> page = null;
+
         String from = map.get("from");
         String to = map.get("to");
 
@@ -63,20 +67,20 @@ public class RegisterController {
                     "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
                     HttpStatus.BAD_REQUEST);
         } else if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            registersPage.setPageNumber(-1);
-            registersPage.setQuantityPerPage(-1);
-            registersPage.setResouces(this.registerService.getAll(from, to));
+            page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+                    this.DEFAULT_QUANTITY_PER_PAGE);
         } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            registersPage.setPageNumber(Integer.parseInt(map.get("page")));
-            registersPage.setQuantityPerPage(this.DEFAULT_QUANTITY_PER_PAGE);
-            registersPage.setResouces(this.registerService.getAll(from, to));
-        } else if (map.containsKey("page")) {
-
+            page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
+            page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+                    Integer.parseInt(map.get("quantity")));
+        } else {
+            page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
+                    Integer.parseInt(map.get("quantity")));
         }
 
-        this.registerService.getAll(from, to);
-
-        return registersPage;
+        return page;
     }
 
     @PostMapping

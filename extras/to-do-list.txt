@@ -1,26 +1,20 @@
 1 - exist a jpa annotation for cascade logical deletion ?
 
-2 - generates new QR privilege only ADMIN
+2 - @Transactional how it really works, search info.
 
-3 - Map inside controller method signature, is possible multiples (key, value) in URI ?
+3 - post weekly: default weekly creation if the api recieve null at "currentWeekly"
 
-4 - @Transactional how it really works, search info.
+4 - check integrity with dates in "weelkly"
 
-5 - encrypt user pass
+5 - is findAllByActiveIsTrue or findAllAndActiveIsTrue ?
 
-6 - post weekly: default weekly creation if the api recieve null at "currentWeekly"
+6 - validation: what about names/lastnames like d'alessandro
 
-7 - check integrity with dates in "weelkly"
+7 - if person fields are updated, what about the QR information? should generate another one ?
 
-8 - is findAllByActiveIsTrue or findAllAndActiveIsTrue ?
+8 - transient variables should not have setters and getters methods names beginning with "get..." or "set..."?
 
-9 - validation: what about names/lastnames like d'alessandro
-
-10 - if person fields are updated, what about the QR information? should generate another one ?
-
-11 - transient variables should not have setters and getters methods names beginning with "get..." or "set..."?
-
-12 - check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
+9 - check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
 written in caller or in caller or callee?
 
-13 - log file for errors
+10 - log file for errors

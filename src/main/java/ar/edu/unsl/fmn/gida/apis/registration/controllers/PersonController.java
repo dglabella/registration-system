@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
-import ar.edu.unsl.fmn.gida.apis.registration.responses.PersonsPage;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
@@ -39,8 +39,8 @@ public class PersonController {
     }
 
     @GetMapping(value = "/paged")
-    public PersonsPage getAll(@RequestParam Map<String, String> map) {
-        PersonsPage personsPage = new PersonsPage();
+    public Page<Person> getAll(@RequestParam Map<String, String> map) {
+        Page<Person> page = null;
         if (!map.containsKey("page")) {
             throw new ErrorResponse("must specify at least a page number", HttpStatus.BAD_REQUEST);
         } else if (!map.containsKey("quantity")) {
@@ -48,23 +48,18 @@ public class PersonController {
                 throw new ErrorResponse("page number must not be less than zero",
                         HttpStatus.BAD_REQUEST);
             } else {
-                personsPage.setPageNumber(Integer.parseInt(map.get("page")));
-                personsPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
-                personsPage.setResouces(
-                        this.personService.getAll(Integer.parseInt(map.get("page")), 20));
+                page = this.personService.getAll(Integer.parseInt(map.get("page")), 20);
             }
         } else {
             if (Integer.parseInt(map.get("quantity")) < 0) {
                 throw new ErrorResponse("quantity number must not be less than zero",
                         HttpStatus.BAD_REQUEST);
             }
-            personsPage.setPageNumber(Integer.parseInt(map.get("page")));
-            personsPage.setQuantityPerPage(Integer.parseInt(map.get("quantity")));
-            personsPage.setResouces(this.personService.getAll(Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity"))));
+            page = this.personService.getAll(Integer.parseInt(map.get("page")),
+                    Integer.parseInt(map.get("quantity")));
         }
 
-        return personsPage;
+        return page;
     }
 
     @GetMapping(value = "/dni/{dni}")

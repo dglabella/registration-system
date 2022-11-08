@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -88,8 +89,8 @@ public class PersonService {
         return persons;
     }
 
-    public List<Person> getAll(int page, int quantityPerPage) {
-        List<Person> persons =
+    public Page<Person> getAll(int page, int quantityPerPage) {
+        Page<Person> persons =
                 this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
 
         for (Person person : persons) {
@@ -97,6 +98,9 @@ public class PersonService {
             person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
         }
 
+        // org.springframework.data.domain.Page<Person> p = (Page<Person>) PageRequest.of(page,
+        // quantityPerPage);
+        // p.getT
         return persons;
     }
 
