@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class PersonService {
 
     public Person getOne(int personId) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
@@ -51,7 +52,7 @@ public class PersonService {
 
     public Person getOneByDni(String dni) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByDniAndActiveIsTrue(dni);
+        Optional<Person> personOptional = this.personRepository.findByDniAndActiveTrue(dni);
 
         if (personOptional.isPresent()) {
             person = personOptional.get();
@@ -64,23 +65,23 @@ public class PersonService {
     }
 
     public List<Person> getAllWithName(String name) {
-        return this.personRepository.findAllByPersonNameAndActiveIsTrue(name);
+        return this.personRepository.findAllByPersonNameAndActiveTrue(name);
     }
 
     public List<Person> getAllWithLastName(String lastName) {
-        return this.personRepository.findAllByPersonLastNameAndActiveIsTrue(lastName);
+        return this.personRepository.findAllByPersonLastNameAndActiveTrue(lastName);
     }
 
     public List<Person> getOneByDniApproach(String string) {
-        return this.personRepository.findByDniContainingAndActiveIsTrue(string);
+        return this.personRepository.findByDniContainingAndActiveTrue(string);
     }
 
     public List<Person> getAllWithNameApproach(String string) {
-        return this.personRepository.findAllByPersonNameContainingAndActiveIsTrue(string);
+        return this.personRepository.findAllByPersonNameContainingAndActiveTrue(string);
     }
 
     public List<Person> getAllWithLastNameApproach(String string) {
-        return this.personRepository.findAllByPersonLastNameContainingAndActiveIsTrue(string);
+        return this.personRepository.findAllByPersonLastNameContainingAndActiveTrue(string);
     }
 
     public List<Person> getAll() {
@@ -88,8 +89,8 @@ public class PersonService {
         return persons;
     }
 
-    public List<Person> getAll(int page, int quantityPerPage) {
-        List<Person> persons =
+    public Page<Person> getAll(int page, int quantityPerPage) {
+        Page<Person> persons =
                 this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
 
         for (Person person : persons) {
@@ -97,6 +98,9 @@ public class PersonService {
             person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
         }
 
+        // org.springframework.data.domain.Page<Person> p = (Page<Person>) PageRequest.of(page,
+        // quantityPerPage);
+        // p.getT
         return persons;
     }
 
@@ -131,7 +135,7 @@ public class PersonService {
     public Person update(int personId, Person person) {
         this.personValidator.validate(person);
         Person ret = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
 
         if (personOptional.isPresent()) {
             try {

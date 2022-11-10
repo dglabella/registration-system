@@ -22,7 +22,7 @@ public class AccessService {
 
     public Access getOne(int id) {
         Access a = null;
-        Optional<Access> optional = accessRepository.findByIdAndActiveIsTrue(id);
+        Optional<Access> optional = accessRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             a = optional.get();
@@ -52,7 +52,7 @@ public class AccessService {
 
     public Access update(int id, Access access) {
         Access a = null;
-        Optional<Access> optional = accessRepository.findByIdAndActiveIsTrue(id);
+        Optional<Access> optional = accessRepository.findByIdAndActiveTrue(id);
         if (optional.isPresent()) {
             try {
                 access.setId(id);
