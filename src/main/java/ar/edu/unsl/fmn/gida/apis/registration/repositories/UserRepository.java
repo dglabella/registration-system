@@ -9,7 +9,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByIdAndActiveIsTrue(Integer id);
+    Optional<User> findByIdAndActiveTrue(Integer id);
 
     List<User> findAllByActiveTrue();
 }

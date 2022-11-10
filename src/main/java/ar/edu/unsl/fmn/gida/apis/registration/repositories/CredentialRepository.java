@@ -9,9 +9,9 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 @Repository
 public interface CredentialRepository extends JpaRepository<Credential, Integer> {
 
-    List<Credential> findAllByActiveIsTrue();
+    List<Credential> findAllByActiveTrue();
 
-    Optional<Credential> findByIdAndActiveIsTrue(Integer id);
+    Optional<Credential> findByIdAndActiveTrue(Integer id);
 
-    Optional<Credential> findByPersonIdAndActiveIsTrue(Integer personId);
+    Optional<Credential> findByPersonIdAndActiveTrue(Integer personId);
 }

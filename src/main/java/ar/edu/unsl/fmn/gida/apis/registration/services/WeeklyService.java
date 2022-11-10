@@ -25,7 +25,7 @@ public class WeeklyService {
 
     public Weekly getOne(int id) {
         Weekly w = null;
-        Optional<Weekly> optional = weeklyRepository.findByIdAndActiveIsTrue(id);
+        Optional<Weekly> optional = weeklyRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             w = optional.get();
@@ -39,7 +39,7 @@ public class WeeklyService {
     public Weekly getCurrentWeeklyFromPerson(Integer personId) {
         Weekly ret = null;
         Optional<Weekly> optional =
-                this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveIsTrue(personId);
+                this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId);
         if (optional.isPresent()) {
             ret = optional.get();
         } else {

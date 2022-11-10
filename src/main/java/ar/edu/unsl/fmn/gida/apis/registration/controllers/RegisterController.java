@@ -79,7 +79,6 @@ public class RegisterController {
             page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
                     Integer.parseInt(map.get("quantity")));
         }
-
         return page;
     }
 
@@ -101,3 +100,4 @@ public class RegisterController {
                 HttpStatus.NOT_IMPLEMENTED);
     }
 }
+

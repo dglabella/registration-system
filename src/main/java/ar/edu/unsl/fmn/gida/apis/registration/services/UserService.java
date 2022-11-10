@@ -25,7 +25,7 @@ public class UserService {
 
     public User getOne(int id) {
         User u = null;
-        Optional<User> optional = userRepository.findByIdAndActiveIsTrue(id);
+        Optional<User> optional = userRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             u = optional.get();
@@ -57,7 +57,7 @@ public class UserService {
 
     public User update(int id, User user) {
         User u = null;
-        Optional<User> optional = this.userRepository.findByIdAndActiveIsTrue(id);
+        Optional<User> optional = this.userRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             try {

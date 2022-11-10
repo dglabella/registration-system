@@ -37,7 +37,7 @@ public class PersonService {
 
     public Person getOne(int personId) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
@@ -52,7 +52,7 @@ public class PersonService {
 
     public Person getOneByDni(String dni) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByDniAndActiveIsTrue(dni);
+        Optional<Person> personOptional = this.personRepository.findByDniAndActiveTrue(dni);
 
         if (personOptional.isPresent()) {
             person = personOptional.get();
@@ -65,23 +65,23 @@ public class PersonService {
     }
 
     public List<Person> getAllWithName(String name) {
-        return this.personRepository.findAllByPersonNameAndActiveIsTrue(name);
+        return this.personRepository.findAllByPersonNameAndActiveTrue(name);
     }
 
     public List<Person> getAllWithLastName(String lastName) {
-        return this.personRepository.findAllByPersonLastNameAndActiveIsTrue(lastName);
+        return this.personRepository.findAllByPersonLastNameAndActiveTrue(lastName);
     }
 
     public List<Person> getOneByDniApproach(String string) {
-        return this.personRepository.findByDniContainingAndActiveIsTrue(string);
+        return this.personRepository.findByDniContainingAndActiveTrue(string);
     }
 
     public List<Person> getAllWithNameApproach(String string) {
-        return this.personRepository.findAllByPersonNameContainingAndActiveIsTrue(string);
+        return this.personRepository.findAllByPersonNameContainingAndActiveTrue(string);
     }
 
     public List<Person> getAllWithLastNameApproach(String string) {
-        return this.personRepository.findAllByPersonLastNameContainingAndActiveIsTrue(string);
+        return this.personRepository.findAllByPersonLastNameContainingAndActiveTrue(string);
     }
 
     public List<Person> getAll() {
@@ -136,7 +136,7 @@ public class PersonService {
     public Person update(int personId, Person person) {
         this.personValidator.validate(person);
         Person ret = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
 
         if (personOptional.isPresent()) {
             try {
