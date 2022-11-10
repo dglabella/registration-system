@@ -25,7 +25,7 @@ public class WeeklyService {
 
     public Weekly getOne(int id) {
         Weekly w = null;
-        Optional<Weekly> optional = weeklyRepository.findByIdAndActiveIsTrue(id);
+        Optional<Weekly> optional = weeklyRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             w = optional.get();
@@ -39,7 +39,7 @@ public class WeeklyService {
     public Weekly getCurrentWeeklyFromPerson(Integer personId) {
         Weekly ret = null;
         Optional<Weekly> optional =
-                this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveIsTrue(personId);
+                this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId);
         if (optional.isPresent()) {
             ret = optional.get();
         } else {
@@ -62,9 +62,15 @@ public class WeeklyService {
                 weekly.setStart(new Date());
             } else if (weekly.getStart().compareTo(new Date()) < 0) {
                 // check if start date is ok for the new weekly
-                throw new ErrorResponse(
-                        "cannot insert/update a new weekly with start datetime before the current clock ",
+                
+            	//CRISTIAN 04-11-2022
+            	throw new ErrorResponse(
+                        "No es posible insertar/actualizar un calendario con fecha de inicio anterior al día de hoy inclusive",
                         HttpStatus.UNPROCESSABLE_ENTITY);
+            	/*throw new ErrorResponse(
+                        "cannot insert/update a new weekly with start datetime before the current clock ",
+                        HttpStatus.UNPROCESSABLE_ENTITY);*/
+            	//END CRISTIAN 04-11-2022
             }
             this.weeklyRepository.save(weekly);
 
@@ -80,7 +86,8 @@ public class WeeklyService {
     public Weekly update(Integer personId, Weekly weekly) {
         // if (weekly != null) {
         this.weeklyValidator.validate(weekly);
-        Weekly w = this.getCurrentWeeklyFromPerson(weekly.getPersonFk());
+        Weekly ret = null;
+        Weekly w = this.getCurrentWeeklyFromPerson(personId);
         try {
             if (!weekly.equals(w)) {
                 // updates in database
@@ -90,11 +97,16 @@ public class WeeklyService {
                     weekly.setStart(new Date());
                 } else if (weekly.getStart().compareTo(new Date()) < 0) {
                     // check if start date is ok for the new weekly
-                    throw new ErrorResponse(
-                            "cannot insert/update a new weekly with start datetime before the current clock ",
+                	//CRISTIAN 04-11-2022
+                	throw new ErrorResponse(
+                            "No es posible insertar/actualizar un calendario con fecha de inicio anterior al día de hoy inclusive",
                             HttpStatus.UNPROCESSABLE_ENTITY);
+                	/*throw new ErrorResponse(
+                            "cannot insert/update a new weekly with start datetime before the current clock ",
+                            HttpStatus.UNPROCESSABLE_ENTITY);*/
+                	//END CRISTIAN 04-11-2022
                 }
-                this.weeklyRepository.save(weekly);
+                ret = this.weeklyRepository.save(weekly);
             }
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
@@ -102,7 +114,7 @@ public class WeeklyService {
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
         // }
-        return weekly;
+        return ret;
     }
 
     public Weekly delete(int id) {

@@ -1,11 +1,15 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +36,9 @@ public class RegisterService {
     private Cypher cypher = new CustomCypher();
     private PersonConverter personConverter = new PersonConverter();
 
+    private SimpleDateFormat dateFormatter =
+            new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.ENGLISH);
+
     public Register getOne(int id) {
         Register r = null;
         Optional<Register> optional = registerRepository.findById(id);
@@ -45,14 +52,51 @@ public class RegisterService {
         return r;
     }
 
-    public List<Register> getAll(String from, String to) {
-        return this.registerRepository.findAll();
+    public Page<Register> getAll(String from, String to, int page, int quantityPerPage) {
+        Date fromDate = null;
+        Date toDate = null;
+
+        try {
+            fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
+            toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+
+            if (fromDate.compareTo(toDate) > 0) {
+                throw new ErrorResponse(" \"from\" date cannot have a later date than \"to\" date",
+                        HttpStatus.BAD_REQUEST);
+            }
+
+        } catch (ParseException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(
+                    "date format is wrong, make sure that date format follows the right specification",
+                    HttpStatus.BAD_REQUEST);
+        }
+        return this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate,
+                PageRequest.of(page, quantityPerPage));
     }
 
-    public List<Register> getRegistersFromPerson(int id) {
-        List<Register> r = this.registerRepository.findAllByPersonIdAndActiveTrue(id);
+    public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
+            int quantityPerPage) {
+        Date fromDate = null;
+        Date toDate = null;
 
-        return r;
+        try {
+            fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
+            toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+
+            if (fromDate.compareTo(toDate) > 0) {
+                throw new ErrorResponse(" \"from\" date cannot have a later date than \"to\" date",
+                        HttpStatus.BAD_REQUEST);
+            }
+
+        } catch (ParseException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(
+                    "date format is wrong, make sure that date format follows the right specification",
+                    HttpStatus.BAD_REQUEST);
+        }
+        return this.registerRepository.findAllByPersonFkAndActiveTrueAndCheckInBetween(personId,
+                fromDate, toDate, PageRequest.of(page, quantityPerPage));
     }
 
     public Register insert(Register register) {
@@ -67,7 +111,7 @@ public class RegisterService {
                     .objectify(this.cypher.decrypt(register.getEncryptedData()));
 
             optional = this.registerRepository
-                    .findByPersonFkAndCheckOutIsNullAndActiveIsTrue(person.getId());
+                    .findByPersonFkAndCheckOutIsNullAndActiveTrue(person.getId());
 
             if (optional.isPresent()) {
                 r1.setId(optional.get().getId());

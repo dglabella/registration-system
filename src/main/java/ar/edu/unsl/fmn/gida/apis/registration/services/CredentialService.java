@@ -24,7 +24,7 @@ public class CredentialService {
 
     public Credential getOne(Integer id) {
         Credential credential = null;
-        Optional<Credential> optional = this.credentialRepository.findByIdAndActiveIsTrue(id);
+        Optional<Credential> optional = this.credentialRepository.findByIdAndActiveTrue(id);
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
@@ -36,7 +36,7 @@ public class CredentialService {
     public Credential getOneByPersonId(Integer personId) {
         Credential credential = null;
         Optional<Credential> optional =
-                this.credentialRepository.findByPersonIdAndActiveIsTrue(personId);
+                this.credentialRepository.findByPersonIdAndActiveTrue(personId);
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
@@ -47,7 +47,7 @@ public class CredentialService {
     }
 
     public List<Credential> getAll() {
-        return this.credentialRepository.findAllByActiveIsTrue();
+        return this.credentialRepository.findAllByActiveTrue();
     }
 
     public Credential insert(Credential credential) {

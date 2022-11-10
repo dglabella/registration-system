@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.UserValidator;
 
@@ -24,7 +25,7 @@ public class UserService {
 
     public User getOne(int id) {
         User u = null;
-        Optional<User> optional = userRepository.findByIdAndActiveIsTrue(id);
+        Optional<User> optional = userRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             u = optional.get();
@@ -41,9 +42,9 @@ public class UserService {
 
     public User insert(User user) {
         this.validator.validate(user);
-
         User u = null;
         try {
+            user.setPassword(new CustomCypher().encrypt(user.getPassword()));
             u = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
@@ -56,7 +57,7 @@ public class UserService {
 
     public User update(int id, User user) {
         User u = null;
-        Optional<User> optional = this.userRepository.findByIdAndActiveIsTrue(id);
+        Optional<User> optional = this.userRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             try {

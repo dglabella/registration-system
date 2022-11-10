@@ -1,8 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +23,9 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 @RequestMapping(value = Endpoint.registers)
 public class RegisterController {
 
+    private final int DEFAULT_PAGE_NUMBER = 0;
+    private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+
     @Autowired
     private RegisterService registerService;
 
@@ -33,39 +36,50 @@ public class RegisterController {
     }
 
     @GetMapping(value = "/paged")
-    public List<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
+    public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
         if (!map.containsKey("from") && !map.containsKey("to")) {
             throw new ErrorResponse(
                     "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
                     HttpStatus.BAD_REQUEST);
         }
 
-        List<Register> registers = null;
+        Page<Register> page = null;
 
         String from = map.get("from");
         String to = map.get("to");
 
+        this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+                this.DEFAULT_QUANTITY_PER_PAGE);
 
-
-        return registers;
+        return page;
     }
 
-    @GetMapping(value = "person/{id}/paged")
-    public List<Register> getRegistersBetweenDates(@PathVariable int id,
+    @GetMapping(value = "person/{id}/bewtween")
+    public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
             @RequestParam Map<String, String> map) {
-        if (!map.containsKey("from") && !map.containsKey("to")) {
-            throw new ErrorResponse(
-                    "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        List<Register> registers = null;
+        Page<Register> page = null;
 
         String from = map.get("from");
         String to = map.get("to");
 
-
-        return registers;
+        if (!map.containsKey("from") && !map.containsKey("to")) {
+            throw new ErrorResponse(
+                    "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
+                    HttpStatus.BAD_REQUEST);
+        } else if (!map.containsKey("page") && !map.containsKey("quantity")) {
+            page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
+            page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
+            page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+                    Integer.parseInt(map.get("quantity")));
+        } else {
+            page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
+                    Integer.parseInt(map.get("quantity")));
+        }
+        return page;
     }
 
     @PostMapping
@@ -86,3 +100,4 @@ public class RegisterController {
                 HttpStatus.NOT_IMPLEMENTED);
     }
 }
+

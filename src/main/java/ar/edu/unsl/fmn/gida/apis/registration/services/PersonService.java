@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,15 +36,16 @@ public class PersonService {
 
     private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
-    public Person getOne(int id) {
+    public Person getOne(int personId) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(id);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
-            person.setCredential(this.credentialService.getOne(id));
+            person.setCredential(this.credentialService.getOneByPersonId(personId));
         } else {
-            throw new ErrorResponse("there is no person with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse("there is no person with id: " + personId,
+                    HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -51,7 +53,7 @@ public class PersonService {
 
     public Person getOneByDni(String dni) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByDniAndActiveIsTrue(dni);
+        Optional<Person> personOptional = this.personRepository.findByDniAndActiveTrue(dni);
 
         if (personOptional.isPresent()) {
             person = personOptional.get();
@@ -64,23 +66,23 @@ public class PersonService {
     }
 
     public List<Person> getAllWithName(String name) {
-        return this.personRepository.findAllByPersonNameAndActiveIsTrue(name);
+        return this.personRepository.findAllByPersonNameAndActiveTrue(name);
     }
 
     public List<Person> getAllWithLastName(String lastName) {
-        return this.personRepository.findAllByPersonLastNameAndActiveIsTrue(lastName);
+        return this.personRepository.findAllByPersonLastNameAndActiveTrue(lastName);
     }
 
     public List<Person> getOneByDniApproach(String string) {
-        return this.personRepository.findByDniContainingAndActiveIsTrue(string);
+        return this.personRepository.findByDniContainingAndActiveTrue(string);
     }
 
     public List<Person> getAllWithNameApproach(String string) {
-        return this.personRepository.findAllByPersonNameContainingAndActiveIsTrue(string);
+        return this.personRepository.findAllByPersonNameContainingAndActiveTrue(string);
     }
 
     public List<Person> getAllWithLastNameApproach(String string) {
-        return this.personRepository.findAllByPersonLastNameContainingAndActiveIsTrue(string);
+        return this.personRepository.findAllByPersonLastNameContainingAndActiveTrue(string);
     }
 
     public List<Person> getAll() {
@@ -88,9 +90,8 @@ public class PersonService {
         return persons;
     }
 
-
-    public List<Person> getAll(int page, int quantityPerPage) {
-        List<Person> persons =
+    public Page<Person> getAll(int page, int quantityPerPage) {
+        Page<Person> persons =
                 this.personRepository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
 
         for (Person person : persons) {
@@ -98,6 +99,9 @@ public class PersonService {
             person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
         }
 
+        // org.springframework.data.domain.Page<Person> p = (Page<Person>) PageRequest.of(page,
+        // quantityPerPage);
+        // p.getT
         return persons;
     }
 
@@ -116,7 +120,6 @@ public class PersonService {
             credential.setImg(new CustomQRGenerator().generate(credential.getData(), 350, 350));
             // save qr
             person.setCredential(this.credentialService.insert(credential));
-
             if (person.getCurrentWeekly() == null) {
                 // setting default weekly
                 person.setCurrentWeekly(new Weekly());
@@ -133,32 +136,39 @@ public class PersonService {
 
     public Person update(int personId, Person person) {
         this.personValidator.validate(person);
-
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveIsTrue(personId);
+        Person ret = null;
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
 
         if (personOptional.isPresent()) {
-
             try {
                 person.setId(personId);
                 if (person.getCurrentWeekly() != null) {
                     person.getCurrentWeekly().setPersonFk(personId);
-                    this.weeklyService.insert(person.getCurrentWeekly());
+                    person.setCurrentWeekly(
+                            this.weeklyService.update(personId, person.getCurrentWeekly()));
                 }
-                this.personRepository.save(person);
-
+                ret = this.personRepository.save(person);
+                
+                //CRISTIAN 04-11-2022
+                ret.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
+                ret.setCredential(this.credentialService.getOneByPersonId(personId));
+                // END CRISTIAN 04-11-2022
+       
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
-
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
                     "cannot update person with id " + personId + " because it doesn't exist",
                     HttpStatus.NOT_FOUND);
         }
-        return person;
+        //CRISTIAN 04-11-2022
+        	//return person;
+        return ret;
+        // END CRISTIAN 04-11-2022
     }
 
     public Person delete(int id) {

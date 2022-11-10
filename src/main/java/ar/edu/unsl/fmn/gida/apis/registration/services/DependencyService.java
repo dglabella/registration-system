@@ -20,7 +20,7 @@ public class DependencyService {
 
     public Dependency getOne(int id) {
         Dependency d = null;
-        Optional<Dependency> optional = dependencyRepository.findByIdAndActiveIsTrue(id);
+        Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);
 
         if (optional.isPresent()) {
             d = optional.get();
@@ -50,7 +50,7 @@ public class DependencyService {
     public Dependency update(int id, Dependency dependency) {
         Dependency d = null;
 
-        Optional<Dependency> optional = dependencyRepository.findByIdAndActiveIsTrue(id);
+        Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);
         if (optional.isPresent()) {
             try {
                 dependency.setId(id);
