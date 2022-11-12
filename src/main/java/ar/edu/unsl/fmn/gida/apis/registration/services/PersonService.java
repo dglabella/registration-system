@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
@@ -16,6 +17,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.lang.Language;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
@@ -33,6 +35,8 @@ public class PersonService {
     @Autowired
     private CredentialService credentialService;
 
+    private Language language = new Language("ES");
+
     private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
     public Person getOne(int personId) {
@@ -43,7 +47,7 @@ public class PersonService {
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
             person.setCredential(this.credentialService.getOneByPersonId(personId));
         } else {
-            throw new ErrorResponse("there is no person with id: " + personId,
+            throw new ErrorResponse(this.language.getPersonMessages().getByIdErrorMessage(personId),
                     HttpStatus.NOT_FOUND);
         }
 
@@ -58,7 +62,8 @@ public class PersonService {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
         } else {
-            throw new ErrorResponse("there is no person with dni: " + dni, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(this.language.getPersonMessages().getByDniErrorMessage(dni),
+                    HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -146,12 +151,12 @@ public class PersonService {
                             this.weeklyService.update(personId, person.getCurrentWeekly()));
                 }
                 ret = this.personRepository.save(person);
-                
-                //CRISTIAN 04-11-2022
+
+                // CRISTIAN 04-11-2022
                 ret.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
                 ret.setCredential(this.credentialService.getOneByPersonId(personId));
                 // END CRISTIAN 04-11-2022
-       
+
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
                 throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
@@ -163,8 +168,8 @@ public class PersonService {
                     "cannot update person with id " + personId + " because it doesn't exist",
                     HttpStatus.NOT_FOUND);
         }
-        //CRISTIAN 04-11-2022
-        	//return person;
+        // CRISTIAN 04-11-2022
+        // return person;
         return ret;
         // END CRISTIAN 04-11-2022
     }

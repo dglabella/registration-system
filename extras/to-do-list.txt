@@ -2,6 +2,8 @@
 
 2 - check integrity with dates in "weelkly"
 
+2.2 - duplicated dni message
+
 3 - validation: what about names/lastnames like d'alessandro
 
 4 - if person fields are updated, what about the QR information? should generate another one ?
