@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 
@@ -12,6 +13,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     List<Person> findAllByActiveTrue();
+
 
     Page<Person> findAllByActiveTrue(Pageable pageable);
 
@@ -28,4 +30,5 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     List<Person> findAllByPersonNameContainingAndActiveTrue(String namePattern);
 
     List<Person> findAllByPersonLastNameContainingAndActiveTrue(String lastNamePattern);
+
 }
