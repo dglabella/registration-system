@@ -49,12 +49,12 @@ public class Register {
     // ============================ model associations ============================
     @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
             updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Person person;
 
     @JoinColumn(name = "accessFk", referencedColumnName = "id", insertable = false,
             updatable = false)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Access access;
 
     // =============================== constructors ===============================

@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,36 +38,12 @@ public class RegisterController {
 
     @GetMapping(value = "/paged")
     public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
-        if (!map.containsKey("from") && !map.containsKey("to")) {
-            throw new ErrorResponse(
-                    "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
-                    HttpStatus.BAD_REQUEST);
-        }
-
         Page<Register> page = null;
 
         String from = map.get("from");
         String to = map.get("to");
 
-        this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
-                this.DEFAULT_QUANTITY_PER_PAGE);
-
-        return page;
-    }
-
-    @GetMapping(value = "person/{id}/bewtween")
-    public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
-            @RequestParam Map<String, String> map) {
-        Page<Register> page = null;
-
-        String from = map.get("from");
-        String to = map.get("to");
-
-        if (!map.containsKey("from") && !map.containsKey("to")) {
-            throw new ErrorResponse(
-                    "request registers between dates must be at least specify a \"from\" date, a \"to\" date, or both",
-                    HttpStatus.BAD_REQUEST);
-        } else if (!map.containsKey("page") && !map.containsKey("quantity")) {
+        if (!map.containsKey("page") && !map.containsKey("quantity")) {
             page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
                     this.DEFAULT_QUANTITY_PER_PAGE);
         } else if (map.containsKey("page") && !map.containsKey("quantity")) {
@@ -79,6 +56,32 @@ public class RegisterController {
             page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
                     Integer.parseInt(map.get("quantity")));
         }
+
+        return page;
+    }
+
+    @GetMapping(value = "person/{id}/paged")
+    public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
+            @RequestParam Map<String, String> map) {
+        Page<Register> page = null;
+
+        String from = map.get("from");
+        String to = map.get("to");
+
+        if (!map.containsKey("page") && !map.containsKey("quantity")) {
+            page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
+            page = this.registerService.getAllFromPerson(id, from, to, Integer.parseInt(map.get("page")),
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
+            page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
+                    Integer.parseInt(map.get("quantity")));
+        } else {
+            page = this.registerService.getAllFromPerson(id,from, to, Integer.parseInt(map.get("page")),
+                    Integer.parseInt(map.get("quantity")));
+        }
+
         return page;
     }
 

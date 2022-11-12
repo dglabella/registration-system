@@ -102,7 +102,9 @@ public class RegisterService {
         this.registerValidator.validate(register);
         Person person = null;
         Register r1 = new Register();
+        Register r1Aux = new Register();
         Register r2 = null;
+        Register r2Aux = new Register();
         Optional<Register> optional;
 
         try {
@@ -113,32 +115,61 @@ public class RegisterService {
                     .findByPersonFkAndCheckOutIsNullAndActiveTrue(person.getId());
 
             if (optional.isPresent()) {
+                // do check out
                 r1.setId(optional.get().getId());
                 r1.setPersonFk(optional.get().getPersonFk());
                 r1.setAccessFk(optional.get().getAccessFk());
                 r1.setCheckIn(optional.get().getCheckIn());
                 r1.setCheckOut(new Date());
-                r1 = this.registerRepository.save(r1);
+
+                r1Aux.setId(r1.getId());
+                r1Aux.setPersonFk(r1.getPersonFk());
+                r1Aux.setAccessFk(r1.getAccessFk());
+                r1Aux.setCheckIn(r1.getCheckIn());
+                r1Aux.setCheckOut(r1.getCheckOut());
+                this.registerRepository.save(r1);
+
+                r1Aux.setPerson(optional.get().getPerson());
+                r1Aux.setAccess(optional.get().getAccess());
 
                 if (register.getAccessFk() != optional.get().getAccessFk()) {
                     r2 = new Register();
                     r2.setPersonFk(person.getId());
                     r2.setAccessFk(register.getAccessFk());
                     r2.setCheckIn(new Date());
-                    r2 = this.registerRepository.save(r2);
+
+                    r2Aux.setId(r2.getId());
+                    r2Aux.setPersonFk(r2.getPersonFk());
+                    r2Aux.setAccessFk(r2.getAccessFk());
+                    r2Aux.setCheckIn(r2.getCheckIn());
+                    r2Aux.setCheckOut(r2.getCheckOut());
+                    this.registerRepository.save(r2);
+                    
+                    r2Aux.setPerson(optional.get().getPerson());
+                    r2Aux.setAccess(register.getAccess());
                 }
             } else {
                 r1.setPersonFk(person.getId());
                 r1.setAccessFk(register.getAccessFk());
                 r1.setCheckIn(new Date());
-                r1 = registerRepository.save(r1);
+                
+                r1Aux.setId(r1.getId());
+                r1Aux.setPersonFk(r1.getPersonFk());
+                r1Aux.setAccessFk(r1.getAccessFk());
+                r1Aux.setCheckIn(r1.getCheckIn());
+                r1Aux.setCheckOut(r1.getCheckOut());
+                this.registerRepository.save(r1);
+                
+                r1Aux.setPerson(person);
+                r1Aux.setAccess(register.getAccess());
             }
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return r2 == null ? r1 : r2;
+
+        return r2 == null ? r1Aux : r2Aux;
     }
 
     public Register update(int id, Register register) {

@@ -114,6 +114,7 @@ public class PersonService {
 
         Credential credential = null;
         try {
+
             person.setId(this.personRepository.save(person).getId());
 
             // QR generation code
