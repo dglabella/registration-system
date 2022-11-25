@@ -1,6 +1,6 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.lang;
+package ar.edu.unsl.fmn.gida.apis.registration.utils.messages;
 
-public class Language {
+public class Messages {
 
     private String lang;
 
@@ -12,7 +12,7 @@ public class Language {
     private UserMessages userMessages;
     private WeeklyMessages weeklyMessages;
 
-    public Language(String lang) {
+    public Messages(String lang) {
         this.lang = lang;
 
         this.accessMessages = new AccessMessages(this);

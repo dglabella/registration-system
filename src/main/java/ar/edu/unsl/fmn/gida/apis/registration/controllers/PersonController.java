@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,8 +23,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 
 @RestController
 @RequestMapping(value = Endpoint.persons)
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3001", "http://localhost:3002" })
-
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class PersonController {
     @Autowired
     private PersonService personService;
@@ -97,19 +95,6 @@ public class PersonController {
         return persons;
 
     }
-
-    // public List<Person> getAllPersons(@RequestParam Map<String, String> map) {
-    //     if (!map.containsKey("page") || !map.containsKey("quantity")) {
-    //         throw new ErrorResponse(
-    //                 "when request for paginated resources, must be specified page number, and quantity per page.",
-    //                 HttpStatus.BAD_REQUEST);
-    //     }
-
-    //     String page = map.get("page");
-    //     String quantityPerPage = map.get("quantity");
-
-    //     return this.personService.getAll(Integer.parseInt(page), Integer.parseInt(quantityPerPage));
-    // }
 
     @PostMapping
     public Person postPerson(@RequestBody Person person) {

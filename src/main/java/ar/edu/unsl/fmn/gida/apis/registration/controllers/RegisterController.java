@@ -1,11 +1,11 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +22,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 
 @RestController
 @RequestMapping(value = Endpoint.registers)
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class RegisterController {
 
     private final int DEFAULT_PAGE_NUMBER = 0;
@@ -72,14 +73,14 @@ public class RegisterController {
             page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
                     this.DEFAULT_QUANTITY_PER_PAGE);
         } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.registerService.getAllFromPerson(id, from, to, Integer.parseInt(map.get("page")),
-                    this.DEFAULT_QUANTITY_PER_PAGE);
+            page = this.registerService.getAllFromPerson(id, from, to,
+                    Integer.parseInt(map.get("page")), this.DEFAULT_QUANTITY_PER_PAGE);
         } else if (!map.containsKey("page") && map.containsKey("quantity")) {
             page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
                     Integer.parseInt(map.get("quantity")));
         } else {
-            page = this.registerService.getAllFromPerson(id,from, to, Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity")));
+            page = this.registerService.getAllFromPerson(id, from, to,
+                    Integer.parseInt(map.get("page")), Integer.parseInt(map.get("quantity")));
         }
 
         return page;
@@ -93,7 +94,7 @@ public class RegisterController {
 
     @PutMapping(value = "/{id}")
     public Register updateRegister(@PathVariable int id, @RequestBody Register register) {
-        throw new ErrorResponse("cannot update a register, illegal operation ",
+        throw new ErrorResponse("update register operation not available...",
                 HttpStatus.NOT_IMPLEMENTED);
     }
 

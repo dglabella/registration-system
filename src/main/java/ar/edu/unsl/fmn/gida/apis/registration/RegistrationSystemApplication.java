@@ -3,23 +3,25 @@ package ar.edu.unsl.fmn.gida.apis.registration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.configs.Configuration;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigurationConverter;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.messages.Messages;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 
 @SpringBootApplication
 public class RegistrationSystemApplication {
 
-	public static Configuration CONFIGURATION;
+	public static Map<String, String> CONFIGURATION;
+	public static Messages MESSAGES;
 
 	private void createQr() {
 		Cypher cypher = new CustomCypher();
@@ -36,16 +38,50 @@ public class RegistrationSystemApplication {
 		}
 	}
 
+
+	private static void setUpConfigFile() {
+		ConfigurationConverter configurationConverter = new ConfigurationConverter();
+		File configFile =
+				new File(System.getProperty("user.dir") + "\\src\\main\\resources\\configs.CONF");
+		try {
+			if (!configFile.exists()) {
+				System.out.println("no config file found, restoring with default values...");
+				configFile.createNewFile();
+				configFile.setWritable(true);
+
+				// Creating config object
+				Map<String, String> configuration = new HashMap<>();
+				// add config 1
+				configuration.put(Configuration.NAME_LOG_FILE_DIR,
+						Configuration.DEFAULT_VALUE_LOG_FILE_DIR);
+				// add config 2
+				configuration.put(Configuration.NAME_LANG, Configuration.DEFAULT_VALUE_LANG);
+				// add future default configs here
+				// ...
+
+				// write into file
+				OutputStream outputStream = new FileOutputStream(configFile);
+				outputStream.write(configurationConverter.stringify(configuration).getBytes());
+				outputStream.close();
+
+			}
+
+			InputStream inputStream = new FileInputStream(configFile);
+			CONFIGURATION =
+					configurationConverter.objectify(new String(inputStream.readAllBytes()));
+			inputStream.close();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	private static void setUpMessagesLang() {
+		MESSAGES = new Messages(CONFIGURATION.get(Configuration.NAME_LANG));
+	}
+
 	public static void main(String[] args) {
-		// try {
-		// FileInputStream fileInputStream = new FileInputStream(new File(
-		// System.getProperty("user.dir") + "\\src\\main\\resources\\configs.CONF"));
-		// fileInputStream.close();
-		// CONFIGURATION = new ConfigurationConverter()
-		// .objectify(new String(fileInputStream.readAllBytes()));
-		// } catch (Exception exception) {
-		// exception.printStackTrace();
-		// }
+		setUpConfigFile();
+		setUpMessagesLang();
 		SpringApplication.run(RegistrationSystemApplication.class, args);
 	}
 

@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
@@ -30,7 +31,8 @@ public class UserService {
         if (optional.isPresent()) {
             u = optional.get();
         } else {
-            throw new ErrorResponse("there is no user with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getUserMessages()
+                    .notFoundErrorMessage(id), HttpStatus.NOT_FOUND);
         }
 
         return u;
@@ -71,13 +73,14 @@ public class UserService {
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
-                    "cannot update user with id " + id + " because it doesn't exist",
+                    RegistrationSystemApplication.MESSAGES.getUserMessages().updateErrorMessage(id),
                     HttpStatus.NOT_FOUND);
         }
         return u;
     }
 
     public User delete(int id) {
-        return null;
+        throw new ErrorResponse("delete user operation not implemented yet...",
+                HttpStatus.NOT_FOUND);
     }
 }

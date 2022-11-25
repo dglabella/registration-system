@@ -1,16 +1,16 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.lang;
+package ar.edu.unsl.fmn.gida.apis.registration.utils.messages;
 
 public class PersonMessages extends EntityMessages {
 
-    public PersonMessages(Language lang) {
-        super(lang);
+    public PersonMessages(Messages messages) {
+        super(messages);
     }
 
     @Override
-    public String getByIdErrorMessage(int id) {
+    public String notFoundErrorMessage(int id) {
         String ret = null;
 
-        switch (this.getLanguage().getLang()) {
+        switch (this.getMessages().getLang()) {
             case "EN":
                 ret = "there is no person with id: " + id;
                 break;
@@ -25,14 +25,25 @@ public class PersonMessages extends EntityMessages {
 
     @Override
     public String updateErrorMessage(int id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public String getByDniErrorMessage(String dni) {
         String ret = null;
 
-        switch (this.getLanguage().getLang()) {
+        switch (this.getMessages().getLang()) {
+            case "EN":
+                ret = "cannot update person with id " + id + " because it doesn't exist";
+                break;
+            case "ES":
+                ret = "no puede actualizarse la persona con id: " + id + " porque no existe";
+                break;
+            default:
+                ret = "cannot update person with id " + id + " because it doesn't exist";
+        }
+        return ret;
+    }
+
+    public String notFoundByDniErrorMessage(String dni) {
+        String ret = null;
+
+        switch (this.getMessages().getLang()) {
             case "EN":
                 ret = "there is no person with dni: " + dni;
                 break;

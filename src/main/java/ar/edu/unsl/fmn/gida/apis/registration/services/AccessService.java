@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.AccessRepository;
@@ -27,7 +28,8 @@ public class AccessService {
         if (optional.isPresent()) {
             a = optional.get();
         } else {
-            throw new ErrorResponse("there is no access with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getAccessMessages()
+                    .notFoundErrorMessage(id), HttpStatus.NOT_FOUND);
         }
 
         return a;
@@ -66,9 +68,8 @@ public class AccessService {
 
         } else {
             // this error should not happen in a typical situation
-            throw new ErrorResponse(
-                    "cannot update access with id " + id + " because it doesn't exist",
-                    HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getAccessMessages()
+                    .updateErrorMessage(id), HttpStatus.NOT_FOUND);
         }
         return a;
     }

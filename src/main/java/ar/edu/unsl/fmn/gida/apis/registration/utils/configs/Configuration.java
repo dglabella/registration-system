@@ -1,21 +1,12 @@
 package ar.edu.unsl.fmn.gida.apis.registration.utils.configs;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface Configuration {
 
-public class Configuration {
+    public static final String NAME_LOG_FILE_DIR = "log-file-dir";
+    public static final String DEFAULT_VALUE_LOG_FILE_DIR =
+            "C:\\Users\\dglab\\OneDrive\\Escritorio\\jacksonTest";
 
-    private Map<String, Configurable> configs;
+    public static final String NAME_LANG = "lang";
+    public static final String DEFAULT_VALUE_LANG = "ES";
 
-    public Configuration() {
-        this.configs = new HashMap<>();
-    }
-
-    public Configurable getConfig(String name) {
-        return this.configs.get(name);
-    }
-
-    public void add(Configurable config) {
-        this.configs.put(config.getName(), config);
-    }
 }
