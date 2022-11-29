@@ -6,29 +6,6 @@ public class WeeklyMessages extends EntityMessages {
         super(lang);
     }
 
-    @Override
-    public String notFoundErrorMessage(int id) {
-        String ret = null;
-
-        switch (this.getMessages().getLang()) {
-            case "EN":
-                ret = "there is no weekly with id: " + id;
-                break;
-            case "ES":
-                ret = "no existe un semanario con id " + id;
-                break;
-            default:
-                ret = "there is no weekly with id: " + id;
-        }
-        return ret;
-    }
-
-    @Override
-    public String updateErrorMessage(int id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public String getCurrentWeeklyErrorMessage(int personId) {
         String ret = null;
 

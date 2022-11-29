@@ -36,16 +36,16 @@ public class PersonService {
 
     private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
 
-    public Person getOne(int personId) {
+    public Person getOne(int id) {
         Person person = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(id);
         if (personOptional.isPresent()) {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
-            person.setCredential(this.credentialService.getOneByPersonId(personId));
+            person.setCredential(this.credentialService.getOneByPersonId(id));
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getPersonMessages()
-                    .notFoundErrorMessage(personId), HttpStatus.NOT_FOUND);
+                    .notFoundErrorMessage(Person.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -100,9 +100,6 @@ public class PersonService {
             person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
         }
 
-        // org.springframework.data.domain.Page<Person> p = (Page<Person>) PageRequest.of(page,
-        // quantityPerPage);
-        // p.getT
         return persons;
     }
 
@@ -127,31 +124,31 @@ public class PersonService {
             }
             person.getCurrentWeekly().setPersonFk(person.getId());
             person.setCurrentWeekly(this.weeklyService.insert(person.getCurrentWeekly()));
-        } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-            throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+        } catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return person;
     }
 
-    public Person update(int personId, Person person) {
+    public Person update(int id, Person person) {
         this.personValidator.validate(person);
         Person ret = null;
-        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(personId);
+        Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(id);
 
         if (personOptional.isPresent()) {
             try {
-                person.setId(personId);
+                person.setId(id);
                 if (person.getCurrentWeekly() != null) {
-                    person.getCurrentWeekly().setPersonFk(personId);
+                    person.getCurrentWeekly().setPersonFk(id);
                     person.setCurrentWeekly(
-                            this.weeklyService.update(personId, person.getCurrentWeekly()));
+                            this.weeklyService.update(id, person.getCurrentWeekly()));
                 }
                 ret = this.personRepository.save(person);
 
                 ret.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
-                ret.setCredential(this.credentialService.getOneByPersonId(personId));
+                ret.setCredential(this.credentialService.getOneByPersonId(id));
 
             } catch (DataIntegrityViolationException exception) {
                 exception.printStackTrace();
@@ -160,8 +157,10 @@ public class PersonService {
             }
         } else {
             // this error should not happen in a typical situation
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getPersonMessages()
-                    .updateErrorMessage(personId), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getPersonMessages()
+                            .updateNonExistentEntityErrorMessage(Person.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
         return ret;
     }

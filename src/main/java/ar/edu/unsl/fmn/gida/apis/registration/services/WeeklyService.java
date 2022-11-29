@@ -32,7 +32,7 @@ public class WeeklyService {
             w = optional.get();
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                    .notFoundErrorMessage(id), HttpStatus.NOT_FOUND);
+                    .notFoundErrorMessage(Weekly.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return w;

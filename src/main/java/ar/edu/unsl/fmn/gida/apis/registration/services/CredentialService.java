@@ -29,8 +29,10 @@ public class CredentialService {
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getCredentialMessages()
-                    .notFoundErrorMessage(id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getCredentialMessages()
+                            .notFoundErrorMessage(Credential.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
         return credential;
     }

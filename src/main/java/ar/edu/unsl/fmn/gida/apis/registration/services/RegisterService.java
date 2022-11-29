@@ -46,8 +46,10 @@ public class RegisterService {
         if (optional.isPresent()) {
             r = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                    .notFoundErrorMessage(id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                            .notFoundErrorMessage(Register.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
 
         return r;
@@ -173,8 +175,7 @@ public class RegisterService {
     }
 
     public Register update(int id, Register register) {
-        throw new ErrorResponse(
-                RegistrationSystemApplication.MESSAGES.getRegisterMessages().updateErrorMessage(id),
+        throw new ErrorResponse("update register operation not available...",
                 HttpStatus.NOT_IMPLEMENTED);
     }
 

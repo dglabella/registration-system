@@ -32,7 +32,7 @@ public class UserService {
             u = optional.get();
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getUserMessages()
-                    .notFoundErrorMessage(id), HttpStatus.NOT_FOUND);
+                    .notFoundErrorMessage(User.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return u;
@@ -45,6 +45,12 @@ public class UserService {
     public User insert(User user) {
         this.validator.validate(user);
         User u = null;
+        if (this.userRepository.existsByDniOrEmailOrAccountAndActiveTrue(user.getDni(),
+                user.getEmail(), user.getAccount())) {
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getUserMessages()
+                    .constraintsErrorMessage(User.class.getSimpleName(), "or or or", "raasdmas"),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         try {
             user.setPassword(new CustomCypher().encrypt(user.getPassword()));
             u = userRepository.save(user);
@@ -73,7 +79,8 @@ public class UserService {
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getUserMessages().updateErrorMessage(id),
+                    RegistrationSystemApplication.MESSAGES.getUserMessages()
+                            .updateNonExistentEntityErrorMessage(User.class.getSimpleName(), id),
                     HttpStatus.NOT_FOUND);
         }
         return u;

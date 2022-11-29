@@ -6,40 +6,6 @@ public class RegisterMessages extends EntityMessages {
         super(lang);
     }
 
-    @Override
-    public String notFoundErrorMessage(int id) {
-        String ret = null;
-
-        switch (this.getMessages().getLang()) {
-            case "EN":
-                ret = "there is no register with id: " + id;
-                break;
-            case "ES":
-                ret = "no existe un registro con id " + id;
-                break;
-            default:
-                ret = "there is no register with id: " + id;
-        }
-        return ret;
-    }
-
-    @Override
-    public String updateErrorMessage(int id) {
-        String ret = null;
-
-        switch (this.getMessages().getLang()) {
-            case "EN":
-                ret = "update register operation not available...";
-                break;
-            case "ES":
-                ret = "operación de actualización de registro no habilitada...";
-                break;
-            default:
-                ret = "update register operation not available...";
-        }
-        return ret;
-    }
-
     public String dateValueSpecificationErrorMessage() {
         String ret = null;
 
