@@ -2,107 +2,107 @@ package ar.edu.unsl.fmn.gida.apis.registration.model.constraints;
 
 public interface Constraints {
 
-    public class User {
-        public static final int NAME_MIN_LENGHT = 1;
-        public static final int NAME_MAX_LENGHT = 60;
-        public static final boolean NAME_NULLABLE = false;
+    interface User {
+        int NAME_MIN_LENGHT = 1;
+        int NAME_MAX_LENGHT = 60;
+        boolean NAME_NULLABLE = false;
 
-        public static final int LAST_NAME_MIN_LENGHT = 1;
-        public static final int LAST_NAME_MAX_LENGHT = 60;
-        public static final boolean LAST_NAME_NULLABLE = false;
+        int LAST_NAME_MIN_LENGHT = 1;
+        int LAST_NAME_MAX_LENGHT = 60;
+        boolean LAST_NAME_NULLABLE = false;
 
-        public static final int DNI_MIN_LENGHT = 1;
-        public static final int DNI_MAX_LENGHT = 15;
-        public static final boolean DNI_NULLABLE = false;
-        public static final boolean DNI_UNIQUE = true;
+        int DNI_MIN_LENGHT = 1;
+        int DNI_MAX_LENGHT = 15;
+        boolean DNI_NULLABLE = false;
+        boolean DNI_UNIQUE = true;
 
-        public static final int EMAIL_MIN_LENGHT = 11;
-        public static final int EMAIL_MAX_LENGHT = 100;
-        public static final boolean EMAIL_NULLABLE = false;
-        public static final boolean EMAIL_UNIQUE = true;
+        int EMAIL_MIN_LENGHT = 11;
+        int EMAIL_MAX_LENGHT = 100;
+        boolean EMAIL_NULLABLE = false;
+        boolean EMAIL_UNIQUE = true;
 
-        public static final int ACCOUNT_MIN_LENGHT = 8;
-        public static final int ACCOUNT_MAX_LENGHT = 60;
-        public static final boolean ACCOUNT_NULLABLE = false;
-        public static final boolean ACCOUNT_UNIQUE = true;
+        int ACCOUNT_MIN_LENGHT = 8;
+        int ACCOUNT_MAX_LENGHT = 60;
+        boolean ACCOUNT_NULLABLE = false;
+        boolean ACCOUNT_UNIQUE = true;
 
-        public static final int PASSWORD_MIN_LENGHT = 8;
-        public static final int PASSWORD_MAX_LENGHT = 60;
-        public static final boolean PASSWORD_NULLABLE = false;
+        int PASSWORD_MIN_LENGHT = 8;
+        int PASSWORD_MAX_LENGHT = 60;
+        boolean PASSWORD_NULLABLE = false;
 
-        public static final boolean PRIVILEGE_NULLABLE = false;
+        boolean PRIVILEGE_NULLABLE = false;
     }
 
-    public class Person {
-        public static final boolean DEPENDENCY_FK_NULLABLE = false;
+    interface Person {
+        boolean DEPENDENCY_FK_NULLABLE = false;
 
-        public static final int NAME_MIN_LENGHT = 1;
-        public static final int NAME_MAX_LENGHT = 60;
-        public static final boolean NAME_NULLABLE = false;
+        int NAME_MIN_LENGHT = 1;
+        int NAME_MAX_LENGHT = 60;
+        boolean NAME_NULLABLE = false;
 
-        public static final int LAST_NAME_MIN_LENGHT = 1;
-        public static final int LAST_NAME_MAX_LENGHT = 60;
-        public static final boolean LAST_NAME_NULLABLE = false;
+        int LAST_NAME_MIN_LENGHT = 1;
+        int LAST_NAME_MAX_LENGHT = 60;
+        boolean LAST_NAME_NULLABLE = false;
 
-        public static final int DNI_MIN_LENGHT = 1;
-        public static final int DNI_MAX_LENGHT = 15;
-        public static final boolean DNI_NULLABLE = false;
-        public static final boolean DNI_UNIQUE = true;
+        int DNI_MIN_LENGHT = 1;
+        int DNI_MAX_LENGHT = 15;
+        boolean DNI_NULLABLE = false;
+        boolean DNI_UNIQUE = true;
     }
 
-    public class Dependency {
-        public static final int NAME_MIN_LENGHT = 1;
-        public static final int NAME_MAX_LENGHT = 60;
-        public static final boolean NAME_NULLABLE = false;
-        public static final boolean NAME_UNIQUE = true;
+    interface Dependency {
+        int NAME_MIN_LENGHT = 1;
+        int NAME_MAX_LENGHT = 60;
+        boolean NAME_NULLABLE = false;
+        boolean NAME_UNIQUE = true;
 
-        public static final int DESCRIPTION_MIN_LENGHT = 1;
-        public static final int DESCRIPTION_MAX_LENGHT = 200;
+        int DESCRIPTION_MIN_LENGHT = 1;
+        int DESCRIPTION_MAX_LENGHT = 200;
     }
 
-    public class Weekly {
-        public static final boolean PERSONFK_NULLABLE = false;
+    interface Weekly {
+        boolean PERSONFK_NULLABLE = false;
 
-        public static final boolean MONDAY_NULLABLE = false;
-        public static final boolean TUESDAY_NULLABLE = false;
-        public static final boolean WEDNESDAY_NULLABLE = false;
-        public static final boolean THURDAY_NULLABLE = false;
-        public static final boolean FRIDAY_NULLABLE = false;
-        public static final boolean SATURDAY_NULLABLE = false;
-        public static final boolean SUNDAY_NULLABLE = false;
+        boolean MONDAY_NULLABLE = false;
+        boolean TUESDAY_NULLABLE = false;
+        boolean WEDNESDAY_NULLABLE = false;
+        boolean THURDAY_NULLABLE = false;
+        boolean FRIDAY_NULLABLE = false;
+        boolean SATURDAY_NULLABLE = false;
+        boolean SUNDAY_NULLABLE = false;
 
-        public static final boolean START_NULLABLE = false;
-        public static final boolean END_NULLABLE = true;
-
-    }
-
-    public class Access {
-        public static final boolean NAME_NULLABLE = false;
-        public static final int NAME_MIN_LENGHT = 1;
-        public static final int NAME_MAX_LENGHT = 60;
-
-        public static final boolean DESCRIPTION_NULLABLE = true;
-        public static final int DESCRIPTION_MIN_LENGHT = 1;
-        public static final int DESCRIPTION_MAX_LENGHT = 200;
+        boolean START_NULLABLE = false;
+        boolean END_NULLABLE = true;
 
     }
 
-    public class Credential {
-        public static final boolean PERSON_FK_NULLABLE = false;
-        public static final boolean DATA_NULLABLE = false;
-        public static final int DATA_MIN_LENGHT = 1;
-        public static final int DATA_MAX_LENGHT = 255;
+    interface Access {
+        boolean NAME_NULLABLE = false;
+        int NAME_MIN_LENGHT = 1;
+        int NAME_MAX_LENGHT = 60;
 
-        public static final boolean IMG_NULLABLE = false;
+        boolean DESCRIPTION_NULLABLE = true;
+        int DESCRIPTION_MIN_LENGHT = 1;
+        int DESCRIPTION_MAX_LENGHT = 200;
+
     }
 
-    public class Register {
-        public static final boolean PERSON_FK_NULLABLE = false;
-        public static final boolean ACCESS_FK_NULLABLE = false;
+    interface Credential {
+        boolean PERSON_FK_NULLABLE = false;
+        boolean DATA_NULLABLE = false;
+        int DATA_MIN_LENGHT = 1;
+        int DATA_MAX_LENGHT = 255;
 
-        public static final boolean CHECK_IN_NULLABLE = false;
-        public static final boolean CHECK_OUT_NULLABLE = true;
+        boolean IMG_NULLABLE = false;
+    }
 
-        public static final boolean ENCRYPTED_DATA_NULLABLE = true;
+    interface Register {
+        boolean PERSON_FK_NULLABLE = false;
+        boolean ACCESS_FK_NULLABLE = false;
+
+        boolean CHECK_IN_NULLABLE = false;
+        boolean CHECK_OUT_NULLABLE = true;
+
+        boolean ENCRYPTED_DATA_NULLABLE = true;
     }
 }

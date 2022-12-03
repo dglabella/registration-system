@@ -10,8 +10,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.CredentialRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CredentialValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CredentialValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 
 @Service
 @Transactional

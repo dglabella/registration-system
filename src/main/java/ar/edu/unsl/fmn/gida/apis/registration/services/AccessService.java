@@ -11,8 +11,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.AccessRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.AccessValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.AccessValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 
 @Service
 @Transactional

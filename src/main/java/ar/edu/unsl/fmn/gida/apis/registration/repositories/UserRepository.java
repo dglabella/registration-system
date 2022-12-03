@@ -13,5 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByIdAndActiveTrue(Integer id);
 
+    Optional<User> findOneByAccountAndActiveTrue(String account);
+
     List<User> findAllByActiveTrue();
 }

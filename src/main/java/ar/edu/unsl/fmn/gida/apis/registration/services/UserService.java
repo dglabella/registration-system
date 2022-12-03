@@ -5,19 +5,23 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.security.CustomUserDetails;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.UserValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.UserValidator;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -27,7 +31,6 @@ public class UserService {
     public User getOne(int id) {
         User u = null;
         Optional<User> optional = userRepository.findByIdAndActiveTrue(id);
-
         if (optional.isPresent()) {
             u = optional.get();
         } else {
@@ -89,5 +92,14 @@ public class UserService {
     public User delete(int id) {
         throw new ErrorResponse("delete user operation not implemented yet...",
                 HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
+        User user = this.userRepository.findOneByAccountAndActiveTrue(account).orElseThrow(
+                () -> new UsernameNotFoundException(RegistrationSystemApplication.MESSAGES
+                        .getUserMessages().notFoundByAccountErrorMessage(account)));
+
+        return new CustomUserDetails(user);
     }
 }

@@ -12,8 +12,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.WeeklyValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.WeeklyValidator;
 
 @Service
 @Transactional

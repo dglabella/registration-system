@@ -1,4 +1,4 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
 
 public abstract class EntityMessages {
 
@@ -17,13 +17,13 @@ public abstract class EntityMessages {
 
         switch (this.messages.getLang()) {
             case "EN":
-                ret = "there is no \"" + entityName + "\" with id: " + id;
+                ret = "there is no '" + entityName + "' with id: " + id;
                 break;
             case "ES":
-                ret = "no existe \"" + entityName + "\" con id " + id;
+                ret = "no existe '" + entityName + "' con id " + id;
                 break;
             default:
-                ret = "there is no \"" + entityName + "\" with id: " + id;
+                ret = "there is no '" + entityName + "' with id: " + id;
         }
         return ret;
     }
@@ -33,15 +33,15 @@ public abstract class EntityMessages {
 
         switch (this.messages.getLang()) {
             case "EN":
-                ret = "cannot update \"" + entityName + "\" with id " + id
+                ret = "cannot update '" + entityName + "' with id " + id
                         + " because it doesn't exist";
                 break;
             case "ES":
-                ret = "no puede actualizarse \"" + entityName + "\" con id " + id
+                ret = "no puede actualizarse '" + entityName + "' con id " + id
                         + " porque no existe";
                 break;
             default:
-                ret = "cannot update \"" + entityName + "\" with id " + id
+                ret = "cannot update '" + entityName + "' with id " + id
                         + " because it doesn't exist";
         }
         return ret;
@@ -52,15 +52,15 @@ public abstract class EntityMessages {
 
         switch (this.messages.getLang()) {
             case "EN":
-                ret = "cannot insert/update \"" + entityName + "\". " + attributeName + " " + value
+                ret = "cannot insert/update '" + entityName + "'. " + attributeName + " " + value
                         + " already exist";
                 break;
             case "ES":
-                ret = "no puede insertarse/actualizarse \"" + entityName + "\". " + attributeName
+                ret = "no puede insertarse/actualizarse '" + entityName + "'. " + attributeName
                         + " " + value + " ya existe";
                 break;
             default:
-                ret = "cannot insert/update \"" + entityName + "\". " + attributeName + " " + value
+                ret = "cannot insert/update '" + entityName + "'. " + attributeName + " " + value
                         + " already exist";
         }
         return ret;

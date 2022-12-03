@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.configs.Configuration;
+import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigurationConverter;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.messages.Messages;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 
 @SpringBootApplication

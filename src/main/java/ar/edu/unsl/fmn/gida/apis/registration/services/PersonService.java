@@ -15,11 +15,11 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.PersonValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.PersonValidator;
 
 @Service
 @Transactional

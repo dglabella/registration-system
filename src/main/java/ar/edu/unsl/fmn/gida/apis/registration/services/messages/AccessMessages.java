@@ -1,4 +1,4 @@
-package ar.edu.unsl.fmn.gida.apis.registration.utils.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
 
 public class AccessMessages extends EntityMessages {
 

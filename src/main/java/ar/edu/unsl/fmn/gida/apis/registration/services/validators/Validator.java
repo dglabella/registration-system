@@ -1,4 +1,4 @@
-package ar.edu.unsl.fmn.gida.apis.registration.validators;
+package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import org.springframework.http.HttpStatus;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
