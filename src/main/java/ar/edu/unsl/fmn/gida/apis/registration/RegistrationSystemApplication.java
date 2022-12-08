@@ -12,7 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
 import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.PersonDetailsCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigurationConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
@@ -24,7 +24,7 @@ public class RegistrationSystemApplication {
 	public static Messages MESSAGES;
 
 	private void createQr() {
-		Cypher cypher = new CustomCypher();
+		Cypher cypher = new PersonDetailsCypher();
 		CustomQRGenerator qrGenerator = new CustomQRGenerator();
 		File file = new File(System.getProperty("user.dir") + "/qrs/" + "matthewQr" + ".png");
 		try {
@@ -80,6 +80,7 @@ public class RegistrationSystemApplication {
 	}
 
 	public static void main(String[] args) {
+		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
 		setUpConfigFile();
 		setUpMessagesLang();
 		SpringApplication.run(RegistrationSystemApplication.class, args);

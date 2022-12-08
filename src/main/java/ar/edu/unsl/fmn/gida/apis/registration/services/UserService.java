@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +19,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.security.CustomUserDetails;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.UserValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
 
 @Service
 @Transactional
@@ -26,7 +27,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    private UserValidator validator = new UserValidator(new CustomExpressionValidator());
+    private final UserValidator validator = new UserValidator(new CustomExpressionValidator());
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User getOne(int id) {
         User u = null;
@@ -55,7 +57,7 @@ public class UserService implements UserDetailsService {
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
         try {
-            user.setPassword(new CustomCypher().encrypt(user.getPassword()));
+            user.setPassword(this.passwordEncoder.encode(user.getPassword()));
             u = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
@@ -99,6 +101,7 @@ public class UserService implements UserDetailsService {
         User user = this.userRepository.findOneByAccountAndActiveTrue(account).orElseThrow(
                 () -> new UsernameNotFoundException(RegistrationSystemApplication.MESSAGES
                         .getUserMessages().notFoundByAccountErrorMessage(account)));
+        System.out.println("user is:\n" + user.getAccount() + " " + user.getPassword());
 
         return new CustomUserDetails(user);
     }

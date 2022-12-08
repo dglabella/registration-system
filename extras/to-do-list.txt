@@ -1,5 +1,7 @@
 - duplicated dni message
 
+- user authentication goes wrong if update User, because update saves the user "entirely"
+
 - check integrity with dates in "weelkly"
 
 - validation: what about names/lastnames like d'alessandro

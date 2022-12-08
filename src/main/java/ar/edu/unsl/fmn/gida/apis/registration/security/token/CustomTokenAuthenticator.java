@@ -10,6 +10,8 @@ public class CustomTokenAuthenticator implements TokenAuthenticator {
 
     @Override
     public UsernamePasswordAuthenticationToken authenticate(String token) {
+        System.out.println("CustomTokenAuthenticator - authenticate");
+        System.out.println();
         UsernamePasswordAuthenticationToken ret = null;
         try {
             Claims claims = Jwts.parserBuilder().setSigningKey(TokenProperties.KEY.getBytes())
@@ -20,6 +22,7 @@ public class CustomTokenAuthenticator implements TokenAuthenticator {
                     Collections.emptyList());
         } catch (JwtException exception) {
             exception.printStackTrace();
+            // invalid token or expired
         }
         return ret;
     }

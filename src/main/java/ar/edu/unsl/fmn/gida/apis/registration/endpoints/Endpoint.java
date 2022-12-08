@@ -8,4 +8,6 @@ public interface Endpoint {
     String weeklies = "weeklies";
     String users = "users";
     String credentials = "credentials";
+
+    String authentication = "/auth/signin";
 }

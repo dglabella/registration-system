@@ -19,7 +19,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.RegisterValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.PersonDetailsCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 
@@ -33,7 +33,7 @@ public class RegisterService {
     private RegisterValidator registerValidator =
             new RegisterValidator(new CustomExpressionValidator());
 
-    private Cypher cypher = new CustomCypher();
+    private Cypher cypher = new PersonDetailsCypher();
     private PersonConverter personConverter = new PersonConverter();
 
     private SimpleDateFormat dateFormatter =
