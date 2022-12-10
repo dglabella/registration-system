@@ -1,10 +1,10 @@
 package ar.edu.unsl.fmn.gida.apis.registration.security;
 
-public class AuthCredentials {
+public class AuthCredential {
     private String account;
     private String password;
 
-    public AuthCredentials() {}
+    public AuthCredential() {}
 
     public String getAccount() {
         return this.account;

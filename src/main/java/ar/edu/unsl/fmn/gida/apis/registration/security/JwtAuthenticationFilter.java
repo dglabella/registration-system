@@ -23,11 +23,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("JwtAuthenticationFilter - attemptAuthentication");
         System.out.println();
 
-        AuthCredentials authCredentials = new AuthCredentials();
+        AuthCredential authCredentials = new AuthCredential();
 
         try {
             authCredentials =
-                    new ObjectMapper().readValue(request.getReader(), AuthCredentials.class);
+                    new ObjectMapper().readValue(request.getReader(), AuthCredential.class);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ErrorResponse("something wrong with the request. Maybe the json sent is bad",

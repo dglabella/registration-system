@@ -24,7 +24,7 @@ public class WebSecurityConfiguration {
 	private JwtAuthorizationFilter jwtAuthorizationFilter;
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
 			AuthenticationManager authManager) throws Exception {
 
 		System.out.println("WebSecurityConfiguration - securityFilterChain");
@@ -50,7 +50,7 @@ public class WebSecurityConfiguration {
 
 	@Bean
 	public AuthenticationManager authManager(HttpSecurity httpSecurity) throws Exception {
-		System.out.println("WebSecurityConfiguration - authenticationManager");
+		System.out.println("WebSecurityConfiguration - authManager");
 		System.out.println();
 		return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
 				.userDetailsService(this.userDetailsService).passwordEncoder(this.passwordEncoder())
