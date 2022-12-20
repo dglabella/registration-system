@@ -1,8 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.beans.Transient;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -133,7 +133,7 @@ public class User implements UserDetails {
     @Override
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(privilege.name()));
+        return Arrays.asList(new SimpleGrantedAuthority(privilege.name()));
     }
 
     @Override
