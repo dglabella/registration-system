@@ -4,6 +4,8 @@
 
 - check integrity with dates in "weelkly"
 
+- all getAll must be paged
+
 - validation: what about names/lastnames like d'alessandro
 
 - if person fields are updated, what about the QR information? should generate another one ?

@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.security;
 
 import java.io.IOException;
-import java.util.Collections;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.security.token.CustomTokenGenerator;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -23,11 +23,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("JwtAuthenticationFilter - attemptAuthentication");
         System.out.println();
 
-        AuthCredential authCredentials = new AuthCredential();
+        User user = new User();
 
         try {
-            authCredentials =
-                    new ObjectMapper().readValue(request.getReader(), AuthCredential.class);
+            user = new ObjectMapper().readValue(request.getReader(), User.class);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ErrorResponse("something wrong with the request. Maybe the json sent is bad",
@@ -35,10 +34,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(authCredentials.getAccount(),
-                        authCredentials.getPassword(), Collections.emptyList());
+                new UsernamePasswordAuthenticationToken(user.getAccount(), user.getPassword(),
+                        user.getAuthorities());
 
-        return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+        return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
     }
 
     @Override
@@ -48,7 +47,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("JwtAuthenticationFilter - successfulAuthentication");
         System.out.println();
 
-        CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
+        User userDetails = (User) authResult.getPrincipal();
+
         String token = new CustomTokenGenerator().generate(userDetails.getUsername(),
                 userDetails.getEmail());
 

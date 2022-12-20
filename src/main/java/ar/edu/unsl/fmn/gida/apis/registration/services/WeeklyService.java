@@ -108,7 +108,7 @@ public class WeeklyService {
     }
 
     public Weekly delete(int id) {
-        throw new ErrorResponse("delete person operation not implemented yet...",
+        throw new ErrorResponse("delete weekly operation not implemented yet...",
                 HttpStatus.NOT_IMPLEMENTED);
     }
 }

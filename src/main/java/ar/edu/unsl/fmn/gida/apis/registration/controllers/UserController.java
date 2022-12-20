@@ -10,42 +10,40 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.services.UserService;
+import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
 @RestController
-@RequestMapping(value = Endpoint.users)
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping(value = Urls.Privileges.admin + Urls.users)
     public List<User> getAllUsers() {
         return userService.getAll();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = Urls.Privileges.admin + Urls.users + "/{id}")
     public User getUser(@PathVariable int id) {
         return this.userService.getOne(id);
     }
 
-    @PostMapping
+    @PostMapping(Urls.Privileges.pub + Urls.signin)
     public User postUser(@RequestBody User user) {
         return this.userService.insert(user);
     }
 
-    @PutMapping(value = "{id}")
+    @PutMapping(value = Urls.Privileges.admin + Urls.users + "/{id}")
     public User updateUser(@PathVariable int id, @RequestBody User user) {
         return this.userService.update(id, user);
     }
 
-    @DeleteMapping
+    @DeleteMapping(Urls.Privileges.admin + Urls.users + "/{id}")
     public User deleteUser() {
         throw new ErrorResponse("delete user operation not implemented yet...",
                 HttpStatus.NOT_IMPLEMENTED);

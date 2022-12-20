@@ -38,7 +38,6 @@ public class RegistrationSystemApplication {
 		}
 	}
 
-
 	private static void setUpConfigFile() {
 		ConfigurationConverter configurationConverter = new ConfigurationConverter();
 		File configFile =

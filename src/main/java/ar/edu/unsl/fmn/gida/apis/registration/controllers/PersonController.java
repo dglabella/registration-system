@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
+import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
 @RestController
-@RequestMapping(value = Endpoint.persons)
+@RequestMapping(value = Urls.Privileges.responsible + Urls.persons)
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class PersonController {
     @Autowired
@@ -108,7 +108,7 @@ public class PersonController {
         return p;
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = "/{id}")
     public Person deletePerson() {
         throw new ErrorResponse("delete person operation not implemented yet...",
                 HttpStatus.NOT_IMPLEMENTED);

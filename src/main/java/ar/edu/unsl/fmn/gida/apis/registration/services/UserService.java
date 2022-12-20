@@ -16,7 +16,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.security.CustomUserDetails;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.UserValidator;
 
@@ -103,6 +102,6 @@ public class UserService implements UserDetailsService {
                         .getUserMessages().notFoundByAccountErrorMessage(account)));
         System.out.println("user is:\n" + user.getAccount() + " " + user.getPassword());
 
-        return new CustomUserDetails(user);
+        return user;
     }
 }
