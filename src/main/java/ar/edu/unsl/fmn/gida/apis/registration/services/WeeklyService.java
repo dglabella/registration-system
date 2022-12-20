@@ -8,11 +8,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.WeeklyValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.WeeklyValidator;
 
 @Service
 @Transactional
@@ -30,7 +31,8 @@ public class WeeklyService {
         if (optional.isPresent()) {
             w = optional.get();
         } else {
-            throw new ErrorResponse("there is no weekly with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                    .notFoundErrorMessage(Weekly.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return w;
@@ -43,8 +45,10 @@ public class WeeklyService {
         if (optional.isPresent()) {
             ret = optional.get();
         } else {
-            throw new ErrorResponse("FATAL ERROR: database integrity may be corrupted; person "
-                    + personId + " has not a current weekly", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                            .getCurrentWeeklyErrorMessage(personId),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ret;
     }
@@ -54,23 +58,16 @@ public class WeeklyService {
     }
 
     public Weekly insert(Weekly weekly) {
-        // if (weekly != null) {
         this.weeklyValidator.validate(weekly);
         try {
-            // then save the new weekly
             if (weekly.getStart() == null) {
                 weekly.setStart(new Date());
             } else if (weekly.getStart().compareTo(new Date()) < 0) {
                 // check if start date is ok for the new weekly
-                
-            	//CRISTIAN 04-11-2022
-            	throw new ErrorResponse(
-                        "No es posible insertar/actualizar un calendario con fecha de inicio anterior al día de hoy inclusive",
+                throw new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                                .wrongWeeklyDatetimeErrorMessage(),
                         HttpStatus.UNPROCESSABLE_ENTITY);
-            	/*throw new ErrorResponse(
-                        "cannot insert/update a new weekly with start datetime before the current clock ",
-                        HttpStatus.UNPROCESSABLE_ENTITY);*/
-            	//END CRISTIAN 04-11-2022
             }
             this.weeklyRepository.save(weekly);
 
@@ -79,12 +76,10 @@ public class WeeklyService {
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        // }
         return weekly;
     }
 
     public Weekly update(Integer personId, Weekly weekly) {
-        // if (weekly != null) {
         this.weeklyValidator.validate(weekly);
         Weekly ret = null;
         Weekly w = this.getCurrentWeeklyFromPerson(personId);
@@ -97,14 +92,10 @@ public class WeeklyService {
                     weekly.setStart(new Date());
                 } else if (weekly.getStart().compareTo(new Date()) < 0) {
                     // check if start date is ok for the new weekly
-                	//CRISTIAN 04-11-2022
-                	throw new ErrorResponse(
-                            "No es posible insertar/actualizar un calendario con fecha de inicio anterior al día de hoy inclusive",
+                    throw new ErrorResponse(
+                            RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                                    .wrongWeeklyDatetimeErrorMessage(),
                             HttpStatus.UNPROCESSABLE_ENTITY);
-                	/*throw new ErrorResponse(
-                            "cannot insert/update a new weekly with start datetime before the current clock ",
-                            HttpStatus.UNPROCESSABLE_ENTITY);*/
-                	//END CRISTIAN 04-11-2022
                 }
                 ret = this.weeklyRepository.save(weekly);
             }
@@ -113,11 +104,11 @@ public class WeeklyService {
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        // }
         return ret;
     }
 
     public Weekly delete(int id) {
-        return null;
+        throw new ErrorResponse("delete weekly operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }

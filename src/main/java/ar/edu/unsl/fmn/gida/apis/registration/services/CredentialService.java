@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.CredentialRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CredentialValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CredentialValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 
 @Service
 @Transactional
@@ -28,7 +29,10 @@ public class CredentialService {
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
-            throw new ErrorResponse("there is no credential with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getCredentialMessages()
+                            .notFoundErrorMessage(Credential.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
         return credential;
     }
@@ -40,8 +44,8 @@ public class CredentialService {
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
-            throw new ErrorResponse("FATAL ERROR: there is no credential with id: " + personId,
-                    HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getCredentialMessages()
+                    .notFoundByPersonIdErrorMessage(personId), HttpStatus.NOT_FOUND);
         }
         return credential;
     }

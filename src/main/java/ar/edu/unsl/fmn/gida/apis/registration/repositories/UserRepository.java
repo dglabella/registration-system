@@ -9,7 +9,11 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    Boolean existsByDniOrEmailOrAccountAndActiveTrue(String dni, String email, String account);
+
     Optional<User> findByIdAndActiveTrue(Integer id);
+
+    Optional<User> findOneByAccountAndActiveTrue(String account);
 
     List<User> findAllByActiveTrue();
 }

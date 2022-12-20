@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +13,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.endpoints.Endpoint;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 import ar.edu.unsl.fmn.gida.apis.registration.services.DependencyService;
+import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
 @RestController
-@RequestMapping(value = Endpoint.dependencies)
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:3001", "http://localhost:3002" })
+@RequestMapping(value = Urls.Privileges.responsible + Urls.dependencies)
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class DependencyController {
 
     @Autowired
     private DependencyService dependencyService;
 
-    @RequestMapping(value = "/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Dependency> getDependency(@PathVariable int id) {
         Dependency d = this.dependencyService.getOne(id);
 
@@ -58,13 +57,13 @@ public class DependencyController {
         return response;
     }
 
-    @PutMapping
+    @PutMapping(value = "/{id}")
     public ResponseEntity<Dependency> updateDependency() {
         throw new ErrorResponse("update dependency operation not implemented yet...",
                 HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Dependency> deleteDependency() {
         throw new ErrorResponse("delete dependency operation not implemented yet...",
                 HttpStatus.NOT_IMPLEMENTED);

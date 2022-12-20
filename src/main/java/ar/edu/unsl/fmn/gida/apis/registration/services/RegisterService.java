@@ -3,7 +3,6 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +12,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.CustomCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.RegisterValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.PersonDetailsCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.validators.RegisterValidator;
 
 @Service
 @Transactional
@@ -33,7 +33,7 @@ public class RegisterService {
     private RegisterValidator registerValidator =
             new RegisterValidator(new CustomExpressionValidator());
 
-    private Cypher cypher = new CustomCypher();
+    private Cypher cypher = new PersonDetailsCypher();
     private PersonConverter personConverter = new PersonConverter();
 
     private SimpleDateFormat dateFormatter =
@@ -46,7 +46,10 @@ public class RegisterService {
         if (optional.isPresent()) {
             r = optional.get();
         } else {
-            throw new ErrorResponse("there is no register with id: " + id, HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                            .notFoundErrorMessage(Register.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
 
         return r;
@@ -61,15 +64,14 @@ public class RegisterService {
             toDate = to != null ? this.dateFormatter.parse(to) : new Date();
 
             if (fromDate.compareTo(toDate) > 0) {
-                throw new ErrorResponse(" \"from\" date cannot have a later date than \"to\" date",
-                        HttpStatus.BAD_REQUEST);
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                        .dateValueSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
             }
 
         } catch (ParseException exception) {
             exception.printStackTrace();
-            throw new ErrorResponse(
-                    "date format is wrong, make sure that date format follows the right specification",
-                    HttpStatus.BAD_REQUEST);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                    .dateFormatSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
         }
         return this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate,
                 PageRequest.of(page, quantityPerPage));
@@ -85,15 +87,14 @@ public class RegisterService {
             toDate = to != null ? this.dateFormatter.parse(to) : new Date();
 
             if (fromDate.compareTo(toDate) > 0) {
-                throw new ErrorResponse(" \"from\" date cannot have a later date than \"to\" date",
-                        HttpStatus.BAD_REQUEST);
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                        .dateValueSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
             }
 
         } catch (ParseException exception) {
             exception.printStackTrace();
-            throw new ErrorResponse(
-                    "date format is wrong, make sure that date format follows the right specification",
-                    HttpStatus.BAD_REQUEST);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                    .dateFormatSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
         }
         return this.registerRepository.findAllByPersonFkAndActiveTrueAndCheckInBetween(personId,
                 fromDate, toDate, PageRequest.of(page, quantityPerPage));
@@ -145,7 +146,7 @@ public class RegisterService {
                     r2Aux.setCheckIn(r2.getCheckIn());
                     r2Aux.setCheckOut(r2.getCheckOut());
                     this.registerRepository.save(r2);
-                    
+
                     r2Aux.setPerson(optional.get().getPerson());
                     r2Aux.setAccess(register.getAccess());
                 }
@@ -153,14 +154,14 @@ public class RegisterService {
                 r1.setPersonFk(person.getId());
                 r1.setAccessFk(register.getAccessFk());
                 r1.setCheckIn(new Date());
-                
+
                 r1Aux.setId(r1.getId());
                 r1Aux.setPersonFk(r1.getPersonFk());
                 r1Aux.setAccessFk(r1.getAccessFk());
                 r1Aux.setCheckIn(r1.getCheckIn());
                 r1Aux.setCheckOut(r1.getCheckOut());
                 this.registerRepository.save(r1);
-                
+
                 r1Aux.setPerson(person);
                 r1Aux.setAccess(register.getAccess());
             }
@@ -174,11 +175,12 @@ public class RegisterService {
     }
 
     public Register update(int id, Register register) {
-        throw new ErrorResponse("cannot update a register, illegal operation ",
+        throw new ErrorResponse("update register operation not available...",
                 HttpStatus.NOT_IMPLEMENTED);
     }
 
     public Register delete(int id) {
-        return null;
+        throw new ErrorResponse("delete register operation not implemented yet...",
+                HttpStatus.NOT_IMPLEMENTED);
     }
 }

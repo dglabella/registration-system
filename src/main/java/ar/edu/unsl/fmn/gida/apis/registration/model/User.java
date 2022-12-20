@@ -1,17 +1,25 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
+import java.beans.Transient;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Privilege;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     // =================================== keys ===================================
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,8 +50,8 @@ public class User {
             length = Constraints.User.PASSWORD_MAX_LENGHT)
     private String password;
 
-    @Column(nullable = Constraints.User.PRIVILEGE_NULLABLE)
-    private Privilege privileges = Privilege.USER;
+    @Enumerated(EnumType.ORDINAL)
+    private Privilege privilege = Privilege.USER;
 
     // ================================== extras ==================================
 
@@ -114,15 +122,50 @@ public class User {
         this.password = password;
     }
 
-    public Privilege getPrivileges() {
-        return this.privileges;
+    public Privilege getPrivilege() {
+        return this.privilege;
     }
 
-    public void setPrivileges(Privilege privileges) {
-        this.privileges = privileges;
+    public void setPrivilege(Privilege privilege) {
+        this.privilege = privilege;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    @Override
+    @Transient
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(privilege.name()));
+    }
+
+    @Override
+    @Transient
+    public String getUsername() {
+        return this.account;
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonExpired() {
+        // account expiration not implemented yet
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonLocked() {
+        // locking account not implemented yet
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isCredentialsNonExpired() {
+        // credentials expiration not implemented yet
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isEnabled() {
+        return this.active;
     }
 }

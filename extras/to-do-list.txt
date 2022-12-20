@@ -1,14 +1,20 @@
-1 - exist a jpa annotation for cascade logical deletion ?
+- duplicated dni message
 
-2 - check integrity with dates in "weelkly"
+- user authentication goes wrong if update User, because update saves the user "entirely"
 
-3 - validation: what about names/lastnames like d'alessandro
+- check integrity with dates in "weelkly"
 
-4 - if person fields are updated, what about the QR information? should generate another one ?
+- all getAll must be paged
 
-5 - transient variables should not have setters and getters methods names beginning with "get..." or "set..."?
+- validation: what about names/lastnames like d'alessandro
 
-6 - check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
+- if person fields are updated, what about the QR information? should generate another one ?
+
+- transient variables should not have setters and getters methods names beginning with "get..." or "set..."?
+
+- check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
 written in caller or in caller or callee?
 
-7 - log file for errors
+- log file for errors
+
+- exist a jpa annotation for cascade logical deletion ?
