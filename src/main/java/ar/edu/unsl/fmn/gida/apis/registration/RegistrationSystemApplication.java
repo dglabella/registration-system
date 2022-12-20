@@ -1,10 +1,10 @@
 package ar.edu.unsl.fmn.gida.apis.registration;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,10 +65,12 @@ public class RegistrationSystemApplication {
 
 			}
 
-			InputStream inputStream = new FileInputStream(configFile);
-			CONFIGURATION =
-					configurationConverter.objectify(new String(inputStream.readAllBytes()));
-			inputStream.close();
+			byte[] bytes = new byte[(int) configFile.length()];
+			DataInputStream dataInputStream = new DataInputStream(new FileInputStream(configFile));
+			dataInputStream.readFully(bytes);
+
+			CONFIGURATION = configurationConverter.objectify(dataInputStream.toString());
+			dataInputStream.close();
 		} catch (IOException exception) {
 			exception.printStackTrace();
 		}
