@@ -1,5 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.security.token;
 
+import java.util.Collection;
+import org.springframework.security.core.GrantedAuthority;
+
 public interface TokenGenerator {
 
     /**
@@ -9,6 +12,7 @@ public interface TokenGenerator {
      * @param userEmail the user email used for the token generation process
      * @return the token
      */
-    String generate(String userAccountName, String userEmail);
+    String generate(long id, String userAccountName, String userEmail,
+            Collection<? extends GrantedAuthority> authorities);
 
 }

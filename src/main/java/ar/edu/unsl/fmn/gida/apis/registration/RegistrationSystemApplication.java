@@ -62,14 +62,31 @@ public class RegistrationSystemApplication {
 				OutputStream outputStream = new FileOutputStream(configFile);
 				outputStream.write(configurationConverter.stringify(configuration).getBytes());
 				outputStream.close();
-
 			}
 
-			byte[] bytes = new byte[(int) configFile.length()];
 			DataInputStream dataInputStream = new DataInputStream(new FileInputStream(configFile));
-			dataInputStream.readFully(bytes);
+			int nBytesToRead = dataInputStream.available();
+			if (nBytesToRead > 0) {
+				byte[] bytes = new byte[nBytesToRead];
+				dataInputStream.read(bytes);
+				CONFIGURATION = configurationConverter.objectify(new String(bytes));
+			} else {
+				System.out.println(
+						"something is wrong reading the config file, default in memory option will be used");
 
-			CONFIGURATION = configurationConverter.objectify(dataInputStream.toString());
+				// Creating config object
+				CONFIGURATION = new HashMap<>();
+
+				// add config 1
+				CONFIGURATION.put(Configuration.NAME_LOG_FILE_DIR,
+						Configuration.DEFAULT_VALUE_LOG_FILE_DIR);
+
+				// add config 2
+				CONFIGURATION.put(Configuration.NAME_LANG, Configuration.DEFAULT_VALUE_LANG);
+
+				// add future default in memory configs here
+				// ...
+			}
 			dataInputStream.close();
 		} catch (IOException exception) {
 			exception.printStackTrace();

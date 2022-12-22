@@ -51,7 +51,7 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.ORDINAL)
-    private Privilege privilege = Privilege.USER;
+    private Privilege privilege = Privilege.ROLE_USER;
 
     // ================================== extras ==================================
 

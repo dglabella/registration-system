@@ -97,11 +97,10 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
+        // System.out.println("user is:\n" + user.getAccount() + " " + user.getPassword());
         User user = this.userRepository.findOneByAccountAndActiveTrue(account).orElseThrow(
                 () -> new UsernameNotFoundException(RegistrationSystemApplication.MESSAGES
                         .getUserMessages().notFoundByAccountErrorMessage(account)));
-        System.out.println("user is:\n" + user.getAccount() + " " + user.getPassword());
-
         return user;
     }
 }
