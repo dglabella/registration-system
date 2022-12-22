@@ -1,5 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.enums;
 
 public enum Privilege {
-    USER, RESPONSIBLE, ADMIN
+    ROLE_USER, ROLE_RESPONSIBLE, ROLE_ADMIN
 }

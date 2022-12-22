@@ -28,9 +28,14 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping(value = Urls.Privileges.admin + Urls.users + "/{id}")
+    @GetMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
     public User getUser(@PathVariable int id) {
         return this.userService.getOne(id);
+    }
+
+    @GetMapping(value = Urls.Privileges.user + Urls.users + "/account/{account}")
+    public User getUser(@PathVariable String account) {
+        return (User) this.userService.loadUserByUsername(account);
     }
 
     @PostMapping(Urls.Privileges.pub + Urls.signin)
@@ -38,7 +43,7 @@ public class UserController {
         return this.userService.insert(user);
     }
 
-    @PutMapping(value = Urls.Privileges.admin + Urls.users + "/{id}")
+    @PutMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
     public User updateUser(@PathVariable int id, @RequestBody User user) {
         return this.userService.update(id, user);
     }

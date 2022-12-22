@@ -5,7 +5,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,19 +16,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("JwtAuthorizationFilter - doFilterInternal");
-        System.out.println();
+        // System.out.println("" + request.getRequestURI() + " ---- >>>");
+        // System.out.println(request.getAttributeNames().nextElement());
+        // System.out.println("JwtAuthorizationFilter - doFilterInternal");
+        // System.out.println();
 
         String bearerToken = request.getHeader("Authorization");
 
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            System.out.println("bearerToken is OK");
-            System.out.println();
+            // System.out.println("bearerToken is OK");
+            // System.out.println();
             String token = bearerToken.replace("Bearer ", "");
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new CustomTokenAuthenticator().authenticate(token);
+
             SecurityContextHolder.getContext()
-                    .setAuthentication(usernamePasswordAuthenticationToken);
+                    .setAuthentication(new CustomTokenAuthenticator().authenticate(token));
         }
 
         filterChain.doFilter(request, response);
