@@ -50,7 +50,6 @@ public class CustomTokenAuthenticator implements TokenAuthenticator {
                                         "The tokes is invalid: maybe is expired or is wrong",
                                         HttpStatus.FORBIDDEN);
                 }
-
                 return ret;
         }
 }

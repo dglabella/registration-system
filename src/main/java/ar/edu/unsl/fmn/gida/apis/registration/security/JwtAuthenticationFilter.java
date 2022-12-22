@@ -2,6 +2,7 @@ package ar.edu.unsl.fmn.gida.apis.registration.security;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +31,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = new User();
 
         try {
+            // System.out.println(request.getReader().lines()
+            // .collect(Collectors.joining(System.lineSeparator())));
             user = new ObjectMapper().readValue(request.getReader(), User.class);
         } catch (IOException e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             throw new ErrorResponse("something wrong with the request. Maybe the json sent is bad",
                     HttpStatus.BAD_REQUEST);
         }
@@ -69,8 +72,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = new CustomTokenGenerator().generate(Long.parseLong(encodedId),
                 user.getUsername(), user.getEmail(), user.getAuthorities());
 
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setId(encodedId);
+        authResponse.setToken(token);
+
+        response.setHeader("Content-type", "application/json");
         response.addHeader("Authorization", "Bearer " + token);
-        response.getWriter().write(encodedId);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(authResponse));
         response.getWriter().flush();
 
         super.successfulAuthentication(request, response, chain, authResult);
