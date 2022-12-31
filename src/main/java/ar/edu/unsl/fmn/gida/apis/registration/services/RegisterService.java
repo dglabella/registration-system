@@ -46,10 +46,8 @@ public class RegisterService {
         if (optional.isPresent()) {
             r = optional.get();
         } else {
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                            .notFoundErrorMessage(Register.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
+                    .notFound(Register.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return r;
@@ -131,7 +129,7 @@ public class RegisterService {
                 r1Aux.setCheckOut(r1.getCheckOut());
                 this.registerRepository.save(r1);
 
-                r1Aux.setPerson(optional.get().getPerson());
+                r1Aux.setPerson(person);
                 r1Aux.setAccess(optional.get().getAccess());
 
                 if (register.getAccessFk() != optional.get().getAccessFk()) {
@@ -147,7 +145,7 @@ public class RegisterService {
                     r2Aux.setCheckOut(r2.getCheckOut());
                     this.registerRepository.save(r2);
 
-                    r2Aux.setPerson(optional.get().getPerson());
+                    r2Aux.setPerson(person);
                     r2Aux.setAccess(register.getAccess());
                 }
             } else {

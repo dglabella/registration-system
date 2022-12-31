@@ -45,7 +45,7 @@ public class PersonService {
             person.setCredential(this.credentialService.getOneByPersonId(id));
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getPersonMessages()
-                    .notFoundErrorMessage(Person.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+                    .notFound(Person.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -160,7 +160,7 @@ public class PersonService {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
                     RegistrationSystemApplication.MESSAGES.getPersonMessages()
-                            .updateNonExistentEntityErrorMessage(Person.class.getSimpleName(), id),
+                            .updateNonExistentEntity(Person.class.getSimpleName(), id),
                     HttpStatus.NOT_FOUND);
         }
         return ret;

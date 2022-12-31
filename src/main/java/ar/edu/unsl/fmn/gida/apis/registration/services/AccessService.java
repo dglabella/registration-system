@@ -29,7 +29,7 @@ public class AccessService {
             a = optional.get();
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getAccessMessages()
-                    .notFoundErrorMessage(Access.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+                    .notFound(Access.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return a;
@@ -70,7 +70,7 @@ public class AccessService {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
                     RegistrationSystemApplication.MESSAGES.getAccessMessages()
-                            .updateNonExistentEntityErrorMessage(Access.class.getSimpleName(), id),
+                            .updateNonExistentEntity(Access.class.getSimpleName(), id),
                     HttpStatus.NOT_FOUND);
         }
         return a;

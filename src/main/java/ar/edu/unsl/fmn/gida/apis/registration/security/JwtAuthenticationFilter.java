@@ -2,7 +2,6 @@ package ar.edu.unsl.fmn.gida.apis.registration.security;
 
 import java.io.IOException;
 import java.util.Random;
-import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +51,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws IOException, ServletException {
         // System.out.println("JwtAuthenticationFilter - successfulAuthentication");
         // System.out.println();
+
+        System.out.println(
+                "principal class in authentication: " + authResult.getPrincipal().getClass());
 
         User user = (User) authResult.getPrincipal();
         // System.out.println(

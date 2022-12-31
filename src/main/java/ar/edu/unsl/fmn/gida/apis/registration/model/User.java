@@ -168,4 +168,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.active;
     }
+
+    public void setEnabled(boolean value) {
+        this.active = value;
+    }
 }
