@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.enums.Privilege;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.UserRepository;
@@ -36,7 +37,7 @@ public class UserService implements UserDetailsService {
             u = optional.get();
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getUserMessages()
-                    .notFoundErrorMessage(User.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+                    .notFound(User.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return u;
@@ -48,46 +49,100 @@ public class UserService implements UserDetailsService {
 
     public User insert(User user) {
         this.validator.validate(user);
-        User u = null;
-        if (this.userRepository.existsByDniOrEmailOrAccountAndActiveTrue(user.getDni(),
-                user.getEmail(), user.getAccount())) {
+        this.userRepository.findOneByDniAndActiveTrue(user.getDni()).ifPresent(u -> {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getUserMessages()
-                    .constraintsErrorMessage(User.class.getSimpleName(), "or or or", "raasdmas"),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+                    .constraintsError(User.class.getSimpleName(), "dni", u.getDni()),
+                    HttpStatus.CONFLICT);
+        });
+
+        this.userRepository.findOneByEmailAndActiveTrue(user.getEmail()).ifPresent(u -> {
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getUserMessages()
+                            .constraintsError(User.class.getSimpleName(), "email", u.getEmail()),
+                    HttpStatus.CONFLICT);
+        });
+
+        this.userRepository.findOneByAccountAndActiveTrue(user.getAccount()).ifPresent(u -> {
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getUserMessages().constraintsError(
+                            User.class.getSimpleName(), "account", u.getAccount()),
+                    HttpStatus.CONFLICT);
+        });
+
+        User ret = null;
+
         try {
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-            u = userRepository.save(user);
+            ret = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
-
-        return u;
+        return ret;
     }
 
-    public User update(int id, User user) {
-        User u = null;
-        Optional<User> optional = this.userRepository.findByIdAndActiveTrue(id);
+    public User update(int id, User user, String loggedAccount, Privilege privilege) {
+        this.validator.validate(user);
 
-        if (optional.isPresent()) {
-            try {
-                user.setId(id);
-                u = userRepository.save(user);
-            } catch (DataIntegrityViolationException exception) {
-                exception.printStackTrace();
-                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                        HttpStatus.UNPROCESSABLE_ENTITY);
+        User ret = null;
+
+        Optional<User> loggedUserOpt =
+                this.userRepository.findOneByAccountAndActiveTrue(loggedAccount);
+
+        User loggedUser =
+                loggedUserOpt
+                        .orElseThrow(
+                                () -> new ErrorResponse(
+                                        RegistrationSystemApplication.MESSAGES.getUserMessages()
+                                                .accesssViolation(loggedAccount),
+                                        HttpStatus.FORBIDDEN));
+
+        // this error should not happen in a typical situation
+        User resourceUser = this.userRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getUserMessages()
+                                .updateNonExistentEntity(User.class.getSimpleName(), id),
+                        HttpStatus.NOT_FOUND));
+
+        try {
+            if (loggedUser.getPrivilege() != Privilege.ROLE_ADMIN && loggedUser.getId() != id) {
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getUserMessages()
+                        .updateAccessViolation(loggedAccount), HttpStatus.UNAUTHORIZED);
             }
-        } else {
-            // this error should not happen in a typical situation
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getUserMessages()
-                            .updateNonExistentEntityErrorMessage(User.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
+
+            this.userRepository.findOneByDniAndIdIsNot(user.getDni(), id).ifPresent(u -> {
+                throw new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getUserMessages()
+                                .constraintsError(User.class.getSimpleName(), "dni", u.getDni()),
+                        HttpStatus.CONFLICT);
+            });
+
+            this.userRepository.findOneByEmailAndIdIsNot(user.getEmail(), id).ifPresent(u -> {
+                throw new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getUserMessages().constraintsError(
+                                User.class.getSimpleName(), "email", u.getEmail()),
+                        HttpStatus.CONFLICT);
+            });
+
+            this.userRepository.findOneByAccountAndIdIsNot(user.getAccount(), id).ifPresent(u -> {
+                throw new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getUserMessages().constraintsError(
+                                User.class.getSimpleName(), "account", u.getAccount()),
+                        HttpStatus.CONFLICT);
+            });
+
+            user.setId(id);
+            user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+            user.setEnabled(true); // because user is active = false by default
+            user.setPrivilege(resourceUser.getPrivilege());
+            ret = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return u;
+        return ret;
     }
 
     public User delete(int id) {
@@ -100,7 +155,7 @@ public class UserService implements UserDetailsService {
         // System.out.println("user is:\n" + user.getAccount() + " " + user.getPassword());
         User user = this.userRepository.findOneByAccountAndActiveTrue(account).orElseThrow(
                 () -> new UsernameNotFoundException(RegistrationSystemApplication.MESSAGES
-                        .getUserMessages().notFoundByAccountErrorMessage(account)));
+                        .getUserMessages().notFoundByAccount(account)));
         return user;
     }
 }

@@ -32,29 +32,22 @@ public class WeeklyService {
             w = optional.get();
         } else {
             throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                    .notFoundErrorMessage(Weekly.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+                    .notFound(Weekly.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return w;
     }
 
     public Weekly getCurrentWeeklyFromPerson(Integer personId) {
-        Weekly ret = null;
-        Optional<Weekly> optional =
-                this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId);
-        if (optional.isPresent()) {
-            ret = optional.get();
-        } else {
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                            .getCurrentWeeklyErrorMessage(personId),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return ret;
+        return this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId)
+                .orElseThrow(() -> new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                                .getCurrentWeeklyError(personId),
+                        HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     public List<Weekly> getAll() {
-        return weeklyRepository.findAllByActiveTrue();
+        return this.weeklyRepository.findAllByActiveTrue();
     }
 
     public Weekly insert(Weekly weekly) {
@@ -64,10 +57,8 @@ public class WeeklyService {
                 weekly.setStart(new Date());
             } else if (weekly.getStart().compareTo(new Date()) < 0) {
                 // check if start date is ok for the new weekly
-                throw new ErrorResponse(
-                        RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                                .wrongWeeklyDatetimeErrorMessage(),
-                        HttpStatus.UNPROCESSABLE_ENTITY);
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                        .wrongWeeklyDatetime(), HttpStatus.UNPROCESSABLE_ENTITY);
             }
             this.weeklyRepository.save(weekly);
 
@@ -92,9 +83,8 @@ public class WeeklyService {
                     weekly.setStart(new Date());
                 } else if (weekly.getStart().compareTo(new Date()) < 0) {
                     // check if start date is ok for the new weekly
-                    throw new ErrorResponse(
-                            RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                                    .wrongWeeklyDatetimeErrorMessage(),
+                    throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                            .getWeeklyMessages().wrongWeeklyDatetime(),
                             HttpStatus.UNPROCESSABLE_ENTITY);
                 }
                 ret = this.weeklyRepository.save(weekly);

@@ -26,10 +26,8 @@ public class DependencyService {
         if (optional.isPresent()) {
             d = optional.get();
         } else {
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getDependencyMessages()
-                            .notFoundErrorMessage(Dependency.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getDependencyMessages()
+                    .notFound(Dependency.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
         }
 
         return d;
@@ -68,8 +66,9 @@ public class DependencyService {
 
         } else {
             // this error should not happen in a typical situation
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getDependencyMessages()
-                    .updateNonExistentEntityErrorMessage(Dependency.class.getSimpleName(), id),
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getDependencyMessages()
+                            .updateNonExistentEntity(Dependency.class.getSimpleName(), id),
                     HttpStatus.NOT_FOUND);
         }
         return d;

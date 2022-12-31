@@ -12,7 +12,7 @@ public abstract class EntityMessages {
         return this.messages;
     }
 
-    public String notFoundErrorMessage(String entityName, int id) {
+    public String notFound(String entityName, int id) {
         String ret = null;
 
         switch (this.messages.getLang()) {
@@ -28,7 +28,7 @@ public abstract class EntityMessages {
         return ret;
     }
 
-    public String updateNonExistentEntityErrorMessage(String entityName, int id) {
+    public String updateNonExistentEntity(String entityName, int id) {
         String ret = null;
 
         switch (this.messages.getLang()) {
@@ -47,7 +47,7 @@ public abstract class EntityMessages {
         return ret;
     }
 
-    public String constraintsErrorMessage(String entityName, String attributeName, String value) {
+    public String constraintsError(String entityName, String attributeName, String value) {
         String ret = null;
 
         switch (this.messages.getLang()) {

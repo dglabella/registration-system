@@ -6,7 +6,7 @@ public class WeeklyMessages extends EntityMessages {
         super(lang);
     }
 
-    public String getCurrentWeeklyErrorMessage(int personId) {
+    public String getCurrentWeeklyError(int personId) {
         String ret = null;
 
         switch (this.getMessages().getLang()) {
@@ -25,7 +25,7 @@ public class WeeklyMessages extends EntityMessages {
         return ret;
     }
 
-    public String wrongWeeklyDatetimeErrorMessage() {
+    public String wrongWeeklyDatetime() {
         String ret = null;
 
         switch (this.getMessages().getLang()) {
