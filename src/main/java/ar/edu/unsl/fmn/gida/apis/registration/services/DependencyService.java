@@ -1,9 +1,10 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +27,17 @@ public class DependencyService {
         if (optional.isPresent()) {
             d = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getDependencyMessages()
-                    .notFound(Dependency.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getDependencyBusinessLogicMessages()
+                            .notFound(Dependency.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
 
         return d;
     }
 
-    public List<Dependency> getAll() {
-        return dependencyRepository.findAllByActiveTrue();
+    public Page<Dependency> getAll(int page, int quantity) {
+        return dependencyRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
     }
 
     public Dependency insert(Dependency dependency) {
@@ -67,7 +70,7 @@ public class DependencyService {
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getDependencyMessages()
+                    RegistrationSystemApplication.MESSAGES.getDependencyBusinessLogicMessages()
                             .updateNonExistentEntity(Dependency.class.getSimpleName(), id),
                     HttpStatus.NOT_FOUND);
         }

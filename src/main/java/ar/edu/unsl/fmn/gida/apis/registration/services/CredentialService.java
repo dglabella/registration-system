@@ -1,8 +1,9 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,8 @@ public class CredentialService {
     private CredentialRepository credentialRepository;
 
     private CredentialValidator credentialValidator =
-            new CredentialValidator(new CustomExpressionValidator());
+            new CredentialValidator(new CustomExpressionValidator(),
+                    RegistrationSystemApplication.MESSAGES.getCredentialValidationMessages());
 
     public Credential getOne(Integer id) {
         Credential credential = null;
@@ -29,8 +31,10 @@ public class CredentialService {
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getCredentialMessages()
-                    .notFound(Credential.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getCredentialBusinessLogicMessages()
+                            .notFound(Credential.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
         return credential;
     }
@@ -42,14 +46,15 @@ public class CredentialService {
         if (optional.isPresent()) {
             credential = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getCredentialMessages()
-                    .notFoundByPersonIdErrorMessage(personId), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                    .getCredentialBusinessLogicMessages().notFoundByPersonIdErrorMessage(personId),
+                    HttpStatus.NOT_FOUND);
         }
         return credential;
     }
 
-    public List<Credential> getAll() {
-        return this.credentialRepository.findAllByActiveTrue();
+    public Page<Credential> getAll(int page, int quantity) {
+        return this.credentialRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
     }
 
     public Credential insert(Credential credential) {

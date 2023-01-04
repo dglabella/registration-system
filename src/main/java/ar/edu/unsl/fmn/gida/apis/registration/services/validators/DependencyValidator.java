@@ -2,11 +2,13 @@ package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.EntityValidationMessages;
 
 public class DependencyValidator extends Validator<Dependency> {
 
-    public DependencyValidator(ExpressionValidator expressionValidator) {
-        super(expressionValidator);
+    public DependencyValidator(ExpressionValidator expressionValidator,
+            EntityValidationMessages entityValidationMessages) {
+        super(expressionValidator, entityValidationMessages);
     }
 
     @Override

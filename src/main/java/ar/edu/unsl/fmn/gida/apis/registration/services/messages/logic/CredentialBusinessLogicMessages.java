@@ -1,8 +1,10 @@
-package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic;
 
-public class CredentialMessages extends EntityMessages {
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
 
-    public CredentialMessages(Messages lang) {
+public class CredentialBusinessLogicMessages extends EntityBusinessLogicMessages {
+
+    public CredentialBusinessLogicMessages(Messages lang) {
         super(lang);
     }
 

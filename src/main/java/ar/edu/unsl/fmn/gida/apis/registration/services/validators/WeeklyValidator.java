@@ -2,12 +2,14 @@ package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.EntityValidationMessages;
 
 
 public class WeeklyValidator extends Validator<Weekly> {
 
-    public WeeklyValidator(ExpressionValidator expresionValidator) {
-        super(expresionValidator);
+    public WeeklyValidator(ExpressionValidator expressionValidator,
+            EntityValidationMessages entityValidationMessages) {
+        super(expressionValidator, entityValidationMessages);
     }
 
     @Override

@@ -1,8 +1,10 @@
-package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic;
 
-public class RegisterMessages extends EntityMessages {
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
 
-    public RegisterMessages(Messages lang) {
+public class RegisterBusinessLogicMessages extends EntityBusinessLogicMessages {
+
+    public RegisterBusinessLogicMessages(Messages lang) {
         super(lang);
     }
 

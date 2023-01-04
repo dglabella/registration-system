@@ -1,8 +1,10 @@
-package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic;
 
-public class PersonMessages extends EntityMessages {
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
 
-    public PersonMessages(Messages messages) {
+public class PersonBusinessLogicMessages extends EntityBusinessLogicMessages {
+
+    public PersonBusinessLogicMessages(Messages messages) {
         super(messages);
     }
 
@@ -19,6 +21,7 @@ public class PersonMessages extends EntityMessages {
             default:
                 ret = "there is no person with dni: " + dni;
         }
+
         return ret;
     }
 }

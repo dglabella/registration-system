@@ -1,8 +1,10 @@
-package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic;
 
-public class UserMessages extends EntityMessages {
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
 
-    public UserMessages(Messages lang) {
+public class UserBusinessLogicMessages extends EntityBusinessLogicMessages {
+
+    public UserBusinessLogicMessages(Messages lang) {
         super(lang);
     }
 
@@ -19,6 +21,7 @@ public class UserMessages extends EntityMessages {
             default:
                 ret = "there is no user with account name '" + account + "'";
         }
+
         return ret;
     }
 
@@ -35,6 +38,7 @@ public class UserMessages extends EntityMessages {
             default:
                 ret = "the user " + account + " cannot update data from other user";
         }
+
         return ret;
     }
 
@@ -54,6 +58,7 @@ public class UserMessages extends EntityMessages {
                 ret = "the user " + account
                         + " has no privilege assigned. Data integrity corrupted or exist a failure loading privileges";
         }
+
         return ret;
     }
 
@@ -70,6 +75,7 @@ public class UserMessages extends EntityMessages {
             default:
                 ret = "the user " + account + " is not registered. Access Violation";
         }
+
         return ret;
     }
 }

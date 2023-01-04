@@ -1,8 +1,10 @@
-package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic;
 
-public class WeeklyMessages extends EntityMessages {
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
 
-    public WeeklyMessages(Messages lang) {
+public class WeeklyBusinessLogicMessages extends EntityBusinessLogicMessages {
+
+    public WeeklyBusinessLogicMessages(Messages lang) {
         super(lang);
     }
 

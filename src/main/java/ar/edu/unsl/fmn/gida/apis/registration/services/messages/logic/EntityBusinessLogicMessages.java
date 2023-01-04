@@ -1,10 +1,12 @@
-package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
+package ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic;
 
-public abstract class EntityMessages {
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
+
+public abstract class EntityBusinessLogicMessages {
 
     private Messages messages;
 
-    public EntityMessages(Messages messages) {
+    public EntityBusinessLogicMessages(Messages messages) {
         this.messages = messages;
     }
 

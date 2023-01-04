@@ -1,11 +1,13 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.EntityValidationMessages;
 
 public class RegisterValidator extends Validator<Register> {
 
-    public RegisterValidator(ExpressionValidator expressionValidator) {
-        super(expressionValidator);
+    public RegisterValidator(ExpressionValidator expressionValidator,
+            EntityValidationMessages entityValidationMessages) {
+        super(expressionValidator, entityValidationMessages);
     }
 
     @Override

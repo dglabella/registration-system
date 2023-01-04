@@ -1,11 +1,7 @@
 
-- check integrity with dates in "weelkly"
-
-- all getAll must be paged
+- language is not transversal to the whole system
 
 - after user creation, do not return pass, dni, etc.
-
-- language is not transversal to the whole system
 
 - validation: what about names/lastnames like d'alessandro
 

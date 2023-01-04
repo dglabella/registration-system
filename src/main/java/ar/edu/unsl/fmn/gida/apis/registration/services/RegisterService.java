@@ -31,7 +31,8 @@ public class RegisterService {
     private RegisterRepository registerRepository;
 
     private RegisterValidator registerValidator =
-            new RegisterValidator(new CustomExpressionValidator());
+            new RegisterValidator(new CustomExpressionValidator(),
+                    RegistrationSystemApplication.MESSAGES.getRegisterValidationMessages());
 
     private Cypher cypher = new PersonDetailsCypher();
     private PersonConverter personConverter = new PersonConverter();
@@ -46,8 +47,10 @@ public class RegisterService {
         if (optional.isPresent()) {
             r = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                    .notFound(Register.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(
+                    RegistrationSystemApplication.MESSAGES.getRegisterBusinessLogicMessages()
+                            .notFound(Register.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
 
         return r;
@@ -62,14 +65,16 @@ public class RegisterService {
             toDate = to != null ? this.dateFormatter.parse(to) : new Date();
 
             if (fromDate.compareTo(toDate) > 0) {
-                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                        .dateValueSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                        .getRegisterBusinessLogicMessages().dateValueSpecificationErrorMessage(),
+                        HttpStatus.BAD_REQUEST);
             }
 
         } catch (ParseException exception) {
             exception.printStackTrace();
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                    .dateFormatSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                    .getRegisterBusinessLogicMessages().dateFormatSpecificationErrorMessage(),
+                    HttpStatus.BAD_REQUEST);
         }
         return this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate,
                 PageRequest.of(page, quantityPerPage));
@@ -85,14 +90,16 @@ public class RegisterService {
             toDate = to != null ? this.dateFormatter.parse(to) : new Date();
 
             if (fromDate.compareTo(toDate) > 0) {
-                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                        .dateValueSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                        .getRegisterBusinessLogicMessages().dateValueSpecificationErrorMessage(),
+                        HttpStatus.BAD_REQUEST);
             }
 
         } catch (ParseException exception) {
             exception.printStackTrace();
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getRegisterMessages()
-                    .dateFormatSpecificationErrorMessage(), HttpStatus.BAD_REQUEST);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                    .getRegisterBusinessLogicMessages().dateFormatSpecificationErrorMessage(),
+                    HttpStatus.BAD_REQUEST);
         }
         return this.registerRepository.findAllByPersonFkAndActiveTrueAndCheckInBetween(personId,
                 fromDate, toDate, PageRequest.of(page, quantityPerPage));

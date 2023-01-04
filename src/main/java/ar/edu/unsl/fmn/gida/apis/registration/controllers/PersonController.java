@@ -25,6 +25,10 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @RequestMapping(value = Urls.Privileges.responsible + Urls.persons)
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class PersonController {
+
+    private final int DEFAULT_PAGE_NUMBER = 0;
+    private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+
     @Autowired
     private PersonService personService;
 
@@ -34,36 +38,26 @@ public class PersonController {
         return person;
     }
 
-    @GetMapping
-    public List<Person> getAllPersons() {
-        List<Person> ret = this.personService.getAll();
-        return ret;
-    }
-
     @GetMapping(value = "/paged")
     public Page<Person> getAll(@RequestParam Map<String, String> map) {
         Page<Person> page = null;
-        if (!map.containsKey("page")) {
-            throw new ErrorResponse("must specify at least a page number", HttpStatus.BAD_REQUEST);
-        } else if (!map.containsKey("quantity")) {
-            if (Integer.parseInt(map.get("page")) < 0) {
-                throw new ErrorResponse("page number must not be less than zero",
-                        HttpStatus.BAD_REQUEST);
-            } else {
-                page = this.personService.getAll(Integer.parseInt(map.get("page")), 20);
-            }
+
+        if (!map.containsKey("page") && !map.containsKey("quantity")) {
+            page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
+            page = this.personService.getAll(Integer.parseInt(map.get("page")),
+                    this.DEFAULT_QUANTITY_PER_PAGE);
+        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
+            page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
+                    Integer.parseInt(map.get("quantity")));
         } else {
-            if (Integer.parseInt(map.get("quantity")) < 0) {
-                throw new ErrorResponse("quantity number must not be less than zero",
-                        HttpStatus.BAD_REQUEST);
-            }
             page = this.personService.getAll(Integer.parseInt(map.get("page")),
                     Integer.parseInt(map.get("quantity")));
         }
 
         return page;
     }
-
 
     @GetMapping(value = "/dni/{dni}")
     public Person getPersonByDni(@PathVariable String dni) {
@@ -93,7 +87,6 @@ public class PersonController {
         }
 
         return persons;
-
     }
 
     @PostMapping

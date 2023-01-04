@@ -34,7 +34,8 @@ public class PersonService {
     @Autowired
     private CredentialService credentialService;
 
-    private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator());
+    private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator(),
+            RegistrationSystemApplication.MESSAGES.getPersonValidationMessages());
 
     public Person getOne(int id) {
         Person person = null;
@@ -44,8 +45,9 @@ public class PersonService {
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
             person.setCredential(this.credentialService.getOneByPersonId(id));
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getPersonMessages()
-                    .notFound(Person.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                    .getPersonBusinessLogicMessages().notFound(Person.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -59,8 +61,9 @@ public class PersonService {
             person = personOptional.get();
             person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getPersonMessages()
-                    .notFoundByDniErrorMessage(dni), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                    .getPersonBusinessLogicMessages().notFoundByDniErrorMessage(dni),
+                    HttpStatus.NOT_FOUND);
         }
 
         return person;
@@ -159,7 +162,7 @@ public class PersonService {
         } else {
             // this error should not happen in a typical situation
             throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getPersonMessages()
+                    RegistrationSystemApplication.MESSAGES.getPersonBusinessLogicMessages()
                             .updateNonExistentEntity(Person.class.getSimpleName(), id),
                     HttpStatus.NOT_FOUND);
         }

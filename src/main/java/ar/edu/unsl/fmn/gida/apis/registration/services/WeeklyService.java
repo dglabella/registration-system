@@ -1,10 +1,11 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,8 @@ public class WeeklyService {
     @Autowired
     private WeeklyRepository weeklyRepository;
 
-    private WeeklyValidator weeklyValidator = new WeeklyValidator(new CustomExpressionValidator());
+    private WeeklyValidator weeklyValidator = new WeeklyValidator(new CustomExpressionValidator(),
+            RegistrationSystemApplication.MESSAGES.getWeeklyValidationMessages());
 
     public Weekly getOne(int id) {
         Weekly w = null;
@@ -31,8 +33,9 @@ public class WeeklyService {
         if (optional.isPresent()) {
             w = optional.get();
         } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                    .notFound(Weekly.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
+            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                    .getWeeklyBusinessLogicMessages().notFound(Weekly.class.getSimpleName(), id),
+                    HttpStatus.NOT_FOUND);
         }
 
         return w;
@@ -41,13 +44,18 @@ public class WeeklyService {
     public Weekly getCurrentWeeklyFromPerson(Integer personId) {
         return this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId)
                 .orElseThrow(() -> new ErrorResponse(
-                        RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
+                        RegistrationSystemApplication.MESSAGES.getWeeklyBusinessLogicMessages()
                                 .getCurrentWeeklyError(personId),
                         HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    public List<Weekly> getAll() {
-        return this.weeklyRepository.findAllByActiveTrue();
+    public Page<Weekly> getAll(int page, int quantity) {
+        return this.weeklyRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
+    }
+
+    public Page<Weekly> getAllFromPerson(int personId, int page, int quantity) {
+        return this.weeklyRepository.findAllByPersonFkAndActiveTrue(personId,
+                PageRequest.of(page, quantity));
     }
 
     public Weekly insert(Weekly weekly) {
@@ -57,8 +65,9 @@ public class WeeklyService {
                 weekly.setStart(new Date());
             } else if (weekly.getStart().compareTo(new Date()) < 0) {
                 // check if start date is ok for the new weekly
-                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getWeeklyMessages()
-                        .wrongWeeklyDatetime(), HttpStatus.UNPROCESSABLE_ENTITY);
+                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
+                        .getWeeklyBusinessLogicMessages().wrongWeeklyDatetime(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
             }
             this.weeklyRepository.save(weekly);
 
@@ -84,7 +93,7 @@ public class WeeklyService {
                 } else if (weekly.getStart().compareTo(new Date()) < 0) {
                     // check if start date is ok for the new weekly
                     throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
-                            .getWeeklyMessages().wrongWeeklyDatetime(),
+                            .getWeeklyBusinessLogicMessages().wrongWeeklyDatetime(),
                             HttpStatus.UNPROCESSABLE_ENTITY);
                 }
                 ret = this.weeklyRepository.save(weekly);

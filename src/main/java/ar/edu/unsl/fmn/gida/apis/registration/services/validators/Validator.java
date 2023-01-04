@@ -2,16 +2,24 @@ package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import org.springframework.http.HttpStatus;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.EntityValidationMessages;
 
 public abstract class Validator<T> {
     private ExpressionValidator expressionValidator;
+    private EntityValidationMessages entityValidationMessages;
 
-    public Validator(ExpressionValidator expressionValidator) {
+    public Validator(ExpressionValidator expressionValidator,
+            EntityValidationMessages entityValidationMessages) {
         this.expressionValidator = expressionValidator;
+        this.entityValidationMessages = entityValidationMessages;
     }
 
     public ExpressionValidator getExpressionValidator() {
         return this.expressionValidator;
+    }
+
+    public EntityValidationMessages getEntityValidationMessages() {
+        return this.entityValidationMessages;
     }
 
     public void sendError(String message) {

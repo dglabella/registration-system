@@ -2,11 +2,13 @@ package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.EntityValidationMessages;
 
 public class UserValidator extends Validator<User> {
 
-    public UserValidator(ExpressionValidator expressionValidator) {
-        super(expressionValidator);
+    public UserValidator(ExpressionValidator expressionValidator,
+            EntityValidationMessages entityValidationMessages) {
+        super(expressionValidator, entityValidationMessages);
     }
 
     @Override
@@ -14,9 +16,8 @@ public class UserValidator extends Validator<User> {
         /**
          * check nullability
          */
-        if (entity.getId() != null) {
+        if (entity.getId() != null)
             this.sendError("cannot specify id");
-        }
 
         if (!(this.getExpressionValidator().isPresent(entity.getUserName())
                 || Constraints.User.NAME_NULLABLE))

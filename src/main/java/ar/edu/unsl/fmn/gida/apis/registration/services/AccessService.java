@@ -1,9 +1,9 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,59 +21,54 @@ public class AccessService {
     @Autowired
     private AccessRepository accessRepository;
 
+    private AccessValidator accessValidator = new AccessValidator(new CustomExpressionValidator(),
+            RegistrationSystemApplication.MESSAGES.getAccessValidationMessages());
+
     public Access getOne(int id) {
-        Access a = null;
-        Optional<Access> optional = accessRepository.findByIdAndActiveTrue(id);
+        Access ret = accessRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getAccessBusinessLogicMessages()
+                                .notFound(Access.class.getSimpleName(), id),
+                        HttpStatus.NOT_FOUND));
 
-        if (optional.isPresent()) {
-            a = optional.get();
-        } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES.getAccessMessages()
-                    .notFound(Access.class.getSimpleName(), id), HttpStatus.NOT_FOUND);
-        }
-
-        return a;
+        return ret;
     }
 
-    public List<Access> getAll() {
-        return accessRepository.findAllByActiveTrue();
+    public Page<Access> getAll(int page, int quantity) {
+        return accessRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
     }
 
     public Access insert(Access access) {
-        new AccessValidator(new CustomExpressionValidator()).validate(access);
-        Access a = null;
+        this.accessValidator.validate(access);
+        Access ret;
         try {
-            a = accessRepository.save(access);
+            ret = accessRepository.save(access);
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
             throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return a;
+        return ret;
     }
 
     public Access update(int id, Access access) {
-        Access a = null;
-        Optional<Access> optional = accessRepository.findByIdAndActiveTrue(id);
-        if (optional.isPresent()) {
-            try {
-                access.setId(id);
-                accessRepository.save(access);
+        this.accessValidator.validate(access);
+        Access ret = this.accessRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new ErrorResponse(
+                        RegistrationSystemApplication.MESSAGES.getAccessBusinessLogicMessages()
+                                .updateNonExistentEntity(Access.class.getSimpleName(), id),
+                        HttpStatus.NOT_FOUND));
 
-            } catch (DataIntegrityViolationException exception) {
-                exception.printStackTrace();
-                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                        HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-
-        } else {
-            // this error should not happen in a typical situation
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getAccessMessages()
-                            .updateNonExistentEntity(Access.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
+        try {
+            access.setId(id);
+            accessRepository.save(access);
+        } catch (DataIntegrityViolationException exception) {
+            exception.printStackTrace();
+            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return a;
+
+        return ret;
     }
 
     public Access delete(int id) {

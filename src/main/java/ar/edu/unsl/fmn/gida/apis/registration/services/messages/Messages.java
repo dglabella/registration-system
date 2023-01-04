@@ -1,86 +1,182 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services.messages;
 
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.AccessBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.CredentialBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.DependencyBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.PersonBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.RegisterBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.UserBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.logic.WeeklyBusinessLogicMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.AccessValidationMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.CredentialValidationMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.DependencyValidationMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.PersonValidationMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.RegisterValidationMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.UserValidationMessages;
+import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.WeeklyValidationMessages;
+
 public class Messages {
 
     private String lang;
 
-    private AccessMessages accessMessages;
-    private CredentialMessages credentialMessages;
-    private DependencyMessages dependencyMessages;
-    private PersonMessages personMessages;
-    private RegisterMessages registerMessages;
-    private UserMessages userMessages;
-    private WeeklyMessages weeklyMessages;
+    private AccessBusinessLogicMessages accessBusinessLogicMessages;
+    private CredentialBusinessLogicMessages credentialBusinessLogicMessages;
+    private DependencyBusinessLogicMessages dependencyBusinessLogicMessages;
+    private PersonBusinessLogicMessages personBusinessLogicMessages;
+    private RegisterBusinessLogicMessages registerBusinessLogicMessages;
+    private UserBusinessLogicMessages userBusinessLogicMessages;
+    private WeeklyBusinessLogicMessages weeklyBusinessLogicMessages;
+
+    private AccessValidationMessages accessValidationMessages;
+    private CredentialValidationMessages credentialValidationMessages;
+    private DependencyValidationMessages dependencyValidationMessages;
+    private PersonValidationMessages personValidationMessages;
+    private RegisterValidationMessages registerValidationMessages;
+    private UserValidationMessages userValidationMessages;
+    private WeeklyValidationMessages weeklyValidationMessages;
 
     public Messages(String lang) {
         this.lang = lang;
 
-        this.accessMessages = new AccessMessages(this);
-        this.credentialMessages = new CredentialMessages(this);
-        this.dependencyMessages = new DependencyMessages(this);
-        this.personMessages = new PersonMessages(this);
-        this.registerMessages = new RegisterMessages(this);
-        this.userMessages = new UserMessages(this);
-        this.weeklyMessages = new WeeklyMessages(this);
+        this.accessBusinessLogicMessages = new AccessBusinessLogicMessages(this);
+        this.credentialBusinessLogicMessages = new CredentialBusinessLogicMessages(this);
+        this.dependencyBusinessLogicMessages = new DependencyBusinessLogicMessages(this);
+        this.personBusinessLogicMessages = new PersonBusinessLogicMessages(this);
+        this.registerBusinessLogicMessages = new RegisterBusinessLogicMessages(this);
+        this.userBusinessLogicMessages = new UserBusinessLogicMessages(this);
+        this.weeklyBusinessLogicMessages = new WeeklyBusinessLogicMessages(this);
+
+        this.accessValidationMessages = new AccessValidationMessages(this);
+        this.credentialValidationMessages = new CredentialValidationMessages(this);
+        this.dependencyValidationMessages = new DependencyValidationMessages(this);
+        this.personValidationMessages = new PersonValidationMessages(this);
+        this.registerValidationMessages = new RegisterValidationMessages(this);
+        this.userValidationMessages = new UserValidationMessages(this);
+        this.weeklyValidationMessages = new WeeklyValidationMessages(this);
     }
 
     public String getLang() {
         return this.lang;
     }
 
-    public AccessMessages getAccessMessages() {
-        return this.accessMessages;
+    public AccessBusinessLogicMessages getAccessBusinessLogicMessages() {
+        return this.accessBusinessLogicMessages;
     }
 
-    public void setAccessMessages(AccessMessages accessMessages) {
-        this.accessMessages = accessMessages;
+    public void setAccessBusinessLogicMessages(
+            AccessBusinessLogicMessages accessBusinessLogicMessages) {
+        this.accessBusinessLogicMessages = accessBusinessLogicMessages;
     }
 
-    public CredentialMessages getCredentialMessages() {
-        return this.credentialMessages;
+    public CredentialBusinessLogicMessages getCredentialBusinessLogicMessages() {
+        return this.credentialBusinessLogicMessages;
     }
 
-    public void setCredentialMessages(CredentialMessages credentialMessages) {
-        this.credentialMessages = credentialMessages;
+    public void setCredentialBusinessLogicMessages(
+            CredentialBusinessLogicMessages credentialBusinessLogicMessages) {
+        this.credentialBusinessLogicMessages = credentialBusinessLogicMessages;
     }
 
-    public DependencyMessages getDependencyMessages() {
-        return this.dependencyMessages;
+    public DependencyBusinessLogicMessages getDependencyBusinessLogicMessages() {
+        return this.dependencyBusinessLogicMessages;
     }
 
-    public void setDependencyMessages(DependencyMessages dependencyMessages) {
-        this.dependencyMessages = dependencyMessages;
+    public void setDependencyBusinessLogicMessages(
+            DependencyBusinessLogicMessages dependencyBusinessLogicMessages) {
+        this.dependencyBusinessLogicMessages = dependencyBusinessLogicMessages;
     }
 
-    public PersonMessages getPersonMessages() {
-        return this.personMessages;
+    public PersonBusinessLogicMessages getPersonBusinessLogicMessages() {
+        return this.personBusinessLogicMessages;
     }
 
-    public void setPersonMessages(PersonMessages personMessages) {
-        this.personMessages = personMessages;
+    public void setPersonBusinessLogicMessages(
+            PersonBusinessLogicMessages personBusinessLogicMessages) {
+        this.personBusinessLogicMessages = personBusinessLogicMessages;
     }
 
-    public RegisterMessages getRegisterMessages() {
-        return this.registerMessages;
+    public RegisterBusinessLogicMessages getRegisterBusinessLogicMessages() {
+        return this.registerBusinessLogicMessages;
     }
 
-    public void setRegisterMessages(RegisterMessages registerMessages) {
-        this.registerMessages = registerMessages;
+    public void setRegisterBusinessLogicMessages(
+            RegisterBusinessLogicMessages registerBusinessLogicMessages) {
+        this.registerBusinessLogicMessages = registerBusinessLogicMessages;
     }
 
-    public UserMessages getUserMessages() {
-        return this.userMessages;
+    public UserBusinessLogicMessages getUserBusinessLogicMessages() {
+        return this.userBusinessLogicMessages;
     }
 
-    public void setUserMessages(UserMessages userMessages) {
-        this.userMessages = userMessages;
+    public void setUserBusinessLogicMessages(UserBusinessLogicMessages userBusinessLogicMessages) {
+        this.userBusinessLogicMessages = userBusinessLogicMessages;
     }
 
-    public WeeklyMessages getWeeklyMessages() {
-        return this.weeklyMessages;
+    public WeeklyBusinessLogicMessages getWeeklyBusinessLogicMessages() {
+        return this.weeklyBusinessLogicMessages;
     }
 
-    public void setWeeklyMessages(WeeklyMessages weeklyMessages) {
-        this.weeklyMessages = weeklyMessages;
+    public void setWeeklyBusinessLogicMessages(
+            WeeklyBusinessLogicMessages weeklyBusinessLogicMessages) {
+        this.weeklyBusinessLogicMessages = weeklyBusinessLogicMessages;
+    }
+
+    public AccessValidationMessages getAccessValidationMessages() {
+        return this.accessValidationMessages;
+    }
+
+    public void setAccessValidationMessages(AccessValidationMessages accessValidationMessages) {
+        this.accessValidationMessages = accessValidationMessages;
+    }
+
+    public CredentialValidationMessages getCredentialValidationMessages() {
+        return this.credentialValidationMessages;
+    }
+
+    public void setCredentialValidationMessages(
+            CredentialValidationMessages credentialValidationMessages) {
+        this.credentialValidationMessages = credentialValidationMessages;
+    }
+
+    public DependencyValidationMessages getDependencyValidationMessages() {
+        return this.dependencyValidationMessages;
+    }
+
+    public void setDependencyValidationMessages(
+            DependencyValidationMessages dependencyValidationMessages) {
+        this.dependencyValidationMessages = dependencyValidationMessages;
+    }
+
+    public PersonValidationMessages getPersonValidationMessages() {
+        return this.personValidationMessages;
+    }
+
+    public void setPersonValidationMessages(PersonValidationMessages personValidationMessages) {
+        this.personValidationMessages = personValidationMessages;
+    }
+
+    public RegisterValidationMessages getRegisterValidationMessages() {
+        return this.registerValidationMessages;
+    }
+
+    public void setRegisterValidationMessages(
+            RegisterValidationMessages registerValidationMessages) {
+        this.registerValidationMessages = registerValidationMessages;
+    }
+
+    public UserValidationMessages getUserValidationMessages() {
+        return this.userValidationMessages;
+    }
+
+    public void setUserValidationMessages(UserValidationMessages userValidationMessages) {
+        this.userValidationMessages = userValidationMessages;
+    }
+
+    public WeeklyValidationMessages getWeeklyValidationMessages() {
+        return this.weeklyValidationMessages;
+    }
+
+    public void setWeeklyValidationMessages(WeeklyValidationMessages weeklyValidationMessages) {
+        this.weeklyValidationMessages = weeklyValidationMessages;
     }
 }
