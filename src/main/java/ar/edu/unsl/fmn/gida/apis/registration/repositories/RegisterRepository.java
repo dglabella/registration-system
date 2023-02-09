@@ -12,16 +12,16 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 @Repository
 public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
-    Page<Register> findAll(Pageable pageable);
+	Page<Register> findAll(Pageable pageable);
 
-    Page<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
+	Page<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
 
-    List<Register> findAllByPersonIdAndActiveTrue(Integer id);
+	List<Register> findAllByPersonIdAndActiveTrue(Integer id);
 
-    Optional<Register> findByIdAndActiveTrue(Integer id);
+	Optional<Register> findByIdAndActiveTrue(Integer id);
 
-    Optional<Register> findByPersonFkAndCheckOutIsNullAndActiveTrue(int personFk);
+	Optional<Register> findByPersonFkAndCheckOutIsNullAndActiveTrue(int personFk);
 
-    Page<Register> findAllByPersonFkAndActiveTrueAndCheckInBetween(Integer personId, Date from,
-            Date to, Pageable pageable);
+	Page<Register> findAllByPersonFkAndActiveTrueAndCheckInBetween(Integer personId, Date from,
+			Date to, Pageable pageable);
 }

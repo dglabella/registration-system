@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
-import ar.edu.unsl.fmn.gida.apis.registration.services.messages.Messages;
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.PersonDetailsCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigurationConverter;
@@ -21,7 +21,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 public class RegistrationSystemApplication {
 
 	public static Map<String, String> CONFIGURATION;
-	public static Messages MESSAGES;
+	public static Messenger MESSENGER;
 
 	private void createQr() {
 		Cypher cypher = new PersonDetailsCypher();
@@ -94,7 +94,7 @@ public class RegistrationSystemApplication {
 	}
 
 	private static void setUpMessagesLang() {
-		MESSAGES = new Messages(CONFIGURATION.get(Configuration.NAME_LANG));
+		MESSENGER = new Messenger(CONFIGURATION.get(Configuration.NAME_LANG));
 	}
 
 	public static void main(String[] args) {

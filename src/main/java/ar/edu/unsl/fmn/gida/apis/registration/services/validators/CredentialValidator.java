@@ -1,31 +1,31 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.ValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
-import ar.edu.unsl.fmn.gida.apis.registration.services.messages.validation.EntityValidationMessages;
 
 public class CredentialValidator extends Validator<Credential> {
 
-    public CredentialValidator(ExpressionValidator expressionValidator,
-            EntityValidationMessages entityValidationMessages) {
-        super(expressionValidator, entityValidationMessages);
-    }
+	public CredentialValidator(ExpressionValidator expressionValidator,
+			ValidationMessenger entityValidationMessages) {
+		super(expressionValidator, entityValidationMessages);
+	}
 
-    @Override
-    public void validate(Credential entity) {
-        /**
-         * check nullability
-         */
+	@Override
+	public void validate(Credential entity) {
+		/**
+		 * check nullability
+		 */
 
-        if (!(entity.getPersonFk() != null || Constraints.Credential.PERSON_FK_NULLABLE))
-            this.sendError("credential person id is required");
+		if (!(entity.getPersonFk() != null || Constraints.Credential.PERSON_FK_NULLABLE))
+			this.sendError("credential person id is required");
 
-        /**
-         * check size
-         */
+		/**
+		 * check size
+		 */
 
-        /**
-         * check pattern
-         */
-    }
+		/**
+		 * check pattern
+		 */
+	}
 }

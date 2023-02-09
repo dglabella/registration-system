@@ -13,23 +13,23 @@ import ar.edu.unsl.fmn.gida.apis.registration.security.token.CustomTokenAuthenti
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
-        // System.out.println("JwtAuthorizationFilter - doFilterInternal");
-        // System.out.println();
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+			FilterChain filterChain) throws ServletException, IOException {
+		// System.out.println("JwtAuthorizationFilter - doFilterInternal");
+		// System.out.println();
 
-        String bearerToken = request.getHeader("Authorization");
+		String bearerToken = request.getHeader("Authorization");
 
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            // System.out.println("bearerToken is OK");
-            // System.out.println();
+		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+			// System.out.println("bearerToken is OK");
+			// System.out.println();
 
-            String token = bearerToken.replace("Bearer ", "");
-            SecurityContextHolder.getContext()
-                    .setAuthentication(new CustomTokenAuthenticator().authenticate(token));
-        }
+			String token = bearerToken.replace("Bearer ", "");
+			SecurityContextHolder.getContext()
+					.setAuthentication(new CustomTokenAuthenticator().authenticate(token));
+		}
 
-        filterChain.doFilter(request, response);
-    }
+		filterChain.doFilter(request, response);
+	}
 }

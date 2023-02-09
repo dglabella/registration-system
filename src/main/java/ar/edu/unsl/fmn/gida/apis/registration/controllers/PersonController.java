@@ -1,7 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
@@ -26,84 +25,131 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class PersonController {
 
-    private final int DEFAULT_PAGE_NUMBER = 0;
-    private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+	private final int DEFAULT_PAGE_NUMBER = 0;
+	private final int DEFAULT_QUANTITY_PER_PAGE = 100;
 
-    @Autowired
-    private PersonService personService;
+	private final String SEARCH_OP = "/search";
 
-    @GetMapping(value = "/{id}")
-    public Person getPerson(@PathVariable int id) {
-        Person person = this.personService.getOne(id);
-        return person;
-    }
+	private final String SEARCH_OP_BY_DNI = "/dni=";
+	private final String SEARCH_OP_BY_NAME = "/name=";
+	private final String SEARCH_OP_BY_LASTNAME = "/lastname=";
 
-    @GetMapping(value = "/paged")
-    public Page<Person> getAll(@RequestParam Map<String, String> map) {
-        Page<Person> page = null;
+	@Autowired
+	private PersonService personService;
 
-        if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.personService.getAll(Integer.parseInt(map.get("page")),
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
-            page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
-                    Integer.parseInt(map.get("quantity")));
-        } else {
-            page = this.personService.getAll(Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity")));
-        }
+	@GetMapping(value = "/{id}")
+	public Person getPerson(@PathVariable int id) {
+		Person person = this.personService.getOne(id);
+		return person;
+	}
 
-        return page;
-    }
+	@GetMapping
+	public Page<Person> getAll(@RequestParam Map<String, String> map) {
+		Page<Person> page = null;
 
-    @GetMapping(value = "/dni/{dni}")
-    public Person getPersonByDni(@PathVariable String dni) {
-        return this.personService.getOneByDni(dni);
-    }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAll(Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.personService.getAll(Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
 
-    @GetMapping(value = "/name/{name}")
-    public List<Person> getPersonByName(@PathVariable String name) {
-        return this.personService.getAllWithName(name);
-    }
+		return page;
+	}
 
-    @GetMapping(value = "/lastName/{lastName}")
-    public List<Person> getPersonByLastName(@PathVariable String lastName) {
-        return this.personService.getAllWithLastName(lastName);
-    }
+	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI + "{value}")
+	public Page<Person> getPersonsByDniApproach(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
 
-    @GetMapping(value = "/search")
-    public List<Person> search(@RequestParam Map<String, String> map) {
-        List<Person> persons = new ArrayList<>();
+		Page<Person> page = null;
 
-        if (map.containsKey("dni")) {
-            persons = this.personService.getOneByDniApproach(map.get("dni"));
-        } else if (map.containsKey("name")) {
-            persons = this.personService.getAllWithNameApproach(map.get("name"));
-        } else if (map.containsKey("lastName")) {
-            persons = this.personService.getAllWithLastNameApproach(map.get("lastName"));
-        }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.personService.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.personService.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
 
-        return persons;
-    }
+		return page;
+	}
 
-    @PostMapping
-    public Person postPerson(@RequestBody Person person) {
-        Person p = personService.insert(person);
-        return p;
-    }
+	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_NAME + "{value}")
+	public Page<Person> getPersonsByNameApproach(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
 
-    @PutMapping(value = "/{id}")
-    public Person updatePerson(@PathVariable int id, @RequestBody Person person) {
-        Person p = personService.update(id, person);
-        return p;
-    }
+		Page<Person> page = null;
 
-    @DeleteMapping(value = "/{id}")
-    public Person deletePerson() {
-        throw new ErrorResponse("delete person operation not implemented yet...",
-                HttpStatus.NOT_IMPLEMENTED);
-    }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.personService.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.personService.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
+
+		return page;
+	}
+
+	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_LASTNAME + "{value}")
+	public Page<Person> getPersonsByLastnameApproach(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
+
+		Page<Person> page = null;
+
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.personService.getAllByLastNameApproach(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.personService.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.personService.getAllByLastNameApproach(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("quantity")));
+		}
+
+		return page;
+	}
+
+	@PostMapping
+	public Person postPerson(@RequestBody Person person) {
+		Person p = personService.insert(person);
+		return p;
+	}
+
+	@PutMapping(value = "/{id}")
+	public Person updatePerson(@PathVariable int id, @RequestBody Person person) {
+		Person p = personService.update(id, person);
+		return p;
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public Person deletePerson() {
+		throw new ErrorResponse(
+				RegistrationSystemApplication.MESSENGER.getPersonControllerMessenger()
+						.operationNotImplementedYet("delete", Person.class.getSimpleName()),
+				HttpStatus.NOT_IMPLEMENTED);
+	}
 }

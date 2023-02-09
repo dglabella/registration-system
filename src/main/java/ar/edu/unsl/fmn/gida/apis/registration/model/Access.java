@@ -11,55 +11,55 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 @Entity
 @Table(name = "accesses")
 public class Access {
-    // =================================== keys ===================================
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	// =================================== keys ===================================
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    // ================================ attributes ================================
-    @Column(name = "name", nullable = Constraints.Access.NAME_NULLABLE,
-            length = Constraints.Access.NAME_MAX_LENGHT)
-    private String accessName;
+	// ================================ attributes ================================
+	@Column(name = "name", nullable = Constraints.Access.NAME_NULLABLE,
+			length = Constraints.Access.NAME_MAX_LENGHT)
+	private String accessName;
 
-    @Column(nullable = Constraints.Access.DESCRIPTION_NULLABLE,
-            length = Constraints.Access.DESCRIPTION_MAX_LENGHT)
-    private String description;
+	@Column(nullable = Constraints.Access.DESCRIPTION_NULLABLE,
+			length = Constraints.Access.DESCRIPTION_MAX_LENGHT)
+	private String description;
 
-    // ================================== extras ==================================
-    @Column(nullable = false)
-    private boolean active = true;
+	// ================================== extras ==================================
+	@Column(nullable = false)
+	private boolean active = true;
 
-    // ============================ model associations ============================;
+	// ============================ model associations ============================;
 
-    // =============================== constructors ===============================
-    public Access() {}
+	// =============================== constructors ===============================
+	public Access() {}
 
-    // ============================ getters and setters ===========================
-    public Integer getId() {
-        return this.id;
-    }
+	// ============================ getters and setters ===========================
+	public Integer getId() {
+		return this.id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getAccessName() {
-        return this.accessName;
-    }
+	public String getAccessName() {
+		return this.accessName;
+	}
 
-    public void setAccessName(String accesseName) {
-        this.accessName = accesseName;
-    }
+	public void setAccessName(String accesseName) {
+		this.accessName = accesseName;
+	}
 
-    public String getDescription() {
-        return this.description;
-    }
+	public String getDescription() {
+		return this.description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 }

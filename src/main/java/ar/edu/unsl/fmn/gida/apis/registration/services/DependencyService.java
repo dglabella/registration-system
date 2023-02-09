@@ -17,68 +17,68 @@ import ar.edu.unsl.fmn.gida.apis.registration.repositories.DependencyRepository;
 @Transactional
 public class DependencyService {
 
-    @Autowired
-    private DependencyRepository dependencyRepository;
+	@Autowired
+	private DependencyRepository dependencyRepository;
 
-    public Dependency getOne(int id) {
-        Dependency d = null;
-        Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);
+	public Dependency getOne(int id) {
+		Dependency d = null;
+		Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);
 
-        if (optional.isPresent()) {
-            d = optional.get();
-        } else {
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getDependencyBusinessLogicMessages()
-                            .notFound(Dependency.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
-        }
+		if (optional.isPresent()) {
+			d = optional.get();
+		} else {
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getDependencyBusinessLogicMessenger()
+							.notFound(Dependency.class.getSimpleName(), id),
+					HttpStatus.NOT_FOUND);
+		}
 
-        return d;
-    }
+		return d;
+	}
 
-    public Page<Dependency> getAll(int page, int quantity) {
-        return dependencyRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
-    }
+	public Page<Dependency> getAll(int page, int quantity) {
+		return dependencyRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
+	}
 
-    public Dependency insert(Dependency dependency) {
-        Dependency d = null;
-        try {
-            d = dependencyRepository.save(dependency);
-        } catch (DataIntegrityViolationException exception) {
-            exception.printStackTrace();
-            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        return d;
-    }
+	public Dependency insert(Dependency dependency) {
+		Dependency d = null;
+		try {
+			d = dependencyRepository.save(dependency);
+		} catch (DataIntegrityViolationException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		return d;
+	}
 
-    public Dependency update(int id, Dependency dependency) {
-        Dependency d = null;
+	public Dependency update(int id, Dependency dependency) {
+		Dependency d = null;
 
-        Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);
-        if (optional.isPresent()) {
-            try {
-                dependency.setId(id);
-                dependencyRepository.save(dependency);
+		Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);
+		if (optional.isPresent()) {
+			try {
+				dependency.setId(id);
+				dependencyRepository.save(dependency);
 
-            } catch (DataIntegrityViolationException exception) {
-                exception.printStackTrace();
-                throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                        HttpStatus.UNPROCESSABLE_ENTITY);
-            }
+			} catch (DataIntegrityViolationException exception) {
+				exception.printStackTrace();
+				throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+						HttpStatus.UNPROCESSABLE_ENTITY);
+			}
 
-        } else {
-            // this error should not happen in a typical situation
-            throw new ErrorResponse(
-                    RegistrationSystemApplication.MESSAGES.getDependencyBusinessLogicMessages()
-                            .updateNonExistentEntity(Dependency.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
-        }
-        return d;
-    }
+		} else {
+			// this error should not happen in a typical situation
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getDependencyBusinessLogicMessenger()
+							.updateNonExistentEntity(Dependency.class.getSimpleName(), id),
+					HttpStatus.NOT_FOUND);
+		}
+		return d;
+	}
 
-    public Dependency delete(int id) {
-        throw new ErrorResponse("delete dependency operation not implemented yet...",
-                HttpStatus.NOT_IMPLEMENTED);
-    }
+	public Dependency delete(int id) {
+		throw new ErrorResponse("delete dependency operation not implemented yet...",
+				HttpStatus.NOT_IMPLEMENTED);
+	}
 }

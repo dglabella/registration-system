@@ -10,7 +10,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 @Repository
 public interface DependencyRepository extends JpaRepository<Dependency, Integer> {
 
-    Optional<Dependency> findByIdAndActiveTrue(Integer id);
+	Optional<Dependency> findByIdAndActiveTrue(Integer id);
 
-    Page<Dependency> findAllByActiveTrue(Pageable pageable);
+	Page<Dependency> findAllByActiveTrue(Pageable pageable);
 }

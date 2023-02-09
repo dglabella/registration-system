@@ -10,20 +10,20 @@ import io.jsonwebtoken.security.Keys;
 
 public class CustomTokenGenerator implements TokenGenerator {
 
-    @Override
-    public String generate(long id, String userAccountName, String userEmail,
-            Collection<? extends GrantedAuthority> authorities) {
+	@Override
+	public String generate(long id, String userAccountName, String userEmail,
+			Collection<? extends GrantedAuthority> authorities) {
 
-        long expirationTimeMillis = TokenProperties.EXPIRATION_TIME_SECONDS * 1000;
-        Date expirationDate = new Date(System.currentTimeMillis() + expirationTimeMillis);
+		long expirationTimeMillis = TokenProperties.EXPIRATION_TIME_SECONDS * 1000;
+		Date expirationDate = new Date(System.currentTimeMillis() + expirationTimeMillis);
 
-        Map<String, Object> extraData = new HashMap<>();
-        extraData.put(TokenProperties.IDENTIFIER_KEY, id);
-        extraData.put(TokenProperties.EMAIL_CLAIM_KEY, userEmail);
-        extraData.put(TokenProperties.PRIVILEGES_CLAIM_KEY, authorities);
+		Map<String, Object> extraData = new HashMap<>();
+		extraData.put(TokenProperties.IDENTIFIER_KEY, id);
+		extraData.put(TokenProperties.EMAIL_CLAIM_KEY, userEmail);
+		extraData.put(TokenProperties.PRIVILEGES_CLAIM_KEY, authorities);
 
-        return Jwts.builder().setSubject(userAccountName).setExpiration(expirationDate)
-                .addClaims(extraData).signWith(Keys.hmacShaKeyFor(TokenProperties.KEY.getBytes()))
-                .compact();
-    }
+		return Jwts.builder().setSubject(userAccountName).setExpiration(expirationDate)
+				.addClaims(extraData).signWith(Keys.hmacShaKeyFor(TokenProperties.KEY.getBytes()))
+				.compact();
+	}
 }

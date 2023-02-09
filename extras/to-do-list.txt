@@ -1,9 +1,6 @@
-
-- language is not transversal to the whole system
-
-- after user creation, do not return pass, dni, etc.
-
 - validation: what about names/lastnames like d'alessandro
+
+- log file for errors
 
 - if person fields are updated, what about the QR information? should generate another one ?
 
@@ -11,7 +8,5 @@
 
 - check null param in services uses cases (like update weekly - WeeklyService: line 70) must be 
 written in caller or in caller or callee?
-
-- log file for errors
 
 - exist a jpa annotation for cascade logical deletion ?

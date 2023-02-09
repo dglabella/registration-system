@@ -4,20 +4,20 @@ import org.jasypt.util.text.StrongTextEncryptor;
 
 public class PersonDetailsCypher implements Cypher {
 
-    private StrongTextEncryptor encryptor;
+	private StrongTextEncryptor encryptor;
 
-    public PersonDetailsCypher() {
-        this.encryptor = new StrongTextEncryptor();
-        this.encryptor.setPassword("159753zseqsc");
-    }
+	public PersonDetailsCypher() {
+		this.encryptor = new StrongTextEncryptor();
+		this.encryptor.setPassword("159753zseqsc");
+	}
 
-    @Override
-    public String encrypt(String data) {
-        return this.encryptor.encrypt(data);
-    }
+	@Override
+	public String encrypt(String data) {
+		return this.encryptor.encrypt(data);
+	}
 
-    @Override
-    public String decrypt(String encryptedData) {
-        return this.encryptor.decrypt(encryptedData);
-    }
+	@Override
+	public String decrypt(String encryptedData) {
+		return this.encryptor.decrypt(encryptedData);
+	}
 }

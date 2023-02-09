@@ -12,77 +12,79 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.User;
 import ar.edu.unsl.fmn.gida.apis.registration.security.token.CustomTokenGenerator;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final int IDENT_PREFIX_QUANT = 5;
-    private final int IDENT_POSTFIX_QUANT = 7;
+	private final int IDENT_PREFIX_QUANT = 5;
+	private final int IDENT_POSTFIX_QUANT = 7;
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-            HttpServletResponse response) throws AuthenticationException {
-        // System.out.println("JwtAuthenticationFilter - attemptAuthentication");
-        // System.out.println();
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request,
+			HttpServletResponse response) throws AuthenticationException {
+		// System.out.println("JwtAuthenticationFilter - attemptAuthentication");
+		// System.out.println();
 
-        User user = new User();
+		User user = new User();
 
-        try {
-            // System.out.println(request.getReader().lines()
-            // .collect(Collectors.joining(System.lineSeparator())));
-            user = new ObjectMapper().readValue(request.getReader(), User.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ErrorResponse("something wrong with the request. Maybe the json sent is bad",
-                    HttpStatus.BAD_REQUEST);
-        }
+		try {
+			// System.out.println(request.getReader().lines()
+			// .collect(Collectors.joining(System.lineSeparator())));
+			user = new ObjectMapper().readValue(request.getReader(), User.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getAuthenticationMessenger().errorReadingCredentials(),
+					HttpStatus.BAD_REQUEST);
+		}
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getAccount(), user.getPassword());
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+				new UsernamePasswordAuthenticationToken(user.getAccount(), user.getPassword());
 
-        return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
-    }
+		return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+	}
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-            HttpServletResponse response, FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
-        // System.out.println("JwtAuthenticationFilter - successfulAuthentication");
-        // System.out.println();
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request,
+			HttpServletResponse response, FilterChain chain, Authentication authResult)
+			throws IOException, ServletException {
+		// System.out.println("JwtAuthenticationFilter - successfulAuthentication");
+		// System.out.println();
 
-        System.out.println(
-                "principal class in authentication: " + authResult.getPrincipal().getClass());
+		System.out.println(
+				"principal class in authentication: " + authResult.getPrincipal().getClass());
 
-        User user = (User) authResult.getPrincipal();
-        // System.out.println(
-        // "Check privileges - successfulAuthentication " + authResult.getAuthorities());
+		User user = (User) authResult.getPrincipal();
+		// System.out.println(
+		// "Check privileges - successfulAuthentication " + authResult.getAuthorities());
 
-        Random random = new Random();
-        String prefix = "";
-        for (int i = 0; i < this.IDENT_PREFIX_QUANT; i++)
-            prefix += (random.nextInt(9) + 1); // excluding cero in prefix to avoid string to long
-                                               // convertion problem
+		Random random = new Random();
+		String prefix = "";
+		for (int i = 0; i < this.IDENT_PREFIX_QUANT; i++)
+			prefix += (random.nextInt(9) + 1); // excluding cero in prefix to avoid string to long
+												// convertion problem
 
-        String postfix = "";
-        for (int i = 0; i < this.IDENT_POSTFIX_QUANT; i++)
-            postfix += random.nextInt(10);
+		String postfix = "";
+		for (int i = 0; i < this.IDENT_POSTFIX_QUANT; i++)
+			postfix += random.nextInt(10);
 
-        String encodedId = prefix + user.getId() + postfix;
+		String encodedId = prefix + user.getId() + postfix;
 
-        String token = new CustomTokenGenerator().generate(Long.parseLong(encodedId),
-                user.getUsername(), user.getEmail(), user.getAuthorities());
+		String token = new CustomTokenGenerator().generate(Long.parseLong(encodedId),
+				user.getUsername(), user.getEmail(), user.getAuthorities());
 
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setId(encodedId);
-        authResponse.setToken(token);
+		AuthResponse authResponse = new AuthResponse();
+		authResponse.setId(encodedId);
+		authResponse.setToken(token);
 
-        response.setHeader("Content-type", "application/json");
-        response.addHeader("Authorization", "Bearer " + token);
-        response.getWriter().write(new ObjectMapper().writeValueAsString(authResponse));
-        response.getWriter().flush();
+		response.setHeader("Content-type", "application/json");
+		response.addHeader("Authorization", "Bearer " + token);
+		response.getWriter().write(new ObjectMapper().writeValueAsString(authResponse));
+		response.getWriter().flush();
 
-        super.successfulAuthentication(request, response, chain, authResult);
-    }
+		super.successfulAuthentication(request, response, chain, authResult);
+	}
 }

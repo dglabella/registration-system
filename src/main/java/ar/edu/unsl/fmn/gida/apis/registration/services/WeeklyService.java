@@ -20,94 +20,95 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.validators.WeeklyValidato
 @Transactional
 public class WeeklyService {
 
-    @Autowired
-    private WeeklyRepository weeklyRepository;
+	@Autowired
+	private WeeklyRepository weeklyRepository;
 
-    private WeeklyValidator weeklyValidator = new WeeklyValidator(new CustomExpressionValidator(),
-            RegistrationSystemApplication.MESSAGES.getWeeklyValidationMessages());
+	private WeeklyValidator weeklyValidator = new WeeklyValidator(new CustomExpressionValidator(),
+			RegistrationSystemApplication.MESSENGER.getWeeklyValidationMessenger());
 
-    public Weekly getOne(int id) {
-        Weekly w = null;
-        Optional<Weekly> optional = weeklyRepository.findByIdAndActiveTrue(id);
+	public Weekly getOne(int id) {
+		Weekly w = null;
+		Optional<Weekly> optional = weeklyRepository.findByIdAndActiveTrue(id);
 
-        if (optional.isPresent()) {
-            w = optional.get();
-        } else {
-            throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
-                    .getWeeklyBusinessLogicMessages().notFound(Weekly.class.getSimpleName(), id),
-                    HttpStatus.NOT_FOUND);
-        }
+		if (optional.isPresent()) {
+			w = optional.get();
+		} else {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWeeklyBusinessLogicMessenger().notFound(Weekly.class.getSimpleName(), id),
+					HttpStatus.NOT_FOUND);
+		}
 
-        return w;
-    }
+		return w;
+	}
 
-    public Weekly getCurrentWeeklyFromPerson(Integer personId) {
-        return this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId)
-                .orElseThrow(() -> new ErrorResponse(
-                        RegistrationSystemApplication.MESSAGES.getWeeklyBusinessLogicMessages()
-                                .getCurrentWeeklyError(personId),
-                        HttpStatus.INTERNAL_SERVER_ERROR));
-    }
+	public Weekly getCurrentWeeklyFromPerson(Integer personId) {
+		return this.weeklyRepository.findByPersonFkAndEndIsNullAndActiveTrue(personId)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyBusinessLogicMessenger()
+								.getCurrentWeeklyError(personId),
+						HttpStatus.INTERNAL_SERVER_ERROR));
+	}
 
-    public Page<Weekly> getAll(int page, int quantity) {
-        return this.weeklyRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
-    }
+	public Page<Weekly> getAll(int page, int quantity) {
+		return this.weeklyRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
+	}
 
-    public Page<Weekly> getAllFromPerson(int personId, int page, int quantity) {
-        return this.weeklyRepository.findAllByPersonFkAndActiveTrue(personId,
-                PageRequest.of(page, quantity));
-    }
+	public Page<Weekly> getAllFromPerson(int personId, int page, int quantity) {
+		return this.weeklyRepository.findAllByPersonFkAndActiveTrue(personId,
+				PageRequest.of(page, quantity));
+	}
 
-    public Weekly insert(Weekly weekly) {
-        this.weeklyValidator.validate(weekly);
-        try {
-            if (weekly.getStart() == null) {
-                weekly.setStart(new Date());
-            } else if (weekly.getStart().compareTo(new Date()) < 0) {
-                // check if start date is ok for the new weekly
-                throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
-                        .getWeeklyBusinessLogicMessages().wrongWeeklyDatetime(),
-                        HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            this.weeklyRepository.save(weekly);
+	public Weekly insert(Weekly weekly) {
+		this.weeklyValidator.validate(weekly);
+		try {
+			if (weekly.getStart() == null) {
+				weekly.setStart(new Date());
+			} else if (weekly.getStart().compareTo(new Date()) < 0) {
+				// check if start date is ok for the new weekly
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getWeeklyBusinessLogicMessenger().wrongWeeklyDatetime(),
+						HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+			this.weeklyRepository.save(weekly);
 
-        } catch (DataIntegrityViolationException exception) {
-            exception.printStackTrace();
-            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        return weekly;
-    }
+		} catch (DataIntegrityViolationException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		return weekly;
+	}
 
-    public Weekly update(Integer personId, Weekly weekly) {
-        this.weeklyValidator.validate(weekly);
-        Weekly ret = null;
-        Weekly w = this.getCurrentWeeklyFromPerson(personId);
-        try {
-            if (!weekly.equals(w)) {
-                // updates in database
-                w.setEnd(new Date());
-                // then save the new weekly
-                if (weekly.getStart() == null) {
-                    weekly.setStart(new Date());
-                } else if (weekly.getStart().compareTo(new Date()) < 0) {
-                    // check if start date is ok for the new weekly
-                    throw new ErrorResponse(RegistrationSystemApplication.MESSAGES
-                            .getWeeklyBusinessLogicMessages().wrongWeeklyDatetime(),
-                            HttpStatus.UNPROCESSABLE_ENTITY);
-                }
-                ret = this.weeklyRepository.save(weekly);
-            }
-        } catch (DataIntegrityViolationException exception) {
-            exception.printStackTrace();
-            throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        return ret;
-    }
+	public Weekly update(Integer personId, Weekly weekly) {
+		this.weeklyValidator.validate(weekly);
+		Weekly ret = null;
+		Weekly w = this.getCurrentWeeklyFromPerson(personId);
+		try {
+			if (!weekly.equals(w)) {
+				// updates in database
+				w.setEnd(new Date());
+				// then save the new weekly
+				if (weekly.getStart() == null) {
+					weekly.setStart(new Date());
+				} else if (weekly.getStart().compareTo(new Date()) < 0) {
+					// check if start date is ok for the new weekly
+					throw new ErrorResponse(
+							RegistrationSystemApplication.MESSENGER
+									.getWeeklyBusinessLogicMessenger().wrongWeeklyDatetime(),
+							HttpStatus.UNPROCESSABLE_ENTITY);
+				}
+				ret = this.weeklyRepository.save(weekly);
+			}
+		} catch (DataIntegrityViolationException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		return ret;
+	}
 
-    public Weekly delete(int id) {
-        throw new ErrorResponse("delete weekly operation not implemented yet...",
-                HttpStatus.NOT_IMPLEMENTED);
-    }
+	public Weekly delete(int id) {
+		throw new ErrorResponse("delete weekly operation not implemented yet...",
+				HttpStatus.NOT_IMPLEMENTED);
+	}
 }

@@ -12,26 +12,24 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
-        // @ExceptionHandler(MethodArgumentNotValidException.class)
-        // public ResponseEntity<ErrorResponseBody> handle(MethodArgumentNotValidException
-        // exception,
-        // WebRequest request) {
-        // String errorMessage = exception.getBindingResult().getFieldErrors().stream()
-        // .map(fieldError -> fieldError.getField() + ": "
-        // + fieldError.getDefaultMessage())
-        // .collect(Collectors.joining("; "));
+	// @ExceptionHandler(MethodArgumentNotValidException.class)
+	// public ResponseEntity<ErrorResponseBody> handle(MethodArgumentNotValidException
+	// exception,
+	// WebRequest request) {
+	// String errorMessage = exception.getBindingResult().getFieldErrors().stream()
+	// .map(fieldError -> fieldError.getField() + ": "
+	// + fieldError.getDefaultMessage())
+	// .collect(Collectors.joining("; "));
 
-        // return new ResponseEntity<>(
-        // new ErrorResponseBody(new Date(), HttpStatus.BAD_REQUEST.value(),
-        // errorMessage, request.getDescription(false)),
-        // HttpStatus.BAD_REQUEST);
-        // }
+	// return new ResponseEntity<>(
+	// new ErrorResponseBody(new Date(), HttpStatus.BAD_REQUEST.value(),
+	// errorMessage, request.getDescription(false)),
+	// HttpStatus.BAD_REQUEST);
+	// }
 
-        @ExceptionHandler(ErrorResponse.class)
-        public ResponseEntity<ErrorResponseBody> handle(ErrorResponse error, WebRequest request) {
-                return new ResponseEntity<>(
-                                new ErrorResponseBody(new Date(), error.getStatus().value(),
-                                                error.getMessage(), request.getDescription(false)),
-                                error.getStatus());
-        }
+	@ExceptionHandler(ErrorResponse.class)
+	public ResponseEntity<ErrorResponseBody> handle(ErrorResponse error, WebRequest request) {
+		return new ResponseEntity<>(new ErrorResponseBody(new Date(), error.getStatus().value(),
+				error.getMessage(), request.getDescription(false)), error.getStatus());
+	}
 }

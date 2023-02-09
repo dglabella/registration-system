@@ -17,79 +17,79 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 @Entity
 @Table(name = "credentials")
 public class Credential {
-    // =================================== keys ===================================
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	// =================================== keys ===================================
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(nullable = Constraints.Credential.PERSON_FK_NULLABLE)
-    private Integer personFk;
+	@Column(nullable = Constraints.Credential.PERSON_FK_NULLABLE)
+	private Integer personFk;
 
-    // ================================ attributes ================================
-    @Column(nullable = Constraints.Credential.DATA_NULLABLE,
-            length = Constraints.Credential.DATA_MAX_LENGHT)
-    private String data;
+	// ================================ attributes ================================
+	@Column(nullable = Constraints.Credential.DATA_NULLABLE,
+			length = Constraints.Credential.DATA_MAX_LENGHT)
+	private String data;
 
-    @Lob
-    @Column(nullable = Constraints.Credential.IMG_NULLABLE)
-    private byte[] img;
+	@Lob
+	@Column(nullable = Constraints.Credential.IMG_NULLABLE)
+	private byte[] img;
 
-    // ================================== extras ==================================
-    @Column(nullable = false)
-    private boolean active = true;
+	// ================================== extras ==================================
+	@Column(nullable = false)
+	private boolean active = true;
 
-    // ============================ model associations ============================
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
-            updatable = false)
-    @JsonBackReference
-    private Person person;
+	// ============================ model associations ============================
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+			updatable = false)
+	@JsonBackReference
+	private Person person;
 
-    // =============================== constructors ===============================
-    public Credential() {}
+	// =============================== constructors ===============================
+	public Credential() {}
 
-    // ============================ getters and setters ===========================
-    public Integer getId() {
-        return this.id;
-    }
+	// ============================ getters and setters ===========================
+	public Integer getId() {
+		return this.id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getPersonFk() {
-        return this.personFk;
-    }
+	public Integer getPersonFk() {
+		return this.personFk;
+	}
 
-    public void setPersonFk(Integer personFk) {
-        this.personFk = personFk;
-    }
+	public void setPersonFk(Integer personFk) {
+		this.personFk = personFk;
+	}
 
-    public String getData() {
-        return this.data;
-    }
+	public String getData() {
+		return this.data;
+	}
 
-    public void setData(String data) {
-        this.data = data;
-    }
+	public void setData(String data) {
+		this.data = data;
+	}
 
-    public byte[] getImg() {
-        return this.img;
-    }
+	public byte[] getImg() {
+		return this.img;
+	}
 
-    public void setImg(byte[] img) {
-        this.img = img;
-    }
+	public void setImg(byte[] img) {
+		this.img = img;
+	}
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
-    public Person getPerson() {
-        return this.person;
-    }
+	public Person getPerson() {
+		return this.person;
+	}
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

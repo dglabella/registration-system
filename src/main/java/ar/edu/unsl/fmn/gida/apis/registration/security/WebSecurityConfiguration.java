@@ -56,13 +56,6 @@ public class WebSecurityConfiguration {
 				.addFilter(jwtAuthenticationFilter)
 				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
-
-		// return httpSecurity.csrf().disable().cors().and().authorizeRequests().anyRequest()
-		// .permitAll().and().sessionManagement()
-		// .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		// .addFilter(jwtAuthenticationFilter)
-		// .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-		// .build();
 	}
 
 	@Bean

@@ -11,23 +11,22 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
-    List<Person> findAllByActiveTrue();
+	List<Person> findAllByActiveTrue();
 
+	Optional<Person> findByIdAndActiveTrue(Integer id);
 
-    Page<Person> findAllByActiveTrue(Pageable pageable);
+	Optional<Person> findByDniAndActiveTrue(String dni);
 
-    Optional<Person> findByIdAndActiveTrue(Integer id);
+	Page<Person> findAllByActiveTrue(Pageable pageable);
 
-    Optional<Person> findByDniAndActiveTrue(String dni);
+	Page<Person> findAllByPersonNameAndActiveTrue(String name, Pageable pageable);
 
-    List<Person> findByDniContainingAndActiveTrue(String dniPattern);
+	Page<Person> findAllByPersonLastNameAndActiveTrue(String lastName, Pageable pageable);
 
-    List<Person> findAllByPersonNameAndActiveTrue(String name);
+	Page<Person> findByDniContainingAndActiveTrue(String dniPattern, Pageable pageable);
 
-    List<Person> findAllByPersonLastNameAndActiveTrue(String lastName);
+	Page<Person> findAllByPersonNameContainingAndActiveTrue(String namePattern, Pageable pageable);
 
-    List<Person> findAllByPersonNameContainingAndActiveTrue(String namePattern);
-
-    List<Person> findAllByPersonLastNameContainingAndActiveTrue(String lastNamePattern);
-
+	Page<Person> findAllByPersonLastNameContainingAndActiveTrue(String lastNamePattern,
+			Pageable pageable);
 }

@@ -18,52 +18,52 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class WeeklyController {
 
-    private final int DEFAULT_PAGE_NUMBER = 0;
-    private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+	private final int DEFAULT_PAGE_NUMBER = 0;
+	private final int DEFAULT_QUANTITY_PER_PAGE = 100;
 
-    @Autowired
-    private WeeklyService weeklyService;
+	@Autowired
+	private WeeklyService weeklyService;
 
-    @GetMapping
-    public Page<Weekly> getAllWeeklies(@RequestParam Map<String, String> map) {
-        Page<Weekly> page = null;
+	@GetMapping
+	public Page<Weekly> getAllWeeklies(@RequestParam Map<String, String> map) {
+		Page<Weekly> page = null;
 
-        if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
-            page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
-                    Integer.parseInt(map.get("quantity")));
-        } else {
-            page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity")));
-        }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
 
-        return page;
-    }
+		return page;
+	}
 
-    @GetMapping(value = "/person/{id}/paged")
-    public Page<Weekly> getAllWeekliesFromPerson(@PathVariable int id,
-            @RequestParam Map<String, String> map) {
-        Page<Weekly> page = null;
+	@GetMapping(value = "/person/{id}/paged")
+	public Page<Weekly> getAllWeekliesFromPerson(@PathVariable int id,
+			@RequestParam Map<String, String> map) {
+		Page<Weekly> page = null;
 
-        if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
-            page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
-                    Integer.parseInt(map.get("quantity")));
-        } else {
-            page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity")));
-        }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
 
-        return page;
-    }
+		return page;
+	}
 }

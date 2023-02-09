@@ -10,7 +10,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Access;
 @Repository
 public interface AccessRepository extends JpaRepository<Access, Integer> {
 
-    Optional<Access> findByIdAndActiveTrue(Integer id);
+	Optional<Access> findByIdAndActiveTrue(Integer id);
 
-    Page<Access> findAllByActiveTrue(Pageable pageable);
+	Page<Access> findAllByActiveTrue(Pageable pageable);
 }

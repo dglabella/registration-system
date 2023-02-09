@@ -28,68 +28,70 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class UserController {
-    private final int DEFAULT_PAGE_NUMBER = 0;
-    private final int DEFAULT_QUANTITY_PER_PAGE = 20;
+	private final int DEFAULT_PAGE_NUMBER = 0;
+	private final int DEFAULT_QUANTITY_PER_PAGE = 20;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @GetMapping(value = Urls.Privileges.admin + Urls.users)
-    public Page<User> getAllUsers(@RequestParam Map<String, String> map) {
-        Page<User> page = null;
-        if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.userService.getAll(this.DEFAULT_PAGE_NUMBER,
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.userService.getAll(Integer.parseInt(map.get("page")),
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
-            page = this.userService.getAll(this.DEFAULT_PAGE_NUMBER,
-                    Integer.parseInt(map.get("quantity")));
-        } else {
-            page = this.userService.getAll(Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity")));
-        }
+	@GetMapping(value = Urls.Privileges.admin + Urls.users)
+	public Page<User> getAllUsers(@RequestParam Map<String, String> map) {
+		Page<User> page = null;
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.userService.getAll(this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.userService.getAll(Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.userService.getAll(this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.userService.getAll(Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
 
-        return page;
-    }
+		return page;
+	}
 
-    @GetMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
-    public User getUser(@PathVariable int id) {
-        return this.userService.getOne(id);
-    }
+	@GetMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
+	public User getUser(@PathVariable int id) {
+		return this.userService.getOne(id);
+	}
 
-    @GetMapping(value = Urls.Privileges.user + Urls.users + "/account/{account}")
-    public User getUser(@PathVariable String account) {
-        return (User) this.userService.loadUserByUsername(account);
-    }
+	@GetMapping(value = Urls.Privileges.user + Urls.users + "/account/{account}")
+	public User getUser(@PathVariable String account) {
+		return (User) this.userService.loadUserByUsername(account);
+	}
 
-    @PostMapping(Urls.Privileges.pub + Urls.signin)
-    public User postUser(@RequestBody User user) {
-        return this.userService.insert(user);
-    }
+	@PostMapping(Urls.Privileges.pub + Urls.signin)
+	public void postUser(@RequestBody User user) {
+		this.userService.insert(user);
+	}
 
-    @PutMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	@PutMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User user) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String loggedAccount = (String) authentication.getPrincipal();
-        Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
-                .collect(Collectors.toSet());
+		String loggedAccount = (String) authentication.getPrincipal();
+		Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+				.collect(Collectors.toSet());
 
-        Optional<String> optional = roles.stream().findAny(); // only one privilege exist
-        String priv =
-                optional.orElseThrow(() -> new ErrorResponse(
-                        RegistrationSystemApplication.MESSAGES.getUserBusinessLogicMessages()
-                                .userPrivilegeIntegrityCorruption(loggedAccount),
-                        HttpStatus.FORBIDDEN));
+		Optional<String> optional = roles.stream().findAny(); // only one privilege exist
+		String priv =
+				optional.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getUserControllerMessenger()
+								.userPrivilegeIntegrityCorruption(loggedAccount),
+						HttpStatus.FORBIDDEN));
 
-        return this.userService.update(id, user, loggedAccount, Privilege.valueOf(priv));
-    }
+		return this.userService.update(id, user, loggedAccount, Privilege.valueOf(priv));
+	}
 
-    @DeleteMapping(Urls.Privileges.admin + Urls.users + "/{id}")
-    public User deleteUser() {
-        throw new ErrorResponse("delete user operation not implemented yet...",
-                HttpStatus.NOT_IMPLEMENTED);
-    }
+	@DeleteMapping(Urls.Privileges.admin + Urls.users + "/{id}")
+	public User deleteUser() {
+		throw new ErrorResponse(
+				RegistrationSystemApplication.MESSENGER.getUserControllerMessenger()
+						.operationNotImplementedYet("delete", User.class.getSimpleName()),
+				HttpStatus.NOT_IMPLEMENTED);
+	}
 }

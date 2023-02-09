@@ -18,64 +18,64 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class RegisterController {
 
-    private final int DEFAULT_PAGE_NUMBER = 0;
-    private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+	private final int DEFAULT_PAGE_NUMBER = 0;
+	private final int DEFAULT_QUANTITY_PER_PAGE = 100;
 
-    @Autowired
-    private RegisterService registerService;
+	@Autowired
+	private RegisterService registerService;
 
-    @GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/paged")
-    public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
-        Page<Register> page = null;
+	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/paged")
+	public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
+		Page<Register> page = null;
 
-        String from = map.get("from");
-        String to = map.get("to");
+		String from = map.get("from");
+		String to = map.get("to");
 
-        if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
-            page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
-                    Integer.parseInt(map.get("quantity")));
-        } else {
-            page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
-                    Integer.parseInt(map.get("quantity")));
-        }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("quantity")));
+		}
 
-        return page;
-    }
+		return page;
+	}
 
-    @GetMapping(value = Urls.Privileges.responsible + Urls.registers + "person/{id}/paged")
-    public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
-            @RequestParam Map<String, String> map) {
-        Page<Register> page = null;
+	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "person/{id}/paged")
+	public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
+			@RequestParam Map<String, String> map) {
+		Page<Register> page = null;
 
-        String from = map.get("from");
-        String to = map.get("to");
+		String from = map.get("from");
+		String to = map.get("to");
 
-        if (!map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
-                    this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (map.containsKey("page") && !map.containsKey("quantity")) {
-            page = this.registerService.getAllFromPerson(id, from, to,
-                    Integer.parseInt(map.get("page")), this.DEFAULT_QUANTITY_PER_PAGE);
-        } else if (!map.containsKey("page") && map.containsKey("quantity")) {
-            page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
-                    Integer.parseInt(map.get("quantity")));
-        } else {
-            page = this.registerService.getAllFromPerson(id, from, to,
-                    Integer.parseInt(map.get("page")), Integer.parseInt(map.get("quantity")));
-        }
+		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+			page = this.registerService.getAllFromPerson(id, from, to,
+					Integer.parseInt(map.get("page")), this.DEFAULT_QUANTITY_PER_PAGE);
+		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+			page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("quantity")));
+		} else {
+			page = this.registerService.getAllFromPerson(id, from, to,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("quantity")));
+		}
 
-        return page;
-    }
+		return page;
+	}
 
-    @PostMapping(value = Urls.Privileges.user + Urls.registers)
-    public Register postRegister(@RequestBody Register register) {
-        Register r = registerService.insert(register);
-        return r;
-    }
+	@PostMapping(value = Urls.Privileges.user + Urls.registers)
+	public Register postRegister(@RequestBody Register register) {
+		Register r = registerService.insert(register);
+		return r;
+	}
 }
