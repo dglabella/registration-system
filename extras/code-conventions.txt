@@ -8,7 +8,7 @@ Syntactics:
     public List<Entity> getAll();.
     public Entity insert(Entity entity);.
     public Entity update(Entity entity);.
-    public Entity delete(int id);.
+    public Entity delete(int id);
 
 - Controllers methods names: (replace 'Entity' or 'Entities' for the model Class name) .
     GET one resource: getEntity.
@@ -30,10 +30,10 @@ Controllers: handle proper responses according to the services.
 
 Services: handle bussines logic / uses cases.
 
-Repositories: Customize queries if needed.
+Repositories: Customize queries
 
 =========
 Database:
 =========
-- tables should be named based on the class model name but in plural.
+- tables must be called as follows: plural of the name of the class that represents the entity
 - column names: inferred with the class.

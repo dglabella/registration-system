@@ -26,7 +26,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 public class PersonController {
 
 	private final int DEFAULT_PAGE_NUMBER = 0;
-	private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+	private final int DEFAULT_PAGE_SIZE = 100;
 
 	private final String SEARCH_OP = "/search";
 
@@ -47,18 +47,17 @@ public class PersonController {
 	public Page<Person> getAll(@RequestParam Map<String, String> map) {
 		Page<Person> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
-			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.personService.getAll(Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -70,18 +69,18 @@ public class PersonController {
 
 		Page<Person> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.personService.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.personService.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -93,18 +92,18 @@ public class PersonController {
 
 		Page<Person> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.personService.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.personService.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -116,18 +115,18 @@ public class PersonController {
 
 		Page<Person> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.personService.getAllByLastNameApproach(value,
-					Integer.parseInt(map.get("page")), this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.personService.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.personService.getAllByLastNameApproach(value,
-					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;

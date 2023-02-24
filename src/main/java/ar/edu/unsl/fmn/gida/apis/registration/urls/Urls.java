@@ -11,7 +11,7 @@ public interface Urls {
 	String credentials = "/credentials";
 
 	String authentication = "/login";
-	String signin = "/signin";
+	String signup = "/signup";
 
 	interface Privileges {
 		String pub = "pub";

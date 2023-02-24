@@ -1,3 +1,11 @@
+- users that can create other users, shouldn't create another user wich privilege is greater than the creator.
+
+- update person need test!
+
+-TIME BEHAVIOR IS WRONG ON Weekly
+
+- can get users info no matter what PRIVILEGE has. Need fix
+
 - validation: what about names/lastnames like d'alessandro
 
 - log file for errors

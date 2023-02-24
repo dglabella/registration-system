@@ -19,36 +19,36 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 public class RegisterController {
 
 	private final int DEFAULT_PAGE_NUMBER = 0;
-	private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+	private final int DEFAULT_PAGE_SIZE = 100;
 
 	@Autowired
 	private RegisterService registerService;
 
-	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/paged")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.registers)
 	public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
 		Page<Register> page = null;
 
 		String from = map.get("from");
 		String to = map.get("to");
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
 			page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.registerService.getAll(from, to, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.registerService.getAll(from, to, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
 	}
 
-	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "person/{id}/paged")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "person/{id}")
 	public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
 			@RequestParam Map<String, String> map) {
 		Page<Register> page = null;
@@ -56,18 +56,18 @@ public class RegisterController {
 		String from = map.get("from");
 		String to = map.get("to");
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
 			page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.registerService.getAllFromPerson(id, from, to,
-					Integer.parseInt(map.get("page")), this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.registerService.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.registerService.getAllFromPerson(id, from, to,
-					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;

@@ -23,7 +23,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class AccessController {
 	private final int DEFAULT_PAGE_NUMBER = 0;
-	private final int DEFAULT_QUANTITY_PER_PAGE = 20;
+	private final int DEFAULT_PAGE_SIZE = 20;
 
 	@Autowired
 	private AccessService accessService;
@@ -37,18 +37,17 @@ public class AccessController {
 	public Page<Access> getAllAccesses(@RequestParam Map<String, String> map) {
 		Page<Access> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
-			page = this.accessService.getAll(this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.accessService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.accessService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.accessService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.accessService.getAll(Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;

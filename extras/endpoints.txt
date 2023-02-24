@@ -1,9 +1,28 @@
+NOTE:
+
+every get all ( .../{privilege}/{resource_name} ) returns a paged object that specify 
+a default page numbre and page size. page numbre and page size can be changed like this:
+
+    .../{privilege}/{resource_name}?page={p}&size={s} 
+    .../{privilege}/{resource_name}?page={p}
+    .../{privilege}/{resource_name}?size={s}
+    .../{privilege}/{resource_name}
+    
+    where 'p' and 's' are natural numbers. 
+
+omitting either values, the default values will be assumed.
+
 =================================================================================================
     PUBLIC:
 =================================================================================================
 
-(POST)              .../pub/signin
 (POST)              .../pub/login
+
+{
+    "account": "dglabella",
+    "password": "789789789"
+}
+---------------------------------------------------------------------------
 (GET)               .../pub/accesses
 
 =================================================================================================
@@ -11,6 +30,12 @@
 =================================================================================================
 
 (POST)              .../user/register
+
+{
+    "accessFk": 4,
+    "encryptedData": "d8vRxfyUD/QpdsOgO0k7cmmQQY6W3cGTJKDz0bWVIi9Voz1C43FMsZyf/WWrdlhY"
+}
+---------------------------------------------------------------------------
 (GET, PUT)          .../user/users/account/{account}    (only id account owner, except for ADMIN)
 (GET, PUT)          .../user/users/{id}                 (only id owner, except for ADMIN)
 
@@ -18,7 +43,25 @@
     RESPONSIBLE:
 =================================================================================================
 
+(POST)              .../responsible/signup
+
+{
+    "userName":"CARLOS",
+    "userLastName":"GUZMAN",
+    "dni":24369852,
+    "email":"carlosguzman@gmail.com",
+    "account":"seguridad-carlos",
+    "password":"estacionamientoCarlos51"
+}
+---------------------------------------------------------------------------
+
 (POST)              .../responsible/accesses
+
+{
+    "accessName":"PUERTA ENTRADA ANFI2 BLOQUE 2",
+    "description":"BLABLABLA"
+}
+---------------------------------------------------------------------------
 (GET, PUT, DELETE)  .../responsible/accesses/{id}
 
 (GET)               .../responsible/credentials
@@ -29,14 +72,16 @@
 
 (GET, POST)         .../responsible/persons
 (GET, PUT, DELETE)  .../responsible/persons/{id}
-(GET)               .../responsible/persons/paged
-(GET)               .../responsible/persons/search
-(GET)               .../responsible/persons/dni/{dni}
-(GET)               .../responsible/persons/name/{name}
-(GET)               .../responsible/persons/lastName/{lastName}
 
-(GET)               .../responsible/registers/paged
-(GET)               .../responsible/registers/person/{id}/paged
+(GET)               .../responsible/persons
+(GET)               .../responsible/persons/search/dni={aproximation}
+(GET)               .../responsible/persons/search/name={aproximation}
+(GET)               .../responsible/persons/search/lastname={aproximation}
+                    (default page = 0, default page size = 100)
+
+(GET)               .../responsible/registers
+(GET)               .../responsible/registers/person/{id}
+                    (default page = 0, default page size = 100)
 
 =================================================================================================
     ADMIN:

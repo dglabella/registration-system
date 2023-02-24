@@ -19,7 +19,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 public class WeeklyController {
 
 	private final int DEFAULT_PAGE_NUMBER = 0;
-	private final int DEFAULT_QUANTITY_PER_PAGE = 100;
+	private final int DEFAULT_PAGE_SIZE = 100;
 
 	@Autowired
 	private WeeklyService weeklyService;
@@ -28,18 +28,17 @@ public class WeeklyController {
 	public Page<Weekly> getAllWeeklies(@RequestParam Map<String, String> map) {
 		Page<Weekly> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
-			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -50,18 +49,18 @@ public class WeeklyController {
 			@RequestParam Map<String, String> map) {
 		Page<Weekly> page = null;
 
-		if (!map.containsKey("page") && !map.containsKey("quantity")) {
+		if (!map.containsKey("page") && !map.containsKey("size")) {
 			page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (map.containsKey("page") && !map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
 			page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
-					this.DEFAULT_QUANTITY_PER_PAGE);
-		} else if (!map.containsKey("page") && map.containsKey("quantity")) {
+					this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
 			page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		} else {
 			page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("quantity")));
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
