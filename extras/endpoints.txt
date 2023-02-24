@@ -43,18 +43,6 @@ omitting either values, the default values will be assumed.
     RESPONSIBLE:
 =================================================================================================
 
-(POST)              .../responsible/signup
-
-{
-    "userName":"CARLOS",
-    "userLastName":"GUZMAN",
-    "dni":24369852,
-    "email":"carlosguzman@gmail.com",
-    "account":"seguridad-carlos",
-    "password":"estacionamientoCarlos51"
-}
----------------------------------------------------------------------------
-
 (POST)              .../responsible/accesses
 
 {
@@ -86,6 +74,18 @@ omitting either values, the default values will be assumed.
 =================================================================================================
     ADMIN:
 =================================================================================================
+
+(POST)              .../admin/signup
+
+{
+    "userName":"CARLOS",
+    "userLastName":"GUZMAN",
+    "dni":24369852,
+    "email":"carlosguzman@gmail.com",
+    "account":"seguridad-carlos",
+    "password":"estacionamientoCarlos51"
+}
+---------------------------------------------------------------------------
 
 (GET)               .../admin/users
 (DELETE)            .../admin/users/{id}

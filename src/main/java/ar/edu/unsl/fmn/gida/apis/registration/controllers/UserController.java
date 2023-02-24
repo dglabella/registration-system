@@ -63,7 +63,7 @@ public class UserController {
 		return (User) this.userService.loadUserByUsername(account);
 	}
 
-	@PostMapping(Urls.Privileges.responsible + Urls.signup)
+	@PostMapping(Urls.Privileges.admin + Urls.signup)
 	public void postUser(@RequestBody User user) {
 		this.userService.insert(user);
 	}
