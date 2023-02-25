@@ -87,10 +87,7 @@ public class UserController {
 	}
 
 	@DeleteMapping(Urls.Privileges.admin + Urls.users + "/{id}")
-	public User deleteUser() {
-		throw new ErrorResponse(
-				RegistrationSystemApplication.MESSENGER.getUserControllerMessenger()
-						.operationNotImplementedYet("delete", User.class.getSimpleName()),
-				HttpStatus.NOT_IMPLEMENTED);
+	public User deleteUser(@PathVariable int id) {
+		return this.userService.delete(id);
 	}
 }

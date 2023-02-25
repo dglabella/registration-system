@@ -2,6 +2,7 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.CredentialRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CredentialValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
@@ -64,5 +66,32 @@ public class CredentialService {
 	public Credential update(int id, Credential credential) {
 		throw new ErrorResponse("update credential operation not implemented yet...",
 				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public Credential delete(int id) {
+		throw new ErrorResponse("delete credential operation not implemented yet...",
+				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public void deleteByPersonFk(int personFk){
+		
+		Credential credential = new Credential();
+		credential = this.credentialRepository.findByPersonIdAndActiveTrue(personFk).orElseThrow(
+			() -> new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
+							.deleteNonExistentEntityCorruptDB(Person.class.getSimpleName(), Credential.class.getSimpleName(),personFk),
+					HttpStatus.NOT_FOUND));
+		
+		
+		try{
+			credential.setActive(false);
+
+		}catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		
+
 	}
 }

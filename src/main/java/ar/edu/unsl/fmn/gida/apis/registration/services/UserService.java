@@ -166,8 +166,23 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User delete(int id) {
-		throw new ErrorResponse("delete user operation not implemented yet...",
-				HttpStatus.NOT_FOUND);
+		User user = null;
+		user = this.userRepository.findByIdAndActiveTrue(id).orElseThrow(
+			() -> new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getUserServiceMessenger().deleteNonExistentEntity(User.class.getSimpleName(), id),
+					HttpStatus.NOT_FOUND));
+		
+		
+		try{
+			user.setEnabled(false);
+
+		}catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		return user;
 	}
 
 	@Override

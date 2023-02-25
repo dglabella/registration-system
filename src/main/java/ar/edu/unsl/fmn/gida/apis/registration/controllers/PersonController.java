@@ -145,10 +145,8 @@ public class PersonController {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public Person deletePerson() {
-		throw new ErrorResponse(
-				RegistrationSystemApplication.MESSENGER.getPersonControllerMessenger()
-						.operationNotImplementedYet("delete", Person.class.getSimpleName()),
-				HttpStatus.NOT_IMPLEMENTED);
+	public Person deletePerson(@PathVariable int id) {
+		Person p = personService.delete(id);
+		return p;
 	}
 }
