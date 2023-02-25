@@ -31,9 +31,8 @@ public class CredentialService {
 		if (optional.isPresent()) {
 			credential = optional.get();
 		} else {
-			throw new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getCredentialBusinessLogicMessenger()
-							.notFound(Credential.class.getSimpleName(), id),
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getCredentialServiceMessenger().notFound(Credential.class.getSimpleName(), id),
 					HttpStatus.NOT_FOUND);
 		}
 		return credential;
@@ -47,7 +46,7 @@ public class CredentialService {
 			credential = optional.get();
 		} else {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getCredentialBusinessLogicMessenger().notFoundByPersonIdErrorMessage(personId),
+					.getCredentialServiceMessenger().notFoundByPersonIdErrorMessage(personId),
 					HttpStatus.NOT_FOUND);
 		}
 		return credential;

@@ -36,8 +36,8 @@ omitting either values, the default values will be assumed.
     "encryptedData": "d8vRxfyUD/QpdsOgO0k7cmmQQY6W3cGTJKDz0bWVIi9Voz1C43FMsZyf/WWrdlhY"
 }
 ---------------------------------------------------------------------------
-(GET, PUT)          .../user/users/account/{account}    (only id account owner, except for ADMIN)
-(GET, PUT)          .../user/users/{id}                 (only id owner, except for ADMIN)
+(GET, PUT)          .../user/users/{id}                 (only id owner)
+(GET, PUT)          .../user/users/account/{account}    (only account owner)
 
 =================================================================================================
     RESPONSIBLE:
@@ -88,4 +88,6 @@ omitting either values, the default values will be assumed.
 ---------------------------------------------------------------------------
 
 (GET)               .../admin/users
-(DELETE)            .../admin/users/{id}
+(GET, PUT, DELETE)  .../admin/users/{id}
+
+(GET, PUT)          .../admin/users/account/{account}

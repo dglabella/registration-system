@@ -49,7 +49,7 @@ public abstract class ServiceMessenger {
 		return ret;
 	}
 
-	public String constraintsError(String entityName, String attributeName, String value) {
+	public String alreadyExistConstraint(String entityName, String attributeName, String value) {
 		String ret = null;
 
 		switch (this.messages.getLang()) {
@@ -65,6 +65,7 @@ public abstract class ServiceMessenger {
 				ret = "cannot insert/update '" + entityName + "'. " + attributeName + " " + value
 						+ " already exist";
 		}
+
 		return ret;
 	}
 }

@@ -8,7 +8,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.controllers.PersonContr
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.controllers.RegisterControllerMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.controllers.UserControllerMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.controllers.WeeklyControllerMessenger;
-
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.AccessServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.CredentialServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.DependencyServiceMessenger;
@@ -16,7 +15,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.PersonServiceMess
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.RegisterServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.UserServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.WeeklyServiceMessenger;
-
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.AccessValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.CredentialValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.DependencyValidationMessenger;
@@ -39,13 +37,13 @@ public class Messenger {
 	private UserControllerMessenger userControllerMessenger;
 	private WeeklyControllerMessenger weeklyControllerMessenger;
 
-	private AccessServiceMessenger accessBusinessLogicMessenger;
-	private CredentialServiceMessenger credentialBusinessLogicMessenger;
-	private DependencyServiceMessenger dependencyBusinessLogicMessenger;
-	private PersonServiceMessenger personBusinessLogicMessenger;
-	private RegisterServiceMessenger registerBusinessLogicMessenger;
-	private UserServiceMessenger userBusinessLogicMessenger;
-	private WeeklyServiceMessenger weeklyBusinessLogicMessenger;
+	private AccessServiceMessenger accessServiceMessenger;
+	private CredentialServiceMessenger credentialServiceMessenger;
+	private DependencyServiceMessenger dependencyServiceMessenger;
+	private PersonServiceMessenger personServiceMessenger;
+	private RegisterServiceMessenger registerServiceMessenger;
+	private UserServiceMessenger userServiceMessenger;
+	private WeeklyServiceMessenger weeklyServiceMessenger;
 
 	private AccessValidationMessenger accessValidationMessenger;
 	private CredentialValidationMessenger credentialValidationMessenger;
@@ -68,13 +66,13 @@ public class Messenger {
 		this.userControllerMessenger = new UserControllerMessenger(this);
 		this.weeklyControllerMessenger = new WeeklyControllerMessenger(this);
 
-		this.accessBusinessLogicMessenger = new AccessServiceMessenger(this);
-		this.credentialBusinessLogicMessenger = new CredentialServiceMessenger(this);
-		this.dependencyBusinessLogicMessenger = new DependencyServiceMessenger(this);
-		this.personBusinessLogicMessenger = new PersonServiceMessenger(this);
-		this.registerBusinessLogicMessenger = new RegisterServiceMessenger(this);
-		this.userBusinessLogicMessenger = new UserServiceMessenger(this);
-		this.weeklyBusinessLogicMessenger = new WeeklyServiceMessenger(this);
+		this.accessServiceMessenger = new AccessServiceMessenger(this);
+		this.credentialServiceMessenger = new CredentialServiceMessenger(this);
+		this.dependencyServiceMessenger = new DependencyServiceMessenger(this);
+		this.personServiceMessenger = new PersonServiceMessenger(this);
+		this.registerServiceMessenger = new RegisterServiceMessenger(this);
+		this.userServiceMessenger = new UserServiceMessenger(this);
+		this.weeklyServiceMessenger = new WeeklyServiceMessenger(this);
 
 		this.accessValidationMessenger = new AccessValidationMessenger(this);
 		this.credentialValidationMessenger = new CredentialValidationMessenger(this);
@@ -121,32 +119,32 @@ public class Messenger {
 		return this.weeklyControllerMessenger;
 	}
 
-	public AccessServiceMessenger getAccessBusinessLogicMessenger() {
-		return this.accessBusinessLogicMessenger;
+	public AccessServiceMessenger getAccessServiceMessenger() {
+		return this.accessServiceMessenger;
 	}
 
-	public CredentialServiceMessenger getCredentialBusinessLogicMessenger() {
-		return this.credentialBusinessLogicMessenger;
+	public CredentialServiceMessenger getCredentialServiceMessenger() {
+		return this.credentialServiceMessenger;
 	}
 
-	public DependencyServiceMessenger getDependencyBusinessLogicMessenger() {
-		return this.dependencyBusinessLogicMessenger;
+	public DependencyServiceMessenger getDependencyServiceMessenger() {
+		return this.dependencyServiceMessenger;
 	}
 
-	public PersonServiceMessenger getPersonBusinessLogicMessenger() {
-		return this.personBusinessLogicMessenger;
+	public PersonServiceMessenger getPersonServiceMessenger() {
+		return this.personServiceMessenger;
 	}
 
-	public RegisterServiceMessenger getRegisterBusinessLogicMessenger() {
-		return this.registerBusinessLogicMessenger;
+	public RegisterServiceMessenger getRegisterServiceMessenger() {
+		return this.registerServiceMessenger;
 	}
 
-	public UserServiceMessenger getUserBusinessLogicMessenger() {
-		return this.userBusinessLogicMessenger;
+	public UserServiceMessenger getUserServiceMessenger() {
+		return this.userServiceMessenger;
 	}
 
-	public WeeklyServiceMessenger getWeeklyBusinessLogicMessenger() {
-		return this.weeklyBusinessLogicMessenger;
+	public WeeklyServiceMessenger getWeeklyServiceMessenger() {
+		return this.weeklyServiceMessenger;
 	}
 
 	public AccessValidationMessenger getAccessValidationMessenger() {

@@ -39,10 +39,11 @@ public class PersonService {
 	public Person getOne(int id) {
 		Person person = null;
 		person = this.personRepository.findByIdAndActiveTrue(id)
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getPersonBusinessLogicMessenger()
-								.notFound(Person.class.getSimpleName(), id),
-						HttpStatus.NOT_FOUND));
+				.orElseThrow(
+						() -> new ErrorResponse(
+								RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
+										.notFound(Person.class.getSimpleName(), id),
+								HttpStatus.NOT_FOUND));
 
 		person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
 		person.setCredential(this.credentialService.getOneByPersonId(id));
@@ -65,7 +66,7 @@ public class PersonService {
 	public Person getOneByDni(String dni) {
 		Person person = this.personRepository.findByDniAndActiveTrue(dni)
 				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getPersonBusinessLogicMessenger().notFoundByDniErrorMessage(dni),
+						.getPersonServiceMessenger().notFoundByDniErrorMessage(dni),
 						HttpStatus.NOT_FOUND));
 
 		person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
@@ -144,7 +145,7 @@ public class PersonService {
 		} else {
 			// this error should not happen in a typical situation
 			throw new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getPersonBusinessLogicMessenger()
+					RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
 							.updateNonExistentEntity(Person.class.getSimpleName(), id),
 					HttpStatus.NOT_FOUND);
 		}

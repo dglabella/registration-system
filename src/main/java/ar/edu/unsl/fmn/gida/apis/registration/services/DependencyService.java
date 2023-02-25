@@ -27,9 +27,8 @@ public class DependencyService {
 		if (optional.isPresent()) {
 			d = optional.get();
 		} else {
-			throw new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getDependencyBusinessLogicMessenger()
-							.notFound(Dependency.class.getSimpleName(), id),
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getDependencyServiceMessenger().notFound(Dependency.class.getSimpleName(), id),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -70,7 +69,7 @@ public class DependencyService {
 		} else {
 			// this error should not happen in a typical situation
 			throw new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getDependencyBusinessLogicMessenger()
+					RegistrationSystemApplication.MESSENGER.getDependencyServiceMessenger()
 							.updateNonExistentEntity(Dependency.class.getSimpleName(), id),
 					HttpStatus.NOT_FOUND);
 		}

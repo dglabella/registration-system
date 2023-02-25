@@ -1,16 +1,16 @@
 ===========
 Syntactics:
 ===========
-- variables and methods names: camelCase.
+- variables and methods names: camelCase
 
-- Service: all services shares 5 methods:.
-    public Entity getOne(int id);.
-    public List<Entity> getAll();.
-    public Entity insert(Entity entity);.
-    public Entity update(Entity entity);.
+- Service: all services shares 5 methods (with very few exception):
+    public Entity getOne(int id);
+    public List<Entity> getAll();
+    public Entity insert(Entity entity);
+    public Entity update(Entity entity);
     public Entity delete(int id);
 
-- Controllers methods names: (replace 'Entity' or 'Entities' for the model Class name) .
+- Controllers methods names: (replace 'Entity' or 'Entities' for the model Class name)
     GET one resource: getEntity.
     GET all resources: getAllEntities.
     POST one resource: postEntity.

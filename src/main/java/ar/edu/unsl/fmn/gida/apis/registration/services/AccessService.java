@@ -25,11 +25,12 @@ public class AccessService {
 			RegistrationSystemApplication.MESSENGER.getAccessValidationMessenger());
 
 	public Access getOne(int id) {
-		Access ret = accessRepository.findByIdAndActiveTrue(id)
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getAccessBusinessLogicMessenger()
-								.notFound(Access.class.getSimpleName(), id),
-						HttpStatus.NOT_FOUND));
+		Access ret =
+				accessRepository.findByIdAndActiveTrue(id)
+						.orElseThrow(() -> new ErrorResponse(
+								RegistrationSystemApplication.MESSENGER.getAccessServiceMessenger()
+										.notFound(Access.class.getSimpleName(), id),
+								HttpStatus.NOT_FOUND));
 
 		return ret;
 	}
@@ -55,7 +56,7 @@ public class AccessService {
 		this.accessValidator.validate(access);
 		Access ret = this.accessRepository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getAccessBusinessLogicMessenger()
+						RegistrationSystemApplication.MESSENGER.getAccessServiceMessenger()
 								.updateNonExistentEntity(Access.class.getSimpleName(), id),
 						HttpStatus.NOT_FOUND));
 

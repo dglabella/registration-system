@@ -47,9 +47,8 @@ public class RegisterService {
 		if (optional.isPresent()) {
 			r = optional.get();
 		} else {
-			throw new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getRegisterBusinessLogicMessenger()
-							.notFound(Register.class.getSimpleName(), id),
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getRegisterServiceMessenger().notFound(Register.class.getSimpleName(), id),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -66,14 +65,14 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterBusinessLogicMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
 			}
 
 		} catch (ParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterBusinessLogicMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
 		return this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate,
@@ -91,14 +90,14 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterBusinessLogicMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
 			}
 
 		} catch (ParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterBusinessLogicMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
 		return this.registerRepository.findAllByPersonFkAndActiveTrueAndCheckInBetween(personId,

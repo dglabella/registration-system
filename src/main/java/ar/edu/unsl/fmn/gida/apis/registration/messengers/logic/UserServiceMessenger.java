@@ -58,4 +58,21 @@ public class UserServiceMessenger extends ServiceMessenger {
 
 		return ret;
 	}
+
+	public String oldPasswordNotMatching() {
+		String ret = null;
+
+		switch (this.getMessages().getLang()) {
+			case "EN":
+				ret = "cannot update user: old password is incorrect";
+				break;
+			case "ES":
+				ret = "no puede actualizarse el usuario: el password anterior es incorrecto";
+				break;
+			default:
+				ret = "cannot update user: old password is incorrect";
+		}
+
+		return ret;
+	}
 }

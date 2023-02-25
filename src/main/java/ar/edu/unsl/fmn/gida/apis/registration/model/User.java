@@ -50,6 +50,9 @@ public class User implements UserDetails {
 			length = Constraints.User.PASSWORD_MAX_LENGHT)
 	private String password;
 
+	@javax.persistence.Transient
+	private String oldPassword;
+
 	@Enumerated(EnumType.ORDINAL)
 	private Privilege privilege = Privilege.ROLE_USER;
 
@@ -120,6 +123,10 @@ public class User implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getOldPassword() {
+		return this.oldPassword;
 	}
 
 	public Privilege getPrivilege() {
