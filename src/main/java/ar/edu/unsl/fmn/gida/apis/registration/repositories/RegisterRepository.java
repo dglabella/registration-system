@@ -14,6 +14,10 @@ public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
 	Page<Register> findAll(Pageable pageable);
 
+	List<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to);
+
+	List<Register> findAllByCheckInBetweenAndActiveTrueOrderByPersonFkAsc(Date from, Date to);
+
 	Page<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
 
 	List<Register> findAllByPersonIdAndActiveTrue(Integer id);
@@ -22,6 +26,23 @@ public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
 	Optional<Register> findByPersonFkAndCheckOutIsNullAndActiveTrue(int personFk);
 
+	List<Register> findAllByPersonFkAndActiveTrueAndCheckInBetween(Integer personId, Date from,
+			Date to);
+
 	Page<Register> findAllByPersonFkAndActiveTrueAndCheckInBetween(Integer personId, Date from,
 			Date to, Pageable pageable);
+
+	// @Query(value = "SELECT * " + "FROM registers "
+	// + "INNER JOIN persons ON registers.person_fk = persons.id "
+	// + "WHERE persons.dni LIKE'%33%' AND "
+	// + "(registers.check_in BETWEEN '2020-08-01' AND '2020-09-01') AND "
+	// + "persons.active = 1 AND registers.active = 1 \n#pageable\n",
+	// countQuery = "SELECT COUNT(*) " + "FROM registers "
+	// + "INNER JOIN persons ON registers.person_fk = persons.id "
+	// + "WHERE persons.dni LIKE '%33%' AND "
+	// + "(registers.check_in BETWEEN '2020-08-01' AND '2020-09-01') AND "
+	// + "persons.active = 1 AND registers.active = 1",
+	// nativeQuery = true)
+	// Page<Register> findAllByPersonDniContainingAndActiveTrue(@Param("dni") String dni,
+	// @Param("from") Date from, @Param("to") Date to, Pageable pageable);
 }

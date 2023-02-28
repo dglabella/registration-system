@@ -2,12 +2,15 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -55,7 +58,7 @@ public class RegisterService {
 		return r;
 	}
 
-	public Page<Register> getAll(String from, String to, int page, int quantityPerPage) {
+	public Page<Register> getAll(String from, String to, int page, int size) {
 		Date fromDate = null;
 		Date toDate = null;
 
@@ -76,11 +79,11 @@ public class RegisterService {
 					HttpStatus.BAD_REQUEST);
 		}
 		return this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate,
-				PageRequest.of(page, quantityPerPage));
+				PageRequest.of(page, size));
 	}
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
-			int quantityPerPage) {
+			int size) {
 		Date fromDate = null;
 		Date toDate = null;
 
@@ -101,7 +104,101 @@ public class RegisterService {
 					HttpStatus.BAD_REQUEST);
 		}
 		return this.registerRepository.findAllByPersonFkAndActiveTrueAndCheckInBetween(personId,
-				fromDate, toDate, PageRequest.of(page, quantityPerPage));
+				fromDate, toDate, PageRequest.of(page, size));
+	}
+
+	public List<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to) {
+		Date fromDate = null;
+		Date toDate = null;
+
+		try {
+			fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
+			toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+
+			if (fromDate.compareTo(toDate) > 0) {
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						HttpStatus.BAD_REQUEST);
+			}
+
+		} catch (ParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		List<Register> registers =
+				this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate);
+
+		List<Register> ret = new ArrayList<>();
+
+		for (Register r : registers) {
+			if (r.getPerson().getDni().contains(dniPattern)) {
+				// clean extra data
+				r.setAccess(null);
+				r.setPerson(null);
+				ret.add(r);
+			}
+		}
+
+		return ret;
+	}
+
+	public Page<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to,
+			int page, int size) {
+		Date fromDate = null;
+		Date toDate = null;
+
+		try {
+			fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
+			toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+
+			if (fromDate.compareTo(toDate) > 0) {
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						HttpStatus.BAD_REQUEST);
+			}
+
+		} catch (ParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		List<Register> registers =
+				this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate);
+
+		List<Register> ret = new ArrayList<>();
+
+		for (Register r : registers) {
+			if (r.getPerson().getDni().contains(dniPattern)) {
+				// clean extra data
+				r.setAccess(null);
+				r.setPerson(null);
+				ret.add(r);
+			}
+		}
+
+		int fromIndex = page * size;
+		int toIndex = fromIndex + size;
+
+		if (fromIndex >= ret.size()) {
+			ret = new ArrayList<>();
+		} else {
+			if (toIndex >= ret.size()) {
+				ret = ret.subList(fromIndex, ret.size());
+			} else {
+				ret = ret.subList(fromIndex, toIndex);
+			}
+		}
+
+		System.out.println("here 2 asd");
+
+		PageImpl<Register> pageRet = new PageImpl<>(ret, PageRequest.of(page, size), ret.size());
+
+		return pageRet;
 	}
 
 	public Register insert(Register register) {

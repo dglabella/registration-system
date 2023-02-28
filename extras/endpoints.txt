@@ -69,6 +69,9 @@ omitting either values, the default values will be assumed.
 
 (GET)               .../responsible/registers
 (GET)               .../responsible/registers/person/{id}
+(GET)               .../responsible/registers/person/search/dni={aproximation}
+(GET)               .../responsible/registers/person/search/name={aproximation}
+(GET)               .../responsible/registers/person/search/lastname={aproximation}
                     (default page = 0, default page size = 100)
 
 =================================================================================================

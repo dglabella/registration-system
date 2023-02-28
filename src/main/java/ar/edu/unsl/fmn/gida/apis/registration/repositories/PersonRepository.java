@@ -23,6 +23,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
 	Page<Person> findAllByPersonLastNameAndActiveTrue(String lastName, Pageable pageable);
 
+	List<Person> findByDniContainingAndActiveTrueOrderByIdAsc(String dniPattern);
+
 	Page<Person> findByDniContainingAndActiveTrue(String dniPattern, Pageable pageable);
 
 	Page<Person> findAllByPersonNameContainingAndActiveTrue(String namePattern, Pageable pageable);

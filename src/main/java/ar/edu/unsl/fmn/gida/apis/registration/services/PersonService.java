@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -74,8 +75,12 @@ public class PersonService {
 		return person;
 	}
 
-	public Page<Person> getAllByDniApproach(String string, int page, int size) {
-		return this.personRepository.findByDniContainingAndActiveTrue(string,
+	public List<Person> getAllByDniApproachOrderByIdAsc(String dni) {
+		return this.personRepository.findByDniContainingAndActiveTrueOrderByIdAsc(dni);
+	}
+
+	public Page<Person> getAllByDniApproach(String dni, int page, int size) {
+		return this.personRepository.findByDniContainingAndActiveTrue(dni,
 				PageRequest.of(page, size));
 	}
 

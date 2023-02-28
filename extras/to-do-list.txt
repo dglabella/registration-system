@@ -1,3 +1,5 @@
+- return all registers by person dni approach between dates (pageable)
+
 - on creation/update do not return data (not in all cases)
 
 - users that can create other users, shouldn't create another user wich privilege is greater than the creator.

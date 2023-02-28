@@ -18,3 +18,6 @@ https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframe
 RuntimeException and Error but not on checked exceptions)
 
 ===============================================================================================================================
+querying unrelated entities jpa
+
+https://www.baeldung.com/jpa-query-unrelated-entities
