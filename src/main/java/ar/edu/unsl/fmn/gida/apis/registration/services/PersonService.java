@@ -161,9 +161,8 @@ public class PersonService {
 	}
 
 	public Person delete(int id) {
-		
+
 		Person person = new Person();
-		Person person2 = null;
 
 		person = this.personRepository.findByIdAndActiveTrue(id)
 				.orElseThrow(
@@ -171,28 +170,19 @@ public class PersonService {
 								RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
 										.notFound(Person.class.getSimpleName(), id),
 								HttpStatus.NOT_FOUND));
+		try {
 
-		try{
-
-			///credencial
-			this.credentialService.deleteByPersonFk(person.getId());
-
-			///semanario
-			this.weeklyService.deleteByPersonFk(person.getId());
-
-			///registro
-			this.registerService.deleteByPersonFk(person.getId());
-
-			///estado
+			this.credentialService.delete(person.getId());
+			this.weeklyService.delete(person.getId());
+			this.registerService.delete(person.getId());
 			person.setActive(false);
 
-
-		}catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
 			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
 					HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		
+
 		return person;
 	}
 }

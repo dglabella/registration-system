@@ -108,30 +108,25 @@ public class WeeklyService {
 		return ret;
 	}
 
-	public Weekly delete(int id){
-		throw new ErrorResponse("delete weekly operation not available...",
-				HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	public void deleteByPersonFk(int personFk) {
+	public void delete(int personFk) {
 		List<Weekly> lWeeklies = this.weeklyRepository.findAllByPersonFkAndActiveTrue(personFk);
-		
-		if (lWeeklies.size() >0) {
-			try{
-				for(int i = 0; i < lWeeklies.size(); i++){				
+
+		if (lWeeklies.size() > 0) {
+			try {
+				for (int i = 0; i < lWeeklies.size(); i++) {
 					lWeeklies.get(i).setActive(false);
 				}
-			}catch (DataIntegrityViolationException e) {
-                e.printStackTrace();
-                throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
-                        HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-		}
-		else {
-			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getCredentialServiceMessenger().deleteNonExistentEntityCorruptDB(Weekly.class.getSimpleName(), Person.class.getSimpleName(), personFk),
+			} catch (DataIntegrityViolationException e) {
+				e.printStackTrace();
+				throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+						HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+		} else {
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
+							.deleteNonExistentEntityCorruptDB(Weekly.class.getSimpleName(),
+									Person.class.getSimpleName(), personFk),
 					HttpStatus.NOT_FOUND);
 		}
-		
 	}
 }

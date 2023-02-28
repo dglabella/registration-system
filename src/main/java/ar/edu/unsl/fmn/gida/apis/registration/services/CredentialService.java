@@ -68,30 +68,24 @@ public class CredentialService {
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	public Credential delete(int id) {
-		throw new ErrorResponse("delete credential operation not implemented yet...",
-				HttpStatus.NOT_IMPLEMENTED);
-	}
+	public void delete(int personFk) {
 
-	public void deleteByPersonFk(int personFk){
-		
 		Credential credential = new Credential();
-		credential = this.credentialRepository.findByPersonIdAndActiveTrue(personFk).orElseThrow(
-			() -> new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
-							.deleteNonExistentEntityCorruptDB(Person.class.getSimpleName(), Credential.class.getSimpleName(),personFk),
-					HttpStatus.NOT_FOUND));
-		
-		
-		try{
+		credential = this.credentialRepository.findByPersonIdAndActiveTrue(personFk)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
+								.deleteNonExistentEntityCorruptDB(Person.class.getSimpleName(),
+										Credential.class.getSimpleName(), personFk),
+						HttpStatus.NOT_FOUND));
+
+
+		try {
 			credential.setActive(false);
 
-		}catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
 			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
 					HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		
-
 	}
 }
