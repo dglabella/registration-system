@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.repositories;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,4 +19,7 @@ public interface WeeklyRepository extends JpaRepository<Weekly, Integer> {
 	Page<Weekly> findAllByActiveTrue(Pageable pageable);
 
 	Page<Weekly> findAllByPersonFkAndActiveTrue(Integer personFk, PageRequest pageble);
+
+	List<Weekly> findAllByPersonFkAndActiveTrue(Integer personFk);
+
 }

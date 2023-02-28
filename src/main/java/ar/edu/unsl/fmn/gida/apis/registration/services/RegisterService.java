@@ -281,7 +281,26 @@ public class RegisterService {
 	}
 
 	public Register delete(int id) {
-		throw new ErrorResponse("delete register operation not implemented yet...",
+		throw new ErrorResponse("delete register operation not available...",
 				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public void deleteByPersonFk(int personId) {
+		
+		List<Register> lRegisters = this.registerRepository.findAllByPersonIdAndActiveTrue(personId);
+		
+		if (lRegisters.size() > 0) {
+			try{
+				for(int i=0; i < lRegisters.size() ; i++)
+					lRegisters.get(i).setActive(false);
+				
+
+			}catch (DataIntegrityViolationException e) {
+                e.printStackTrace();
+                throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+		}
+		
 	}
 }

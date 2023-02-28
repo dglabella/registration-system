@@ -125,6 +125,7 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 
+	@Transient
 	public String getOldPassword() {
 		return this.oldPassword;
 	}

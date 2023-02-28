@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
@@ -106,8 +108,30 @@ public class WeeklyService {
 		return ret;
 	}
 
-	public Weekly delete(int id) {
-		throw new ErrorResponse("delete weekly operation not implemented yet...",
+	public Weekly delete(int id){
+		throw new ErrorResponse("delete weekly operation not available...",
 				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public void deleteByPersonFk(int personFk) {
+		List<Weekly> lWeeklies = this.weeklyRepository.findAllByPersonFkAndActiveTrue(personFk);
+		
+		if (lWeeklies.size() >0) {
+			try{
+				for(int i = 0; i < lWeeklies.size(); i++){				
+					lWeeklies.get(i).setActive(false);
+				}
+			}catch (DataIntegrityViolationException e) {
+                e.printStackTrace();
+                throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+                        HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+		}
+		else {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getCredentialServiceMessenger().deleteNonExistentEntityCorruptDB(Weekly.class.getSimpleName(), Person.class.getSimpleName(), personFk),
+					HttpStatus.NOT_FOUND);
+		}
+		
 	}
 }

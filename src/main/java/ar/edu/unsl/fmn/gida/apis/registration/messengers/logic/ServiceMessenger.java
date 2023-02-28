@@ -49,6 +49,44 @@ public abstract class ServiceMessenger {
 		return ret;
 	}
 
+	public String deleteNonExistentEntity(String entityName, int id) {
+		String ret = null;
+
+		switch (this.messages.getLang()) {
+			case "EN":
+				ret = "cannot be deleted'" + entityName + "' with id " + id
+						+ " because it doesn't exist";
+				break;
+			case "ES":
+				ret = "no se puede eliminar '" + entityName + "' con id " + id
+						+ " porque no existe";
+				break;
+			default:
+				ret = "cannot be deleted'" + entityName + "' with id " + id
+						+ " because it doesn't exist";
+		}
+		return ret;
+	}
+
+	public String deleteNonExistentEntityCorruptDB(String independentEntityName, String dependentEntityName, int independentEntityId) {
+		String ret = null;
+
+		switch (this.messages.getLang()) {
+			case "EN":
+				ret = "cannot delete '" + dependentEntityName + "' of  " + independentEntityName
+						+ "' with id " + independentEntityId + " because it does not exist. Corrupted DB integrity.";
+				break;
+			case "ES":
+				ret = "no se puede eliminar '" + dependentEntityName + "' de '" + independentEntityName 
+						+ "' con id "+ independentEntityId + " porque no existe. Integridad de BD corrupta.";
+				break;
+			default:
+				ret = "cannot delete '" + dependentEntityName + "' of  " + independentEntityName
+				+ "' with id " + independentEntityId + " because it does not exist. Corrupted DB integrity.";
+		}
+		return ret;
+	}
+
 	public String alreadyExistConstraint(String entityName, String attributeName, String value) {
 		String ret = null;
 

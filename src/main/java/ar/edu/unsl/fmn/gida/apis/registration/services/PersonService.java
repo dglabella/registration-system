@@ -34,6 +34,9 @@ public class PersonService {
 	@Autowired
 	private CredentialService credentialService;
 
+	@Autowired
+	private RegisterService registerService;
+
 	private PersonValidator personValidator = new PersonValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getPersonValidationMessenger());
 
@@ -158,7 +161,38 @@ public class PersonService {
 	}
 
 	public Person delete(int id) {
-		throw new ErrorResponse("delete person operation not implemented yet...",
-				HttpStatus.NOT_FOUND);
+		
+		Person person = new Person();
+		Person person2 = null;
+
+		person = this.personRepository.findByIdAndActiveTrue(id)
+				.orElseThrow(
+						() -> new ErrorResponse(
+								RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
+										.notFound(Person.class.getSimpleName(), id),
+								HttpStatus.NOT_FOUND));
+
+		try{
+
+			///credencial
+			this.credentialService.deleteByPersonFk(person.getId());
+
+			///semanario
+			this.weeklyService.deleteByPersonFk(person.getId());
+
+			///registro
+			this.registerService.deleteByPersonFk(person.getId());
+
+			///estado
+			person.setActive(false);
+
+
+		}catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		
+		return person;
 	}
 }
