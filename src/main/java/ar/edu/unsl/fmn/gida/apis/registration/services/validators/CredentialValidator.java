@@ -12,13 +12,16 @@ public class CredentialValidator extends Validator<Credential> {
 	}
 
 	@Override
-	public void validate(Credential entity) {
+	public void validateInsert(Credential entity) {
 		/**
 		 * check nullability
 		 */
+		if (entity.getId() != null)
+			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
 		if (!(entity.getPersonFk() != null || Constraints.Credential.PERSON_FK_NULLABLE))
-			this.sendError("credential person id is required");
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Credential.class.getSimpleName(), "person id"));
 
 		/**
 		 * check size
@@ -27,5 +30,10 @@ public class CredentialValidator extends Validator<Credential> {
 		/**
 		 * check pattern
 		 */
+	}
+
+	@Override
+	public void validateUpdate(Credential entity) {
+		this.validateInsert(entity);
 	}
 }

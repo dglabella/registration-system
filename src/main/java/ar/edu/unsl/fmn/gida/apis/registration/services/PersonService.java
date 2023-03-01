@@ -98,7 +98,7 @@ public class PersonService {
 	}
 
 	public Person insert(Person person) {
-		this.personValidator.validate(person);
+		this.personValidator.validateInsert(person);
 
 		Credential credential = null;
 		try {
@@ -128,7 +128,7 @@ public class PersonService {
 	}
 
 	public Person update(int id, Person person) {
-		this.personValidator.validate(person);
+		this.personValidator.validateUpdate(person);
 		Person ret = null;
 		Optional<Person> personOptional = this.personRepository.findByIdAndActiveTrue(id);
 
@@ -140,6 +140,7 @@ public class PersonService {
 					person.setCurrentWeekly(
 							this.weeklyService.update(id, person.getCurrentWeekly()));
 				}
+
 				ret = this.personRepository.save(person);
 
 				ret.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));

@@ -40,21 +40,14 @@ public class RegisterService {
 	private Cypher cypher = new PersonDetailsCypher();
 	private PersonConverter personConverter = new PersonConverter();
 
-	private SimpleDateFormat dateFormatter =
-			new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.ENGLISH);
+	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
 	public Register getOne(int id) {
-		Register r = null;
-		Optional<Register> optional = registerRepository.findById(id);
-
-		if (optional.isPresent()) {
-			r = optional.get();
-		} else {
-			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterServiceMessenger().notFound(Register.class.getSimpleName(), id),
-					HttpStatus.NOT_FOUND);
-		}
-
+		Register r = this.registerRepository.findById(id)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
+								.notFound(Register.class.getSimpleName(), id),
+						HttpStatus.NOT_FOUND));
 		return r;
 	}
 
@@ -63,8 +56,10 @@ public class RegisterService {
 		Date toDate = null;
 
 		try {
-			fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
-			toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
+					: new Date(Long.MIN_VALUE);
+			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
+					: new Date();
 
 			if (fromDate.compareTo(toDate) > 0) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -78,8 +73,8 @@ public class RegisterService {
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
-		return this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate,
-				PageRequest.of(page, size));
+		return this.registerRepository.findAllByCheckInBetweenAndActiveTrueOrderByIdDesc(fromDate,
+				toDate, PageRequest.of(page, size));
 	}
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
@@ -88,8 +83,10 @@ public class RegisterService {
 		Date toDate = null;
 
 		try {
-			fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
-			toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
+					: new Date(Long.MIN_VALUE);
+			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
+					: new Date();
 
 			if (fromDate.compareTo(toDate) > 0) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -112,8 +109,10 @@ public class RegisterService {
 		Date toDate = null;
 
 		try {
-			fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
-			toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
+					: new Date(Long.MIN_VALUE);
+			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
+					: new Date();
 
 			if (fromDate.compareTo(toDate) > 0) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -136,8 +135,8 @@ public class RegisterService {
 		for (Register r : registers) {
 			if (r.getPerson().getDni().contains(dniPattern)) {
 				// clean extra data
-				r.setAccess(null);
-				r.setPerson(null);
+				// r.setAccess(null);
+				// r.setPerson(null);
 				ret.add(r);
 			}
 		}
@@ -151,8 +150,10 @@ public class RegisterService {
 		Date toDate = null;
 
 		try {
-			fromDate = from != null ? this.dateFormatter.parse(from) : new Date(Long.MIN_VALUE);
-			toDate = to != null ? this.dateFormatter.parse(to) : new Date();
+			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
+					: new Date(Long.MIN_VALUE);
+			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
+					: new Date();
 
 			if (fromDate.compareTo(toDate) > 0) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -175,8 +176,8 @@ public class RegisterService {
 		for (Register r : registers) {
 			if (r.getPerson().getDni().contains(dniPattern)) {
 				// clean extra data
-				r.setAccess(null);
-				r.setPerson(null);
+				// r.setAccess(null);
+				// r.setPerson(null);
 				ret.add(r);
 			}
 		}
@@ -194,15 +195,13 @@ public class RegisterService {
 			}
 		}
 
-		System.out.println("here 2 asd");
-
 		PageImpl<Register> pageRet = new PageImpl<>(ret, PageRequest.of(page, size), ret.size());
 
 		return pageRet;
 	}
 
 	public Register insert(Register register) {
-		this.registerValidator.validate(register);
+		this.registerValidator.validateInsert(register);
 		Person person = null;
 		Register r1 = new Register();
 		Register r1Aux = new Register();

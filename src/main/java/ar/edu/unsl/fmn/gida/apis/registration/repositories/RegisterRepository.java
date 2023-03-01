@@ -20,6 +20,9 @@ public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
 	Page<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
 
+	Page<Register> findAllByCheckInBetweenAndActiveTrueOrderByIdDesc(Date from, Date to,
+			Pageable pageable);
+
 	List<Register> findAllByPersonIdAndActiveTrue(Integer id);
 
 	Optional<Register> findByIdAndActiveTrue(Integer id);

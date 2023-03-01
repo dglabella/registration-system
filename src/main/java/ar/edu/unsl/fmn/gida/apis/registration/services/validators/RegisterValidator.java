@@ -11,14 +11,24 @@ public class RegisterValidator extends Validator<Register> {
 	}
 
 	@Override
-	public void validate(Register entity) {
+	public void validateInsert(Register entity) {
 		/**
 		 * check nullability
 		 */
+		if (entity.getId() != null)
+			this.sendError(this.getEntityValidationMessenger().idNotRequired());
+
 		if (entity.getAccessFk() == null)
-			this.sendError("register access id is required");
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Register.class.getSimpleName(), "access id"));
 
 		if (entity.getEncryptedData() == null)
-			this.sendError("register encrypted data is required");
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Register.class.getSimpleName(), "encrypted data"));
+	}
+
+	@Override
+	public void validateUpdate(Register entity) {
+		this.validateInsert(entity);
 	}
 }

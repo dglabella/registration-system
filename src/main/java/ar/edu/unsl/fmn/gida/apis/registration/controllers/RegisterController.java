@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,46 +80,46 @@ public class RegisterController {
 		return page;
 	}
 
-	// @GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/person" + SEARCH_OP
-	// + SEARCH_OP_BY_DNI + "{value}")
-	// public Page<Register> getRegistersFromPersonBetweenDatesByDni(@PathVariable String value,
-	// @RequestParam Map<String, String> map) {
-	// Page<Register> page = null;
-
-	// String from = map.get("from");
-	// String to = map.get("to");
-
-	// if (!map.containsKey("page") && !map.containsKey("size")) {
-	// System.out.println("HERE 1");
-	// page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
-	// this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
-	// } else if (map.containsKey("page") && !map.containsKey("size")) {
-	// page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
-	// Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
-	// } else if (!map.containsKey("page") && map.containsKey("size")) {
-	// page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
-	// this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
-	// } else {
-	// page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
-	// Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
-	// }
-
-	// return page;
-	// }
-
 	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/person" + SEARCH_OP
 			+ SEARCH_OP_BY_DNI + "{value}")
-	public List<Register> getRegistersFromPersonBetweenDatesByDni(@PathVariable String value,
+	public Page<Register> getRegistersFromPersonBetweenDatesByDni(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
-		List<Register> ret = null;
+		Page<Register> page = null;
 
 		String from = map.get("from");
 		String to = map.get("to");
 
-		ret = this.registerService.getAllFromPersonByDniApproach(value, from, to);
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			System.out.println("HERE 1");
+			page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
+			page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
+			page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
+		} else {
+			page = this.registerService.getAllFromPersonByDniApproach(value, from, to,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
+		}
 
-		return ret;
+		return page;
 	}
+
+	// @GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/person" + SEARCH_OP
+	// + SEARCH_OP_BY_DNI + "{value}")
+	// public List<Register> getRegistersFromPersonBetweenDatesByDni(@PathVariable String value,
+	// @RequestParam Map<String, String> map) {
+	// List<Register> ret = null;
+
+	// String from = map.get("from");
+	// String to = map.get("to");
+
+	// ret = this.registerService.getAllFromPersonByDniApproach(value, from, to);
+
+	// return ret;
+	// }
 
 	@PostMapping(value = Urls.Privileges.user + Urls.registers)
 	public Register postRegister(@RequestBody Register register) {

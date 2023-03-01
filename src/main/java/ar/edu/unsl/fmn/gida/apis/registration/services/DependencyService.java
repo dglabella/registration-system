@@ -12,6 +12,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Dependency;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.DependencyRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.DependencyValidator;
 
 @Service
 @Transactional
@@ -19,6 +21,10 @@ public class DependencyService {
 
 	@Autowired
 	private DependencyRepository dependencyRepository;
+
+	private DependencyValidator dependencyValidator =
+			new DependencyValidator(new CustomExpressionValidator(),
+					RegistrationSystemApplication.MESSENGER.getAccessValidationMessenger());
 
 	public Dependency getOne(int id) {
 		Dependency d = null;
@@ -40,6 +46,8 @@ public class DependencyService {
 	}
 
 	public Dependency insert(Dependency dependency) {
+		this.dependencyValidator.validateInsert(dependency);
+
 		Dependency d = null;
 		try {
 			d = dependencyRepository.save(dependency);
@@ -52,6 +60,8 @@ public class DependencyService {
 	}
 
 	public Dependency update(int id, Dependency dependency) {
+		this.dependencyValidator.validateUpdate(dependency);
+
 		Dependency d = null;
 
 		Optional<Dependency> optional = dependencyRepository.findByIdAndActiveTrue(id);

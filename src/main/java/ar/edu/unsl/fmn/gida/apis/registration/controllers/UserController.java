@@ -66,6 +66,24 @@ public class UserController {
 	}
 
 	@PutMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User user) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String loggedAccount = (String) authentication.getPrincipal();
+
+		// Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
+		// .collect(Collectors.toSet());
+
+		// Optional<String> optional = roles.stream().findAny(); // only one privilege exist
+		// String priv =
+		// optional.orElseThrow(() -> new ErrorResponse(
+		// RegistrationSystemApplication.MESSENGER.getUserControllerMessenger()
+		// .userPrivilegeIntegrityCorruption(loggedAccount),
+		// HttpStatus.FORBIDDEN));
+
+		return this.userService.updateUser(id, user, loggedAccount);
+	}
+
+	@PutMapping(value = Urls.Privileges.admin + Urls.users + "/{id}")
 	public User updateAdmin(@PathVariable int id, @RequestBody User user) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String loggedAccount = (String) authentication.getPrincipal();
@@ -80,7 +98,7 @@ public class UserController {
 		// .userPrivilegeIntegrityCorruption(loggedAccount),
 		// HttpStatus.FORBIDDEN));
 
-		return this.userService.update(id, user, loggedAccount);
+		return this.userService.updateAdmin(id, user, loggedAccount);
 	}
 
 	@DeleteMapping(Urls.Privileges.admin + Urls.users + "/{id}")

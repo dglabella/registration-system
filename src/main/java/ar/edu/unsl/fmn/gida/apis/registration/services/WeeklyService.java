@@ -61,7 +61,7 @@ public class WeeklyService {
 	}
 
 	public Weekly insert(Weekly weekly) {
-		this.weeklyValidator.validate(weekly);
+		this.weeklyValidator.validateInsert(weekly);
 		try {
 			if (weekly.getStart() == null) {
 				weekly.setStart(new Date());
@@ -82,7 +82,7 @@ public class WeeklyService {
 	}
 
 	public Weekly update(Integer personId, Weekly weekly) {
-		this.weeklyValidator.validate(weekly);
+		this.weeklyValidator.validateUpdate(weekly);
 		Weekly ret = null;
 		Weekly w = this.getCurrentWeeklyFromPerson(personId);
 		try {
@@ -105,6 +105,7 @@ public class WeeklyService {
 			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
 					HttpStatus.UNPROCESSABLE_ENTITY);
 		}
+
 		return ret;
 	}
 

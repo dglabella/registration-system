@@ -68,4 +68,61 @@ public abstract class ValidationMessenger {
 
 		return ret;
 	}
+
+	public String invalidChar(String entityName, String attributeName) {
+		String ret = null;
+
+		switch (this.messages.getLang()) {
+			case "EN":
+				ret = "invalid " + entityName + " " + attributeName
+						+ ": must have only valids characters.";
+				break;
+			case "ES":
+				ret = entityName + " " + attributeName
+						+ " inválido: debe contener solo caracteres válidos.";
+				break;
+			default:
+				ret = "invalid " + entityName + " " + attributeName
+						+ ": must have only valids characters.";
+		}
+
+		return ret;
+	}
+
+	public String onlyNumberAllowed(String entityName, String attributeName) {
+		String ret = null;
+
+		switch (this.messages.getLang()) {
+			case "EN":
+				ret = "invalid " + entityName + " " + attributeName + ": only digits are allowed";
+				break;
+			case "ES":
+				ret = entityName + " " + attributeName + " inválido: solo dígitos estan permitidos";
+				break;
+			default:
+				ret = "invalid " + entityName + " " + attributeName + ": only digits are allowed";
+		}
+
+		return ret;
+	}
+
+	public String notAnEmail(String entityName, String attributeName) {
+		String ret = null;
+
+		switch (this.messages.getLang()) {
+			case "EN":
+				ret = "invalid " + entityName + " " + attributeName
+						+ ": must be like anything@example.com";
+				break;
+			case "ES":
+				ret = entityName + " " + attributeName
+						+ " inválido: debe ser como cualquiercosa@ejemplo.com";
+				break;
+			default:
+				ret = "invalid " + entityName + " " + attributeName
+						+ ": must be like anything@example.com";
+		}
+
+		return ret;
+	}
 }

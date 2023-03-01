@@ -13,12 +13,16 @@ public class WeeklyValidator extends Validator<Weekly> {
 	}
 
 	@Override
-	public void validate(Weekly entity) {
+	public void validateInsert(Weekly entity) {
 		/**
 		 * check nullability
 		 */
+		if (entity.getId() != null)
+			this.sendError(this.getEntityValidationMessenger().idNotRequired());
+
 		if (!(entity.getPersonFk() != null || Constraints.Weekly.PERSONFK_NULLABLE))
-			this.sendError("weekly person id is required");
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Weekly.class.getSimpleName(), "person id"));
 
 		/**
 		 * check size
@@ -27,5 +31,10 @@ public class WeeklyValidator extends Validator<Weekly> {
 		/**
 		 * check pattern
 		 */
+	}
+
+	@Override
+	public void validateUpdate(Weekly entity) {
+		this.validateInsert(entity);
 	}
 }

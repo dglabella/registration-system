@@ -59,7 +59,7 @@ public class CredentialService {
 	}
 
 	public Credential insert(Credential credential) {
-		this.credentialValidator.validate(credential);
+		this.credentialValidator.validateInsert(credential);
 		return this.credentialRepository.save(credential);
 	}
 

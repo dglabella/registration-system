@@ -51,7 +51,8 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User insert(User user) {
-		this.validator.validate(user);
+		this.validator.validateInsert(user);
+
 		this.userRepository.findOneByDniAndActiveTrue(user.getDni()).ifPresent(u -> {
 			throw new ErrorResponse(
 					RegistrationSystemApplication.MESSENGER.getUserServiceMessenger()
@@ -86,8 +87,67 @@ public class UserService implements UserDetailsService {
 		return ret;
 	}
 
-	public User update(int id, User body, String loggedAccount) {
-		this.validator.validate(body);
+	public User updateUser(int id, User body, String loggedAccount) {
+		this.validator.validateUpdate(body);
+		User ret = null;
+
+		Optional<User> loggedUserOpt =
+				this.userRepository.findOneByAccountAndActiveTrue(loggedAccount);
+
+		// this error should not happen in a typical situation
+		User resourceUser = this.userRepository.findByIdAndActiveTrue(id)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getUserServiceMessenger()
+								.updateNonExistentEntity(User.class.getSimpleName(), id),
+						HttpStatus.NOT_FOUND));
+
+
+		this.userRepository.findOneByDniAndIdIsNot(body.getDni(), id).ifPresent(u -> {
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getUserServiceMessenger()
+							.alreadyExistConstraint(User.class.getSimpleName(), "dni", u.getDni()),
+					HttpStatus.CONFLICT);
+		});
+
+		this.userRepository.findOneByEmailAndIdIsNot(body.getEmail(), id).ifPresent(u -> {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getUserServiceMessenger().alreadyExistConstraint(User.class.getSimpleName(),
+							"email", u.getEmail()),
+					HttpStatus.CONFLICT);
+		});
+
+		this.userRepository.findOneByAccountAndIdIsNot(body.getAccount(), id).ifPresent(u -> {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getUserServiceMessenger().alreadyExistConstraint(User.class.getSimpleName(),
+							"account", u.getAccount()),
+					HttpStatus.CONFLICT);
+		});
+
+		if (!body.getOldPassword().equals(resourceUser.getPassword())) {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getUserServiceMessenger().oldPasswordNotMatching(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		try {
+			body.setId(id);
+			body.setPassword(this.passwordEncoder.encode(body.getPassword()));
+			body.setEnabled(true); // because user is active = false by default
+			body.setPrivilege(resourceUser.getPrivilege());
+
+			ret = userRepository.save(body);
+
+		} catch (DataIntegrityViolationException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		return ret;
+	}
+
+	public User updateAdmin(int id, User body, String loggedAccount) {
+		this.validator.validateUpdate(body);
 
 		User ret = null;
 
@@ -106,57 +166,42 @@ public class UserService implements UserDetailsService {
 								.updateNonExistentEntity(User.class.getSimpleName(), id),
 						HttpStatus.NOT_FOUND));
 
+
+		if (loggedUser.getPrivilege() != Privilege.ROLE_ADMIN && loggedUser.getId() != id) {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getUserServiceMessenger().updateAccessViolation(loggedAccount),
+					HttpStatus.UNAUTHORIZED);
+		}
+
+		this.userRepository.findOneByDniAndIdIsNot(body.getDni(), id).ifPresent(u -> {
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getUserServiceMessenger()
+							.alreadyExistConstraint(User.class.getSimpleName(), "dni", u.getDni()),
+					HttpStatus.CONFLICT);
+		});
+
+		this.userRepository.findOneByEmailAndIdIsNot(body.getEmail(), id).ifPresent(u -> {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getUserServiceMessenger().alreadyExistConstraint(User.class.getSimpleName(),
+							"email", u.getEmail()),
+					HttpStatus.CONFLICT);
+		});
+
+		this.userRepository.findOneByAccountAndIdIsNot(body.getAccount(), id).ifPresent(u -> {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getUserServiceMessenger().alreadyExistConstraint(User.class.getSimpleName(),
+							"account", u.getAccount()),
+					HttpStatus.CONFLICT);
+		});
+
 		try {
-			if (loggedUser.getPrivilege() != Privilege.ROLE_ADMIN && loggedUser.getId() != id) {
-				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getUserServiceMessenger().updateAccessViolation(loggedAccount),
-						HttpStatus.UNAUTHORIZED);
-			}
-
-			this.userRepository.findOneByDniAndIdIsNot(body.getDni(), id).ifPresent(u -> {
-				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getUserServiceMessenger()
-						.alreadyExistConstraint(User.class.getSimpleName(), "dni", u.getDni()),
-						HttpStatus.CONFLICT);
-			});
-
-			this.userRepository.findOneByEmailAndIdIsNot(body.getEmail(), id).ifPresent(u -> {
-				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getUserServiceMessenger()
-						.alreadyExistConstraint(User.class.getSimpleName(), "email", u.getEmail()),
-						HttpStatus.CONFLICT);
-			});
-
-			this.userRepository.findOneByAccountAndIdIsNot(body.getAccount(), id).ifPresent(u -> {
-				throw new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getUserServiceMessenger()
-								.alreadyExistConstraint(User.class.getSimpleName(), "account",
-										u.getAccount()),
-						HttpStatus.CONFLICT);
-			});
-
-			if (loggedUser.getPrivilege() != Privilege.ROLE_ADMIN) {
-
-				if (body.getOldPassword() != null) {
-
-					if (!body.getOldPassword().equals(resourceUser.getPassword())) {
-
-						throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-								.getUserServiceMessenger().oldPasswordNotMatching(),
-								HttpStatus.UNPROCESSABLE_ENTITY);
-					}
-				} else {
-					throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-							.getUserServiceMessenger().oldPasswordNotMatching(),
-							HttpStatus.UNPROCESSABLE_ENTITY);
-				}
-			}
 
 			body.setId(id);
 			body.setPassword(this.passwordEncoder.encode(body.getPassword()));
 			body.setEnabled(true); // because user is active = false by default
 			body.setPrivilege(resourceUser.getPrivilege());
 			ret = userRepository.save(body);
+
 		} catch (DataIntegrityViolationException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
@@ -167,16 +212,17 @@ public class UserService implements UserDetailsService {
 
 	public User delete(int id) {
 		User user = null;
-		user = this.userRepository.findByIdAndActiveTrue(id).orElseThrow(
-			() -> new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getUserServiceMessenger().deleteNonExistentEntity(User.class.getSimpleName(), id),
-					HttpStatus.NOT_FOUND));
-		
-		
-		try{
+		user = this.userRepository.findByIdAndActiveTrue(id)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getUserServiceMessenger()
+								.deleteNonExistentEntity(User.class.getSimpleName(), id),
+						HttpStatus.NOT_FOUND));
+
+
+		try {
 			user.setEnabled(false);
 
-		}catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
 			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
 					HttpStatus.UNPROCESSABLE_ENTITY);

@@ -40,7 +40,7 @@ public class AccessService {
 	}
 
 	public Access insert(Access access) {
-		this.accessValidator.validate(access);
+		this.accessValidator.validateInsert(access);
 		Access ret;
 		try {
 			ret = accessRepository.save(access);
@@ -53,7 +53,7 @@ public class AccessService {
 	}
 
 	public Access update(int id, Access access) {
-		this.accessValidator.validate(access);
+		this.accessValidator.validateUpdate(access);
 		Access ret = this.accessRepository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getAccessServiceMessenger()

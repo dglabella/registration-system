@@ -12,31 +12,39 @@ public class DependencyValidator extends Validator<Dependency> {
 	}
 
 	@Override
-	public void validate(Dependency entity) {
+	public void validateInsert(Dependency entity) {
 		/**
 		 * check nullability
 		 */
-		if (entity.getId() == null)
-			this.sendError("dependency id must not be null");
+		if (entity.getId() != null)
+			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
 		if (!(this.getExpressionValidator().isPresent(entity.getDependencyName())
 				|| Constraints.Dependency.NAME_NULLABLE))
-			this.sendError("dependency name is required");
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Dependency.class.getSimpleName(), "name"));
 
 		/**
 		 * check size
 		 */
 		if (!(Constraints.Dependency.NAME_MIN_LENGHT < entity.getDependencyName().length()
 				&& entity.getDependencyName().length() < Constraints.Dependency.NAME_MAX_LENGHT))
-			this.sendError("invalid dependency name: must contain between "
-					+ Constraints.Dependency.NAME_MIN_LENGHT + " and "
-					+ Constraints.Dependency.NAME_MAX_LENGHT + " characters");
+			this.sendError(this.getEntityValidationMessenger().invalidAttributeSize(
+					Dependency.class.getSimpleName(), "name",
+					Constraints.Dependency.NAME_MIN_LENGHT,
+					Constraints.Dependency.NAME_MAX_LENGHT));
 
 		if (!(Constraints.Dependency.DESCRIPTION_MIN_LENGHT < entity.getDependencyName().length()
 				&& entity.getDependencyName()
 						.length() < Constraints.Dependency.DESCRIPTION_MAX_LENGHT))
-			this.sendError("invalid dependency description: must contain between "
-					+ Constraints.Dependency.NAME_MIN_LENGHT + " and "
-					+ Constraints.Dependency.NAME_MAX_LENGHT + " characters");
+			this.sendError(this.getEntityValidationMessenger().invalidAttributeSize(
+					Dependency.class.getSimpleName(), "description",
+					Constraints.Dependency.NAME_MIN_LENGHT,
+					Constraints.Dependency.NAME_MAX_LENGHT));
+	}
+
+	@Override
+	public void validateUpdate(Dependency entity) {
+		this.validateInsert(entity);
 	}
 }
