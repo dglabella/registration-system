@@ -176,6 +176,7 @@ public class PersonService {
 			this.credentialService.delete(person.getId());
 			this.weeklyService.delete(person.getId());
 			this.registerService.delete(person.getId());
+
 			person.setActive(false);
 
 		} catch (DataIntegrityViolationException e) {
