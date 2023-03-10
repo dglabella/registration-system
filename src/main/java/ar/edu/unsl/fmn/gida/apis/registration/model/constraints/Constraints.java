@@ -16,7 +16,7 @@ public interface Constraints {
 		boolean DNI_NULLABLE = false;
 		boolean DNI_UNIQUE = true;
 
-		int EMAIL_MIN_LENGHT = 11;
+		int EMAIL_MIN_LENGHT = 5;
 		int EMAIL_MAX_LENGHT = 100;
 		boolean EMAIL_NULLABLE = false;
 		boolean EMAIL_UNIQUE = true;
@@ -63,14 +63,6 @@ public interface Constraints {
 	interface Weekly {
 		boolean PERSONFK_NULLABLE = false;
 
-		boolean MONDAY_NULLABLE = false;
-		boolean TUESDAY_NULLABLE = false;
-		boolean WEDNESDAY_NULLABLE = false;
-		boolean THURDAY_NULLABLE = false;
-		boolean FRIDAY_NULLABLE = false;
-		boolean SATURDAY_NULLABLE = false;
-		boolean SUNDAY_NULLABLE = false;
-
 		boolean START_NULLABLE = false;
 		boolean END_NULLABLE = true;
 
@@ -104,5 +96,15 @@ public interface Constraints {
 		boolean CHECK_OUT_NULLABLE = true;
 
 		boolean ENCRYPTED_DATA_NULLABLE = true;
+	}
+
+
+	interface Responsibility {
+		boolean WEEKLY_FK_NULLABLE = false;
+
+		boolean DAY_NULLABLE = false;
+
+		boolean ENTRANCE_TIME_NULLABLE = false;
+		boolean DEPARTURE_TIME_NULLABLE = false;
 	}
 }

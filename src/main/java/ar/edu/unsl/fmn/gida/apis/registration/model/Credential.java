@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,7 +22,7 @@ public class Credential {
 	private Integer id;
 
 	@Column(nullable = Constraints.Credential.PERSON_FK_NULLABLE)
-	private Integer personFk;
+	private Integer personId;
 
 	// ================================ attributes ================================
 	@Column(nullable = Constraints.Credential.DATA_NULLABLE,
@@ -39,8 +38,8 @@ public class Credential {
 	private boolean active = true;
 
 	// ============================ model associations ============================
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "personId", referencedColumnName = "id", insertable = false,
 			updatable = false)
 	@JsonBackReference
 	private Person person;
@@ -57,12 +56,12 @@ public class Credential {
 		this.id = id;
 	}
 
-	public Integer getPersonFk() {
-		return this.personFk;
+	public Integer getPersonId() {
+		return this.personId;
 	}
 
-	public void setPersonFk(Integer personFk) {
-		this.personFk = personFk;
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
 	}
 
 	public String getData() {

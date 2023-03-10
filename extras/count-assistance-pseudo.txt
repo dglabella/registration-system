@@ -7,10 +7,10 @@ countAssistanceFromAPerson(weeklies: set, registers: set) : n
         set days = weeklies.get(i).getDays();     // days = [monday, wednesday, friday]
 
         j = 0;
-        while(j < registers.size && registers.get(j).getDate() < weeklies.get(i).getEnd() ){
-            
-            days.exists( registers.get(j).getDay() ); // registers.get(j).getDay() = tuesday -- registers.get(j).getDate() = 01/03/2023
 
+        while(j < registers.size && registers.get(j).getDate() < weeklies.get(i).getEnd() ){
+
+            days.exists( registers.get(j).getDay() ); // registers.get(j).getDay() = tuesday -- registers.get(j).getDate() = 01/03/2023
             
             n++;
 
@@ -20,9 +20,24 @@ countAssistanceFromAPerson(weeklies: set, registers: set) : n
     }
 }
 
+controlDeAsistencia(Weeklies weeklies, Register registers) {
+    
+    Array<String> dias;
+    for(int i = 0; i< weeklies.size(); i++){
+        dias = weeklies.get(i).getDias();
 
-Braian paes:
+        for(int j =0; j < registers.size(); j++){
+            
+            k=0;
+            while( k < dias.size){
+                contador = dias.get(k).equals(registers.get(j).getDiaTransformado);
+                k++;
+            }
+        }
+    }
+}
 
+Braian Paes:
 weeklies = [
     {
         "days": [mon,wed,fri],
@@ -32,15 +47,16 @@ weeklies = [
     {
         "days": [mon,wed,sat],
         start: 31-03-2023
-        end: 15-07-2023
+        end: 28-05-2023
     },
     {
         "days": [wed,fri],
-        start: 15-07-2023
+        start: 28-05-2023
         end: null
     }
 ]
------------------------------------------
+-----------------------------------------                                   Assist = 6
+                                                                            extraAssist = 4
 registers = [
     {
         checkIn: 01-03-2023 08:00:00
@@ -52,18 +68,34 @@ registers = [
     },
     {
         checkIn: 05-03-2023 08:00:00
-        checkOut: 01-03-2023 18:00:00
+        checkOut: 05-03-2023 18:00:00
     },
     {
-        checkIn: 01-03-2023 08:00:00
-        checkOut: 01-03-2023 18:00:00
+        checkIn: 08-04-2023 08:00:00
+        checkOut: 08-04-2023 18:00:00
     }, 
     {
-        checkIn: 01-03-2023 08:00:00
-        checkOut: 01-03-2023 18:00:00
+        checkIn: 09-04-2023 10:00:00
+        checkOut: 09-04-2023 17:50:00
     },
     {
-        checkIn: 01-03-2023 08:00:00
-        checkOut: 01-03-2023 18:00:00
+        checkIn: 27-04-2023 11:50:00
+        checkOut: 27-04-2023 18:00:00
+    },
+    {
+        checkIn: 03-05-2023 09:30:00
+        checkOut: 03-05-2023 16:09:00
+    },
+    {
+        checkIn: 06-05-2023 13:00:00
+        checkOut: 06-05-2023 17:30:00
+    },
+    {
+        checkIn: 20-05-2023 09:20:06
+        checkOut: 20-05-2023 19:06:40
+    },
+    {
+        checkIn: 07-06-2023 11:00:11
+        checkOut: 07-06-2023 18:37:26
     }
 ]

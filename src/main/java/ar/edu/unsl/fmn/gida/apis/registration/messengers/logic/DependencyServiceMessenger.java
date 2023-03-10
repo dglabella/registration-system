@@ -4,7 +4,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class DependencyServiceMessenger extends ServiceMessenger {
 
-	public DependencyServiceMessenger(Messenger lang) {
-		super(lang);
+	public DependencyServiceMessenger(Messenger messenger) {
+		super(messenger);
 	}
 }

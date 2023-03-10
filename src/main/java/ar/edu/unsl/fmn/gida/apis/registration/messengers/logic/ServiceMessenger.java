@@ -4,20 +4,37 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public abstract class ServiceMessenger {
 
-	private Messenger messages;
+	private Messenger messenger;
 
-	public ServiceMessenger(Messenger messages) {
-		this.messages = messages;
+	public ServiceMessenger(Messenger messenger) {
+		this.messenger = messenger;
 	}
 
-	public Messenger getMessages() {
-		return this.messages;
+	public Messenger getMessenger() {
+		return this.messenger;
+	}
+
+	public String unspecifiedEntity(String entityName) {
+		String ret = null;
+
+		switch (this.messenger.getLang()) {
+			case "EN":
+				ret = "need to specify: " + entityName;
+				break;
+			case "ES":
+				ret = "es necesario especificar: " + entityName;
+				break;
+			default:
+				ret = "need to specify: " + entityName;
+		}
+
+		return ret;
 	}
 
 	public String notFound(String entityName, int id) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "there is no '" + entityName + "' with id: " + id;
 				break;
@@ -33,7 +50,7 @@ public abstract class ServiceMessenger {
 	public String updateNonExistentEntity(String entityName, int id) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "cannot update '" + entityName + "' with id " + id
 						+ " because it doesn't exist";
@@ -52,7 +69,7 @@ public abstract class ServiceMessenger {
 	public String deleteNonExistentEntity(String entityName, int id) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "cannot be deleted'" + entityName + "' with id " + id
 						+ " because it doesn't exist";
@@ -68,21 +85,25 @@ public abstract class ServiceMessenger {
 		return ret;
 	}
 
-	public String deleteNonExistentEntityCorruptDB(String independentEntityName, String dependentEntityName, int independentEntityId) {
+	public String deleteNonExistentEntityCorruptDB(String independentEntityName,
+			String dependentEntityName, int independentEntityId) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "cannot delete '" + dependentEntityName + "' of  " + independentEntityName
-						+ "' with id " + independentEntityId + " because it does not exist. Corrupted DB integrity.";
+						+ "' with id " + independentEntityId
+						+ " because it does not exist. Corrupted DB integrity.";
 				break;
 			case "ES":
-				ret = "no se puede eliminar '" + dependentEntityName + "' de '" + independentEntityName 
-						+ "' con id "+ independentEntityId + " porque no existe. Integridad de BD corrupta.";
+				ret = "no se puede eliminar '" + dependentEntityName + "' de '"
+						+ independentEntityName + "' con id " + independentEntityId
+						+ " porque no existe. Integridad de BD corrupta.";
 				break;
 			default:
 				ret = "cannot delete '" + dependentEntityName + "' of  " + independentEntityName
-				+ "' with id " + independentEntityId + " because it does not exist. Corrupted DB integrity.";
+						+ "' with id " + independentEntityId
+						+ " because it does not exist. Corrupted DB integrity.";
 		}
 		return ret;
 	}
@@ -90,7 +111,7 @@ public abstract class ServiceMessenger {
 	public String alreadyExistConstraint(String entityName, String attributeName, String value) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "cannot insert/update '" + entityName + "'. " + attributeName + " " + value
 						+ " already exist";

@@ -4,14 +4,14 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class UserValidationMessenger extends ValidationMessenger {
 
-	public UserValidationMessenger(Messenger messages) {
-		super(messages);
+	public UserValidationMessenger(Messenger messenger) {
+		super(messenger);
 	}
 
 	public String invalidNamePattern() {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "invalid user name: cannot contain numbers or special characters";
 				break;
@@ -28,7 +28,7 @@ public class UserValidationMessenger extends ValidationMessenger {
 	public String invalidLastnamePattern() {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "invalid user name: cannot contain numbers or special characters";
 				break;
@@ -45,7 +45,7 @@ public class UserValidationMessenger extends ValidationMessenger {
 	public String invalidAccount() {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "invalid user account: must follow the next specification: "
 						+ "1- Begin with a letter (uppercase or lowercase) or a digit. "
@@ -77,7 +77,7 @@ public class UserValidationMessenger extends ValidationMessenger {
 	public String invalidPassword() {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "invalid user passowrd: must follow the next specification: "
 						+ "must contain only alphanumeric characters";

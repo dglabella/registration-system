@@ -4,14 +4,14 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class UserServiceMessenger extends ServiceMessenger {
 
-	public UserServiceMessenger(Messenger lang) {
-		super(lang);
+	public UserServiceMessenger(Messenger messenger) {
+		super(messenger);
 	}
 
 	public String notFoundByAccount(String account) {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "there is no user with account name '" + account + "'";
 				break;
@@ -28,7 +28,7 @@ public class UserServiceMessenger extends ServiceMessenger {
 	public String updateAccessViolation(String account) {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "the user " + account + " cannot update data from other user";
 				break;
@@ -45,7 +45,7 @@ public class UserServiceMessenger extends ServiceMessenger {
 	public String accesssViolation(String account) {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "the user " + account + " is not registered. Access Violation";
 				break;
@@ -62,7 +62,7 @@ public class UserServiceMessenger extends ServiceMessenger {
 	public String oldPasswordNotMatching() {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "cannot update user: old password is incorrect";
 				break;
@@ -71,6 +71,23 @@ public class UserServiceMessenger extends ServiceMessenger {
 				break;
 			default:
 				ret = "cannot update user: old password is incorrect";
+		}
+
+		return ret;
+	}
+
+	public String oldPasswordIsNull() {
+		String ret = null;
+
+		switch (this.getMessenger().getLang()) {
+			case "EN":
+				ret = "cannot update user: must specify the old password in order to change it";
+				break;
+			case "ES":
+				ret = "no puede actualizarse el usuario: debe especificarse el password anterior para cambiarlo";
+				break;
+			default:
+				ret = "cannot update user: must specify the old password in order to change it";
 		}
 
 		return ret;

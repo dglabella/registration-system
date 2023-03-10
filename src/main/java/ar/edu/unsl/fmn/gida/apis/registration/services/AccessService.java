@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -19,14 +18,14 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressi
 public class AccessService {
 
 	@Autowired
-	private AccessRepository accessRepository;
+	private AccessRepository repository;
 
-	private AccessValidator accessValidator = new AccessValidator(new CustomExpressionValidator(),
+	private final AccessValidator validator = new AccessValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getAccessValidationMessenger());
 
 	public Access getOne(int id) {
 		Access ret =
-				accessRepository.findByIdAndActiveTrue(id)
+				this.repository.findByIdAndActiveTrue(id)
 						.orElseThrow(() -> new ErrorResponse(
 								RegistrationSystemApplication.MESSENGER.getAccessServiceMessenger()
 										.notFound(Access.class.getSimpleName(), id),
@@ -36,43 +35,36 @@ public class AccessService {
 	}
 
 	public Page<Access> getAll(int page, int quantity) {
-		return accessRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
+		return this.repository.findAllByActiveTrue(PageRequest.of(page, quantity));
 	}
 
-	public Access insert(Access access) {
-		this.accessValidator.validateInsert(access);
-		Access ret;
-		try {
-			ret = accessRepository.save(access);
-		} catch (DataIntegrityViolationException exception) {
-			exception.printStackTrace();
-			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-					HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-		return ret;
+	public Access insert(Access requestBody) {
+		this.validator.validateInsert(requestBody);
+		return this.repository.save(requestBody);
 	}
 
-	public Access update(int id, Access access) {
-		this.accessValidator.validateUpdate(access);
-		Access ret = this.accessRepository.findByIdAndActiveTrue(id)
+	public Access update(int id, Access requestBody) {
+		this.validator.validateUpdate(requestBody);
+
+		this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getAccessServiceMessenger()
 								.updateNonExistentEntity(Access.class.getSimpleName(), id),
 						HttpStatus.NOT_FOUND));
 
-		try {
-			access.setId(id);
-			accessRepository.save(access);
-		} catch (DataIntegrityViolationException exception) {
-			exception.printStackTrace();
-			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-					HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-
-		return ret;
+		requestBody.setId(id);
+		return this.repository.save(requestBody);
 	}
 
 	public Access delete(int id) {
-		return null;
+		Access ret = this.repository.findByIdAndActiveTrue(id)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getAccessServiceMessenger()
+								.updateNonExistentEntity(Access.class.getSimpleName(), id),
+						HttpStatus.NOT_FOUND));
+
+		ret.setActive(false);
+
+		return ret;
 	}
 }

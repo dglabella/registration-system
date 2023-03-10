@@ -4,20 +4,20 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public abstract class ControllerMessenger {
 
-	private Messenger messages;
+	private Messenger messenger;
 
-	public ControllerMessenger(Messenger messages) {
-		this.messages = messages;
+	public ControllerMessenger(Messenger messenger) {
+		this.messenger = messenger;
 	}
 
-	public Messenger getMessages() {
-		return this.messages;
+	public Messenger getMessenger() {
+		return this.messenger;
 	}
 
 	public String operationNotImplementedYet(String operationName, String entityName) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = operationName + " " + entityName + " operation not implemented yet";
 				break;

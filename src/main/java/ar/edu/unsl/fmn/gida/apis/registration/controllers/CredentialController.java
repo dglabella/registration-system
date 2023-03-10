@@ -27,11 +27,11 @@ public class CredentialController {
 	private final int DEFAULT_PAGE_SIZE = 20;
 
 	@Autowired
-	private CredentialService credentialService;
+	private CredentialService service;
 
 	@GetMapping(value = "/{id}")
 	public Credential getCredential(@PathVariable int id) {
-		Credential credential = this.credentialService.getOne(id);
+		Credential credential = this.service.getOne(id);
 		return credential;
 	}
 
@@ -39,15 +39,13 @@ public class CredentialController {
 	public Page<Credential> getAllCredentials(@RequestParam Map<String, String> map) {
 		Page<Credential> page = null;
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.credentialService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.credentialService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.credentialService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.credentialService.getAll(Integer.parseInt(map.get("page")),
+			page = this.service.getAll(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -56,7 +54,7 @@ public class CredentialController {
 
 	@PutMapping(value = "/{id}")
 	public Credential updateCredential(@PathVariable int id, @RequestBody Credential credential) {
-		Credential c = this.credentialService.update(id, credential);
+		Credential c = this.service.update(id, credential);
 		return c;
 	}
 

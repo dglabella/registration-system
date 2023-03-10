@@ -18,13 +18,22 @@ public class RegisterValidator extends Validator<Register> {
 		if (entity.getId() != null)
 			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-		if (entity.getAccessFk() == null)
+		if (entity.getAccessId() == null)
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Register.class.getSimpleName(), "access id"));
 
 		if (entity.getEncryptedData() == null)
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Register.class.getSimpleName(), "encrypted data"));
+
+		/**
+		 * check size
+		 */
+
+
+		/**
+		 * check pattern
+		 */
 	}
 
 	@Override

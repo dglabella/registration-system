@@ -1,8 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -21,71 +19,56 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressi
 public class CredentialService {
 
 	@Autowired
-	private CredentialRepository credentialRepository;
+	private CredentialRepository repository;
 
-	private CredentialValidator credentialValidator =
+	private final CredentialValidator validator =
 			new CredentialValidator(new CustomExpressionValidator(),
 					RegistrationSystemApplication.MESSENGER.getCredentialValidationMessenger());
 
 	public Credential getOne(Integer id) {
-		Credential credential = null;
-		Optional<Credential> optional = this.credentialRepository.findByIdAndActiveTrue(id);
-		if (optional.isPresent()) {
-			credential = optional.get();
-		} else {
-			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getCredentialServiceMessenger().notFound(Credential.class.getSimpleName(), id),
-					HttpStatus.NOT_FOUND);
-		}
-		return credential;
+		return this.repository.findByIdAndActiveTrue(id)
+				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getCredentialServiceMessenger().notFound(Person.class.getSimpleName(), id),
+						HttpStatus.NOT_FOUND));
 	}
 
 	public Credential getOneByPersonId(Integer personId) {
-		Credential credential = null;
-		Optional<Credential> optional =
-				this.credentialRepository.findByPersonIdAndActiveTrue(personId);
-		if (optional.isPresent()) {
-			credential = optional.get();
-		} else {
-			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getCredentialServiceMessenger().notFoundByPersonIdErrorMessage(personId),
-					HttpStatus.NOT_FOUND);
-		}
-		return credential;
+		return this.repository.findByPersonIdAndActiveTrue(personId)
+				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getCredentialServiceMessenger().notFoundByPersonIdErrorMessage(personId),
+						HttpStatus.NOT_FOUND));
 	}
 
 	public Page<Credential> getAll(int page, int quantity) {
-		return this.credentialRepository.findAllByActiveTrue(PageRequest.of(page, quantity));
+		return this.repository.findAllByActiveTrue(PageRequest.of(page, quantity));
 	}
 
-	public Credential insert(Credential credential) {
-		this.credentialValidator.validateInsert(credential);
-		return this.credentialRepository.save(credential);
+	public Credential insert(Credential body) {
+		if (body == null)
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
+							.unspecifiedEntity(Credential.class.getSimpleName()),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+
+		this.validator.validateInsert(body);
+
+		return this.repository.save(body);
 	}
 
-	public Credential update(int id, Credential credential) {
+	public Credential update(int id, Credential body) {
 		throw new ErrorResponse("update credential operation not implemented yet...",
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	public void delete(int personFk) {
+	public void delete(int personId) {
 
-		Credential credential = new Credential();
-		credential = this.credentialRepository.findByPersonIdAndActiveTrue(personFk)
+		Credential credential = this.repository.findByPersonIdAndActiveTrue(personId)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
 								.deleteNonExistentEntityCorruptDB(Person.class.getSimpleName(),
-										Credential.class.getSimpleName(), personFk),
+										Credential.class.getSimpleName(), personId),
 						HttpStatus.NOT_FOUND));
 
-
-		try {
-			credential.setActive(false);
-
-		} catch (DataIntegrityViolationException e) {
-			e.printStackTrace();
-			throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
-					HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+		credential.setActive(false);
 	}
 }

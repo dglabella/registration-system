@@ -4,7 +4,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class CredentialValidationMessenger extends ValidationMessenger {
 
-	public CredentialValidationMessenger(Messenger messages) {
-		super(messages);
+	public CredentialValidationMessenger(Messenger messenger) {
+		super(messenger);
 	}
 }

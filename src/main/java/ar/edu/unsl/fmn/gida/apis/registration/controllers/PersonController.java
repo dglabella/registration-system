@@ -32,28 +32,26 @@ public class PersonController {
 	private final String SEARCH_OP_BY_LASTNAME = "/lastname=";
 
 	@Autowired
-	private PersonService personService;
+	private PersonService service;
 
 	@GetMapping(value = "/{id}")
 	public Person getPerson(@PathVariable int id) {
-		Person person = this.personService.getOne(id);
+		Person person = this.service.getOne(id);
 		return person;
 	}
 
 	@GetMapping
-	public Page<Person> getAll(@RequestParam Map<String, String> map) {
+	public Page<Person> getAllPersons(@RequestParam Map<String, String> map) {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.personService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.personService.getAll(Integer.parseInt(map.get("page")),
+			page = this.service.getAll(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -67,16 +65,16 @@ public class PersonController {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
 					this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
+			page = this.service.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
 					this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.personService.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
 					Integer.parseInt(map.get("size")));
 		} else {
-			page = this.personService.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
+			page = this.service.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -90,16 +88,16 @@ public class PersonController {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
 					this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
+			page = this.service.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
 					this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.personService.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
 					Integer.parseInt(map.get("size")));
 		} else {
-			page = this.personService.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
+			page = this.service.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -113,37 +111,34 @@ public class PersonController {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
 					this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.personService.getAllByLastNameApproach(value,
-					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByLastNameApproach(value, Integer.parseInt(map.get("page")),
+					this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.personService.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
 					Integer.parseInt(map.get("size")));
 		} else {
-			page = this.personService.getAllByLastNameApproach(value,
-					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
+			page = this.service.getAllByLastNameApproach(value, Integer.parseInt(map.get("page")),
+					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
 	}
 
 	@PostMapping
-	public Person postPerson(@RequestBody Person person) {
-		Person p = personService.insert(person);
-		return p;
+	public void postPerson(@RequestBody Person person) {
+		this.service.insert(person);
 	}
 
 	@PutMapping(value = "/{id}")
-	public Person updatePerson(@PathVariable int id, @RequestBody Person person) {
-		Person p = personService.update(id, person);
-		return p;
+	public void updatePerson(@PathVariable int id, @RequestBody Person person) {
+		this.service.update(id, person);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public Person deletePerson(@PathVariable int id) {
-		Person p = personService.delete(id);
-		return p;
+	public void deletePerson(@PathVariable int id) {
+		this.service.delete(id);
 	}
 }

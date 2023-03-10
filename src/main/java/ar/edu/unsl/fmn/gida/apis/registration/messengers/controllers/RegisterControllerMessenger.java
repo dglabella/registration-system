@@ -4,7 +4,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class RegisterControllerMessenger extends ControllerMessenger {
 
-	public RegisterControllerMessenger(Messenger lang) {
-		super(lang);
+	public RegisterControllerMessenger(Messenger messenger) {
+		super(messenger);
 	}
 }

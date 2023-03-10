@@ -19,13 +19,27 @@ public class CredentialValidator extends Validator<Credential> {
 		if (entity.getId() != null)
 			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-		if (!(entity.getPersonFk() != null || Constraints.Credential.PERSON_FK_NULLABLE))
+		if (!(entity.getPersonId() != null || Constraints.Credential.PERSON_FK_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Credential.class.getSimpleName(), "person id"));
+
+		if (!(entity.getData() != null || Constraints.Credential.DATA_NULLABLE))
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Credential.class.getSimpleName(), "data"));
+
+		if (!(entity.getImg() != null || Constraints.Credential.IMG_NULLABLE))
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Credential.class.getSimpleName(), "img"));
 
 		/**
 		 * check size
 		 */
+		if (!(Constraints.Credential.DATA_MIN_LENGHT < entity.getData().length()
+				&& entity.getData().length() < Constraints.Credential.DATA_MAX_LENGHT))
+			this.sendError(this.getEntityValidationMessenger().invalidAttributeSize(
+					Credential.class.getSimpleName(), "data",
+					Constraints.Credential.DATA_MIN_LENGHT,
+					Constraints.Credential.DATA_MAX_LENGHT));
 
 		/**
 		 * check pattern

@@ -29,21 +29,19 @@ public class UserController {
 	private final int DEFAULT_PAGE_SIZE = 20;
 
 	@Autowired
-	private UserService userService;
+	private UserService service;
 
 	@GetMapping(value = Urls.Privileges.admin + Urls.users)
 	public Page<User> getAllUsers(@RequestParam Map<String, String> map) {
 		Page<User> page = null;
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.userService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.userService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.userService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.userService.getAll(Integer.parseInt(map.get("page")),
+			page = this.service.getAll(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -52,17 +50,17 @@ public class UserController {
 
 	@GetMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
 	public User getUser(@PathVariable int id) {
-		return this.userService.getOne(id);
+		return this.service.getOne(id);
 	}
 
 	@GetMapping(value = Urls.Privileges.user + Urls.users + "/account/{account}")
 	public User getUser(@PathVariable String account) {
-		return (User) this.userService.loadUserByUsername(account);
+		return (User) this.service.loadUserByUsername(account);
 	}
 
 	@PostMapping(Urls.Privileges.admin + Urls.signup)
 	public void postUser(@RequestBody User user) {
-		this.userService.insert(user);
+		this.service.insert(user);
 	}
 
 	@PutMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
@@ -80,29 +78,16 @@ public class UserController {
 		// .userPrivilegeIntegrityCorruption(loggedAccount),
 		// HttpStatus.FORBIDDEN));
 
-		return this.userService.updateUser(id, user, loggedAccount);
+		return this.service.updateUser(id, user, loggedAccount);
 	}
 
 	@PutMapping(value = Urls.Privileges.admin + Urls.users + "/{id}")
 	public User updateAdmin(@PathVariable int id, @RequestBody User user) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String loggedAccount = (String) authentication.getPrincipal();
-
-		// Set<String> roles = authentication.getAuthorities().stream().map(r -> r.getAuthority())
-		// .collect(Collectors.toSet());
-
-		// Optional<String> optional = roles.stream().findAny(); // only one privilege exist
-		// String priv =
-		// optional.orElseThrow(() -> new ErrorResponse(
-		// RegistrationSystemApplication.MESSENGER.getUserControllerMessenger()
-		// .userPrivilegeIntegrityCorruption(loggedAccount),
-		// HttpStatus.FORBIDDEN));
-
-		return this.userService.updateAdmin(id, user, loggedAccount);
+		return this.service.updateAdmin(id, user);
 	}
 
 	@DeleteMapping(Urls.Privileges.admin + Urls.users + "/{id}")
 	public User deleteUser(@PathVariable int id) {
-		return this.userService.delete(id);
+		return this.service.delete(id);
 	}
 }

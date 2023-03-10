@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,13 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.RegisterValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.PersonDetailsCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 
@@ -31,19 +31,19 @@ import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConv
 public class RegisterService {
 
 	@Autowired
-	private RegisterRepository registerRepository;
+	private RegisterRepository repository;
 
-	private RegisterValidator registerValidator =
+	private final RegisterValidator validator =
 			new RegisterValidator(new CustomExpressionValidator(),
 					RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
 
-	private Cypher cypher = new PersonDetailsCypher();
-	private PersonConverter personConverter = new PersonConverter();
+	private final Cypher cypher = new QrCypher();
 
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+	private final SimpleDateFormat dateFormatter =
+			new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
 	public Register getOne(int id) {
-		Register r = this.registerRepository.findById(id)
+		Register r = this.repository.findById(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
 								.notFound(Register.class.getSimpleName(), id),
@@ -73,8 +73,8 @@ public class RegisterService {
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
-		return this.registerRepository.findAllByCheckInBetweenAndActiveTrueOrderByIdDesc(fromDate,
-				toDate, PageRequest.of(page, size));
+		return this.repository.findAllByCheckInBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
+				PageRequest.of(page, size));
 	}
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
@@ -100,8 +100,8 @@ public class RegisterService {
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
-		return this.registerRepository.findAllByPersonFkAndActiveTrueAndCheckInBetween(personId,
-				fromDate, toDate, PageRequest.of(page, size));
+		return this.repository.findAllByPersonIdAndActiveTrueAndCheckInBetween(personId, fromDate,
+				toDate, PageRequest.of(page, size));
 	}
 
 	public List<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to) {
@@ -128,7 +128,7 @@ public class RegisterService {
 		}
 
 		List<Register> registers =
-				this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate);
+				this.repository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate);
 
 		List<Register> ret = new ArrayList<>();
 
@@ -146,6 +146,7 @@ public class RegisterService {
 
 	public Page<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to,
 			int page, int size) {
+
 		Date fromDate = null;
 		Date toDate = null;
 
@@ -169,7 +170,7 @@ public class RegisterService {
 		}
 
 		List<Register> registers =
-				this.registerRepository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate);
+				this.repository.findAllByCheckInBetweenAndActiveTrue(fromDate, toDate);
 
 		List<Register> ret = new ArrayList<>();
 
@@ -200,99 +201,86 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public Register insert(Register register) {
-		this.registerValidator.validateInsert(register);
-		Person person = null;
-		Register r1 = new Register();
-		Register r1Aux = new Register();
-		Register r2 = null;
-		Register r2Aux = new Register();
-		Optional<Register> optional;
+	public Register insert(Register requestBody) {
+		// this.validator.validateInsert(requestBody);
 
-		try {
-			person = this.personConverter
-					.objectify(this.cypher.decrypt(register.getEncryptedData()));
+		// Integer personId = null;
+		// Register r1 = new Register();
+		// Register r1Aux = new Register();
+		// Register r2 = null;
+		// Register r2Aux = new Register();
+		// Optional<Register> optional;
 
-			optional = this.registerRepository
-					.findByPersonFkAndCheckOutIsNullAndActiveTrue(person.getId());
+		// personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
 
-			if (optional.isPresent()) {
-				// do check out
-				r1.setId(optional.get().getId());
-				r1.setPersonFk(optional.get().getPersonFk());
-				r1.setAccessFk(optional.get().getAccessFk());
-				r1.setCheckIn(optional.get().getCheckIn());
-				r1.setCheckOut(new Date());
+		// optional = this.repository.findByPersonIdAndCheckOutIsNullAndActiveTrue(person.getId());
 
-				r1Aux.setId(r1.getId());
-				r1Aux.setPersonFk(r1.getPersonFk());
-				r1Aux.setAccessFk(r1.getAccessFk());
-				r1Aux.setCheckIn(r1.getCheckIn());
-				r1Aux.setCheckOut(r1.getCheckOut());
-				this.registerRepository.save(r1);
+		// if (optional.isPresent()) {
+		// // do check out
+		// r1.setId(optional.get().getId());
+		// r1.setPersonId(optional.get().getPersonId());
+		// r1.setAccessId(optional.get().getAccessId());
+		// r1.setCheckIn(optional.get().getCheckIn());
+		// r1.setCheckOut(new Date());
 
-				r1Aux.setPerson(person);
-				r1Aux.setAccess(optional.get().getAccess());
+		// r1Aux.setId(r1.getId());
+		// r1Aux.setPersonId(r1.getPersonId());
+		// r1Aux.setAccessId(r1.getAccessId());
+		// r1Aux.setCheckIn(r1.getCheckIn());
+		// r1Aux.setCheckOut(r1.getCheckOut());
+		// this.repository.save(r1);
 
-				if (register.getAccessFk() != optional.get().getAccessFk()) {
-					r2 = new Register();
-					r2.setPersonFk(person.getId());
-					r2.setAccessFk(register.getAccessFk());
-					r2.setCheckIn(new Date());
+		// r1Aux.setPerson(person);
+		// r1Aux.setAccess(optional.get().getAccess());
 
-					r2Aux.setId(r2.getId());
-					r2Aux.setPersonFk(r2.getPersonFk());
-					r2Aux.setAccessFk(r2.getAccessFk());
-					r2Aux.setCheckIn(r2.getCheckIn());
-					r2Aux.setCheckOut(r2.getCheckOut());
-					this.registerRepository.save(r2);
+		// if (requestBody.getAccessId() != optional.get().getAccessId()) {
+		// r2 = new Register();
+		// r2.setPersonId(person.getId());
+		// r2.setAccessId(requestBody.getAccessId());
+		// r2.setCheckIn(new Date());
 
-					r2Aux.setPerson(person);
-					r2Aux.setAccess(register.getAccess());
-				}
-			} else {
-				r1.setPersonFk(person.getId());
-				r1.setAccessFk(register.getAccessFk());
-				r1.setCheckIn(new Date());
+		// r2Aux.setId(r2.getId());
+		// r2Aux.setPersonId(r2.getPersonId());
+		// r2Aux.setAccessId(r2.getAccessId());
+		// r2Aux.setCheckIn(r2.getCheckIn());
+		// r2Aux.setCheckOut(r2.getCheckOut());
+		// this.repository.save(r2);
 
-				r1Aux.setId(r1.getId());
-				r1Aux.setPersonFk(r1.getPersonFk());
-				r1Aux.setAccessFk(r1.getAccessFk());
-				r1Aux.setCheckIn(r1.getCheckIn());
-				r1Aux.setCheckOut(r1.getCheckOut());
-				this.registerRepository.save(r1);
+		// r2Aux.setPerson(person);
+		// r2Aux.setAccess(requestBody.getAccess());
+		// }
+		// } else {
+		// r1.setPersonId(person.getId());
+		// r1.setAccessId(requestBody.getAccessId());
+		// r1.setCheckIn(new Date());
 
-				r1Aux.setPerson(person);
-				r1Aux.setAccess(register.getAccess());
-			}
-		} catch (DataIntegrityViolationException exception) {
-			exception.printStackTrace();
-			throw new ErrorResponse(exception.getMostSpecificCause().getMessage(),
-					HttpStatus.UNPROCESSABLE_ENTITY);
-		}
+		// r1Aux.setId(r1.getId());
+		// r1Aux.setPersonId(r1.getPersonId());
+		// r1Aux.setAccessId(r1.getAccessId());
+		// r1Aux.setCheckIn(r1.getCheckIn());
+		// r1Aux.setCheckOut(r1.getCheckOut());
+		// this.repository.save(r1);
 
-		return r2 == null ? r1Aux : r2Aux;
+		// r1Aux.setPerson(person);
+		// r1Aux.setAccess(requestBody.getAccess());
+		// }
+
+		// return r2 == null ? r1Aux : r2Aux;
+		return null;
 	}
 
-	public Register update(int id, Register register) {
+	public Register update(int id, Register requestBody) {
 		throw new ErrorResponse("update register operation not available...",
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	public void delete(int personId) {
-		List<Register> lRegisters =
-				this.registerRepository.findAllByPersonIdAndActiveTrue(personId);
 
-		if (lRegisters.size() > 0) {
-			try {
-				for (int i = 0; i < lRegisters.size(); i++)
-					lRegisters.get(i).setActive(false);
+		List<Register> registers = this.repository.findAllByPersonIdAndActiveTrue(personId);
 
-			} catch (DataIntegrityViolationException e) {
-				e.printStackTrace();
-				throw new ErrorResponse(e.getMostSpecificCause().getMessage(),
-						HttpStatus.UNPROCESSABLE_ENTITY);
-			}
+		if (registers.size() > 0) {
+			for (int i = 0; i < registers.size(); i++)
+				registers.get(i).setActive(false);
 		}
 	}
 }

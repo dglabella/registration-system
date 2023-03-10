@@ -4,7 +4,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class WeeklyControllerMessenger extends ControllerMessenger {
 
-	public WeeklyControllerMessenger(Messenger lang) {
-		super(lang);
+	public WeeklyControllerMessenger(Messenger messenger) {
+		super(messenger);
 	}
 }

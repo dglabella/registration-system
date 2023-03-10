@@ -4,14 +4,14 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class CredentialServiceMessenger extends ServiceMessenger {
 
-	public CredentialServiceMessenger(Messenger lang) {
-		super(lang);
+	public CredentialServiceMessenger(Messenger messenger) {
+		super(messenger);
 	}
 
 	public String notFoundByPersonIdErrorMessage(int personId) {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "FATAL ERROR: database integrity may be corrupted; person " + personId
 						+ " has not a credential";

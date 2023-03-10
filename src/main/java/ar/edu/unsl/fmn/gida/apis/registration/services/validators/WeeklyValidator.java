@@ -20,13 +20,19 @@ public class WeeklyValidator extends Validator<Weekly> {
 		if (entity.getId() != null)
 			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-		if (!(entity.getPersonFk() != null || Constraints.Weekly.PERSONFK_NULLABLE))
+		if (!(entity.getPersonId() != null || Constraints.Weekly.PERSONFK_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Weekly.class.getSimpleName(), "person id"));
+
+
+		if (!(entity.getStart() != null || Constraints.Weekly.START_NULLABLE))
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Weekly.class.getSimpleName(), "start"));
 
 		/**
 		 * check size
 		 */
+
 
 		/**
 		 * check pattern

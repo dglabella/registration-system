@@ -22,44 +22,42 @@ public class WeeklyController {
 	private final int DEFAULT_PAGE_SIZE = 100;
 
 	@Autowired
-	private WeeklyService weeklyService;
+	private WeeklyService service;
 
 	@GetMapping
 	public Page<Weekly> getAllWeeklies(@RequestParam Map<String, String> map) {
 		Page<Weekly> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.weeklyService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.weeklyService.getAll(Integer.parseInt(map.get("page")),
+			page = this.service.getAll(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
 		return page;
 	}
 
-	@GetMapping(value = "/person/{id}/paged")
+	@GetMapping(value = "/person/{id}")
 	public Page<Weekly> getAllWeekliesFromPerson(@PathVariable int id,
 			@RequestParam Map<String, String> map) {
 		Page<Weekly> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
 					this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
+			page = this.service.getAllFromPerson(id, Integer.parseInt(map.get("page")),
 					this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.weeklyService.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllFromPerson(id, this.DEFAULT_PAGE_NUMBER,
 					Integer.parseInt(map.get("size")));
 		} else {
-			page = this.weeklyService.getAllFromPerson(id, Integer.parseInt(map.get("page")),
+			page = this.service.getAllFromPerson(id, Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 

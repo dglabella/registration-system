@@ -14,12 +14,11 @@ public interface WeeklyRepository extends JpaRepository<Weekly, Integer> {
 
 	Optional<Weekly> findByIdAndActiveTrue(Integer id);
 
-	Optional<Weekly> findByPersonFkAndEndIsNullAndActiveTrue(Integer personFk);
+	Optional<Weekly> findByPersonIdAndEndIsNullAndActiveTrue(Integer personId);
 
 	Page<Weekly> findAllByActiveTrue(Pageable pageable);
 
-	Page<Weekly> findAllByPersonFkAndActiveTrue(Integer personFk, PageRequest pageble);
+	Page<Weekly> findAllByPersonIdAndActiveTrue(Integer personId, PageRequest pageble);
 
-	List<Weekly> findAllByPersonFkAndActiveTrue(Integer personFk);
-
+	List<Weekly> findAllByPersonIdAndActiveTrue(Integer personId);
 }

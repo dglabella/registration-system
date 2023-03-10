@@ -4,14 +4,14 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public class UserControllerMessenger extends ControllerMessenger {
 
-	public UserControllerMessenger(Messenger lang) {
-		super(lang);
+	public UserControllerMessenger(Messenger messenger) {
+		super(messenger);
 	}
 
 	public String userPrivilegeIntegrityCorruption(String account) {
 		String ret = null;
 
-		switch (this.getMessages().getLang()) {
+		switch (this.getMessenger().getLang()) {
 			case "EN":
 				ret = "the user " + account
 						+ " has no privilege assigned. Data integrity corrupted or exist a failure loading privileges";

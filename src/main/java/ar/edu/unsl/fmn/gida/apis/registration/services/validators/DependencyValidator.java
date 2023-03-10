@@ -41,6 +41,10 @@ public class DependencyValidator extends Validator<Dependency> {
 					Dependency.class.getSimpleName(), "description",
 					Constraints.Dependency.NAME_MIN_LENGHT,
 					Constraints.Dependency.NAME_MAX_LENGHT));
+
+		/**
+		 * check pattern
+		 */
 	}
 
 	@Override

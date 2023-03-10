@@ -1,7 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.util.Date;
-import javax.persistence.CascadeType;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -25,29 +27,9 @@ public class Weekly {
 	private Integer id;
 
 	@Column(nullable = Constraints.Weekly.PERSONFK_NULLABLE)
-	private Integer personFk;
+	private Integer personId;
 
 	// ================================ attributes ================================
-	@Column(nullable = Constraints.Weekly.MONDAY_NULLABLE)
-	private boolean monday = true;
-
-	@Column(nullable = Constraints.Weekly.TUESDAY_NULLABLE)
-	private boolean tuesday = true;
-
-	@Column(nullable = Constraints.Weekly.WEDNESDAY_NULLABLE)
-	private boolean wednesday = true;
-
-	@Column(nullable = Constraints.Weekly.THURDAY_NULLABLE)
-	private boolean thursday = true;
-
-	@Column(nullable = Constraints.Weekly.FRIDAY_NULLABLE)
-	private boolean friday = true;
-
-	@Column(nullable = Constraints.Weekly.SATURDAY_NULLABLE)
-	private boolean saturday = false;
-
-	@Column(nullable = Constraints.Weekly.SUNDAY_NULLABLE)
-	private boolean sunday = false;
 
 	@Column(nullable = Constraints.Weekly.START_NULLABLE)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -62,11 +44,15 @@ public class Weekly {
 	private boolean active = true;
 
 	// ============================ model associations ============================
-	@JoinColumn(name = "personFk", referencedColumnName = "id", insertable = false,
+	@JoinColumn(name = "personId", referencedColumnName = "id", insertable = false,
 			updatable = false)
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference
 	private Person person;
+
+	@Transient
+	@JsonManagedReference
+	private List<Responsibility> responsibilities;
 
 	// =============================== constructors ===============================
 	public Weekly() {}
@@ -80,68 +66,12 @@ public class Weekly {
 		this.id = id;
 	}
 
-	public Integer getPersonFk() {
-		return this.personFk;
+	public Integer getPersonId() {
+		return this.personId;
 	}
 
-	public void setPersonFk(Integer personFk) {
-		this.personFk = personFk;
-	}
-
-	public boolean isMonday() {
-		return this.monday;
-	}
-
-	public void setMonday(boolean monday) {
-		this.monday = monday;
-	}
-
-	public boolean isTuesday() {
-		return this.tuesday;
-	}
-
-	public void setTuesday(boolean tuesday) {
-		this.tuesday = tuesday;
-	}
-
-	public boolean isWednesday() {
-		return this.wednesday;
-	}
-
-	public void setWednesday(boolean wednesday) {
-		this.wednesday = wednesday;
-	}
-
-	public boolean isThursday() {
-		return this.thursday;
-	}
-
-	public void setThursday(boolean thursday) {
-		this.thursday = thursday;
-	}
-
-	public boolean isFriday() {
-		return this.friday;
-	}
-
-	public void setFriday(boolean friday) {
-		this.friday = friday;
-	}
-
-	public boolean isSaturday() {
-		return this.saturday;
-	}
-
-	public void setSaturday(boolean saturday) {
-		this.saturday = saturday;
-	}
-
-	public boolean isSunday() {
-		return this.sunday;
-	}
-
-	public void setSunday(boolean sunday) {
-		this.sunday = sunday;
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
 	}
 
 	public Date getStart() {
@@ -172,20 +102,38 @@ public class Weekly {
 		this.person = person;
 	}
 
-	/**
-	 * IN THIS IMPLEMENTATION: a weekly is equals to another one if and only if all days matchs.
-	 * {@inheritDoc}
-	 */
+	public List<Responsibility> getResponsibilities() {
+		return this.responsibilities;
+	}
+
+	public void setResponsibilities(List<Responsibility> responsibilities) {
+		this.responsibilities = responsibilities;
+	}
+
 	@Override
-	public boolean equals(Object o) {
-		if (o == this)
+	public boolean equals(Object weekly) {
+		if (weekly == this)
 			return true;
-		if (!(o instanceof Weekly)) {
+
+		if (!(weekly instanceof Weekly)) {
 			return false;
 		}
-		Weekly weekly = (Weekly) o;
-		return monday == weekly.monday && tuesday == weekly.tuesday && wednesday == weekly.wednesday
-				&& thursday == weekly.thursday && friday == weekly.friday
-				&& saturday == weekly.saturday && sunday == weekly.sunday;
+
+		Weekly w = (Weekly) weekly;
+		boolean ret = true;
+
+		if (this.start.compareTo(w.start) != 0
+				|| this.responsibilities.size() != w.responsibilities.size()) {
+			ret = false;
+		} else {
+			for (int i = 0; i < this.responsibilities.size(); i++) {
+				if (!this.responsibilities.get(i).equals(w.responsibilities.get(i))) {
+					ret = false;
+					i = this.responsibilities.size();
+				}
+			}
+		}
+
+		return ret;
 	}
 }

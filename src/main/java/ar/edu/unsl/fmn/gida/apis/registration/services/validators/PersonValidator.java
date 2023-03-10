@@ -20,7 +20,7 @@ public class PersonValidator extends Validator<Person> {
 		if (entity.getId() != null)
 			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-		if (!(entity.getDependencyFk() != null || Constraints.Person.DEPENDENCY_FK_NULLABLE))
+		if (!(entity.getDependencyId() != null || Constraints.Person.DEPENDENCY_FK_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Person.class.getSimpleName(), "dependency id"));
 

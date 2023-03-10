@@ -14,26 +14,17 @@ public class UserValidator extends Validator<User> {
 
 	@Override
 	public void validateInsert(User entity) {
-		this.validateUpdate(entity);
-
-		if (!this.getExpressionValidator().isPasswordValid(entity.getPassword()))
-			this.sendError(((UserValidationMessenger) this.getEntityValidationMessenger())
-					.invalidPassword());
-	}
-
-	@Override
-	public void validateUpdate(User entity) {
-		/**
-		 * check nullability
-		 */
-		if (entity.getId() != null)
-			this.sendError(this.getEntityValidationMessenger().idNotRequired());
+		if (entity == null)
+			/**
+			 * check nullability
+			 */
+			if (entity.getId() != null)
+				this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
 		if (!(this.getExpressionValidator().isPresent(entity.getUserName())
 				|| Constraints.User.NAME_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(User.class.getSimpleName(), "name"));
-
 
 		if (!(this.getExpressionValidator().isPresent(entity.getUserLastName())
 				|| Constraints.User.LAST_NAME_NULLABLE))
@@ -122,5 +113,14 @@ public class UserValidator extends Validator<User> {
 		if (!this.getExpressionValidator().isAccountValid(entity.getAccount()))
 			this.sendError(((UserValidationMessenger) this.getEntityValidationMessenger())
 					.invalidAccount());
+
+		if (!this.getExpressionValidator().isPasswordValid(entity.getPassword()))
+			this.sendError(((UserValidationMessenger) this.getEntityValidationMessenger())
+					.invalidPassword());
+	}
+
+	@Override
+	public void validateUpdate(User entity) {
+		this.validateInsert(entity);
 	}
 }

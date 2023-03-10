@@ -37,6 +37,10 @@ public class AccessValidator extends Validator<Access> {
 			this.sendError(this.getEntityValidationMessenger().invalidAttributeSize(
 					Access.class.getSimpleName(), "name", Constraints.Access.NAME_MIN_LENGHT,
 					Constraints.Access.NAME_MAX_LENGHT));
+
+		/**
+		 * check pattern
+		 */
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class Person {
 	private Integer id;
 
 	@Column(nullable = Constraints.Person.DEPENDENCY_FK_NULLABLE)
-	private Integer dependencyFk;
+	private Integer dependencyId;
 
 	// ================================ attributes ================================
 	@Column(name = "name", nullable = Constraints.Person.NAME_NULLABLE,
@@ -51,7 +51,7 @@ public class Person {
 
 	// @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "dependencyFk", referencedColumnName = "id", insertable = false,
+	@JoinColumn(name = "dependencyId", referencedColumnName = "id", insertable = false,
 			updatable = false)
 	private Dependency dependency;
 
@@ -62,10 +62,6 @@ public class Person {
 	@Transient
 	@JsonManagedReference
 	private Credential credential;
-
-	// @Transient
-	// @JsonManagedReference
-	// private List<Register> registers;
 
 	@Enumerated(EnumType.ORDINAL)
 	@ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
@@ -83,12 +79,12 @@ public class Person {
 		this.id = id;
 	}
 
-	public Integer getDependencyFk() {
-		return this.dependencyFk;
+	public Integer getDependencyId() {
+		return this.dependencyId;
 	}
 
-	public void setDependencyFk(Integer dependencyFk) {
-		this.dependencyFk = dependencyFk;
+	public void setDependencyId(Integer dependencyId) {
+		this.dependencyId = dependencyId;
 	}
 
 	public String getPersonLastName() {
@@ -142,14 +138,6 @@ public class Person {
 	public void setCredential(Credential credential) {
 		this.credential = credential;
 	}
-
-	// public List<Register> getRegisters() {
-	// return this.registers;
-	// }
-
-	// public void setRegisters(List<Register> registers) {
-	// this.registers = registers;
-	// }
 
 	public List<Role> getRoles() {
 		return this.roles;

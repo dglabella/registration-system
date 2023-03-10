@@ -13,6 +13,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.CredentialService
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.DependencyServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.PersonServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.RegisterServiceMessenger;
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.ResponsibilityServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.UserServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.WeeklyServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.AccessValidationMessenger;
@@ -20,6 +21,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.CredentialVa
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.DependencyValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.PersonValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.RegisterValidationMessenger;
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.ResponsibilityValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.UserValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.WeeklyValidationMessenger;
 
@@ -42,6 +44,7 @@ public class Messenger {
 	private DependencyServiceMessenger dependencyServiceMessenger;
 	private PersonServiceMessenger personServiceMessenger;
 	private RegisterServiceMessenger registerServiceMessenger;
+	private ResponsibilityServiceMessenger responsibilityServiceMessenger;
 	private UserServiceMessenger userServiceMessenger;
 	private WeeklyServiceMessenger weeklyServiceMessenger;
 
@@ -50,6 +53,7 @@ public class Messenger {
 	private DependencyValidationMessenger dependencyValidationMessenger;
 	private PersonValidationMessenger personValidationMessenger;
 	private RegisterValidationMessenger registerValidationMessenger;
+	private ResponsibilityValidationMessenger responsibilityValidationMessenger;
 	private UserValidationMessenger userValidationMessenger;
 	private WeeklyValidationMessenger weeklyValidationMessenger;
 
@@ -71,6 +75,7 @@ public class Messenger {
 		this.dependencyServiceMessenger = new DependencyServiceMessenger(this);
 		this.personServiceMessenger = new PersonServiceMessenger(this);
 		this.registerServiceMessenger = new RegisterServiceMessenger(this);
+		this.responsibilityServiceMessenger = new ResponsibilityServiceMessenger(this);
 		this.userServiceMessenger = new UserServiceMessenger(this);
 		this.weeklyServiceMessenger = new WeeklyServiceMessenger(this);
 
@@ -79,6 +84,7 @@ public class Messenger {
 		this.dependencyValidationMessenger = new DependencyValidationMessenger(this);
 		this.personValidationMessenger = new PersonValidationMessenger(this);
 		this.registerValidationMessenger = new RegisterValidationMessenger(this);
+		this.responsibilityValidationMessenger = new ResponsibilityValidationMessenger(this);
 		this.userValidationMessenger = new UserValidationMessenger(this);
 		this.weeklyValidationMessenger = new WeeklyValidationMessenger(this);
 	}
@@ -139,6 +145,10 @@ public class Messenger {
 		return this.registerServiceMessenger;
 	}
 
+	public ResponsibilityServiceMessenger getResponsibilityServiceMessenger() {
+		return this.responsibilityServiceMessenger;
+	}
+
 	public UserServiceMessenger getUserServiceMessenger() {
 		return this.userServiceMessenger;
 	}
@@ -165,6 +175,10 @@ public class Messenger {
 
 	public RegisterValidationMessenger getRegisterValidationMessenger() {
 		return this.registerValidationMessenger;
+	}
+
+	public ResponsibilityValidationMessenger getResponsibilityValidationMessenger() {
+		return this.responsibilityValidationMessenger;
 	}
 
 	public UserValidationMessenger getUserValidationMessenger() {

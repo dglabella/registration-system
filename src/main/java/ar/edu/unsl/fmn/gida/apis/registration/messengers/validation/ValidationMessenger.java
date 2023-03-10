@@ -4,20 +4,20 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 
 public abstract class ValidationMessenger {
 
-	private Messenger messages;
+	private Messenger messenger;
 
-	public ValidationMessenger(Messenger messages) {
-		this.messages = messages;
+	public ValidationMessenger(Messenger messenger) {
+		this.messenger = messenger;
 	}
 
-	public Messenger getMessages() {
-		return this.messages;
+	public Messenger getMessenger() {
+		return this.messenger;
 	}
 
 	public String idNotRequired() {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "id cannot be specified in entity";
 				break;
@@ -34,7 +34,7 @@ public abstract class ValidationMessenger {
 	public String attributeRequired(String entityName, String attributeName) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "'" + entityName + "' " + attributeName + " is required";
 				break;
@@ -52,7 +52,7 @@ public abstract class ValidationMessenger {
 			int maxLenght) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "invalid " + entityName + " " + attributeName + ": must contain between "
 						+ minLenght + " and " + maxLenght + " characters";
@@ -72,7 +72,7 @@ public abstract class ValidationMessenger {
 	public String invalidChar(String entityName, String attributeName) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "invalid " + entityName + " " + attributeName
 						+ ": must have only valids characters.";
@@ -92,7 +92,7 @@ public abstract class ValidationMessenger {
 	public String onlyNumberAllowed(String entityName, String attributeName) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "invalid " + entityName + " " + attributeName + ": only digits are allowed";
 				break;
@@ -109,7 +109,7 @@ public abstract class ValidationMessenger {
 	public String notAnEmail(String entityName, String attributeName) {
 		String ret = null;
 
-		switch (this.messages.getLang()) {
+		switch (this.messenger.getLang()) {
 			case "EN":
 				ret = "invalid " + entityName + " " + attributeName
 						+ ": must be like anything@example.com";

@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.PersonDetailsCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigurationConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
@@ -25,7 +25,7 @@ public class RegistrationSystemApplication {
 	public static Messenger MESSENGER;
 
 	private void createQr() {
-		Cypher cypher = new PersonDetailsCypher();
+		Cypher cypher = new QrCypher();
 		CustomQRGenerator qrGenerator = new CustomQRGenerator();
 		File file = new File(System.getProperty("user.dir") + "/qrs/" + "matthewQr" + ".png");
 		try {
@@ -100,6 +100,7 @@ public class RegistrationSystemApplication {
 
 	public static void main(String[] args) {
 		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
+
 		setUpConfigFile();
 		setUpMessagesLang();
 		SpringApplication.run(RegistrationSystemApplication.class, args);

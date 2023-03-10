@@ -30,11 +30,11 @@ public class DependencyController {
 	private final int DEFAULT_PAGE_SIZE = 20;
 
 	@Autowired
-	private DependencyService dependencyService;
+	private DependencyService service;
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Dependency> getDependency(@PathVariable int id) {
-		Dependency d = this.dependencyService.getOne(id);
+		Dependency d = this.service.getOne(id);
 
 		ResponseEntity<Dependency> response = d != null ? ResponseEntity.ok().body(d)
 				: new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -46,15 +46,13 @@ public class DependencyController {
 	public Page<Dependency> getAllDependencies(@RequestParam Map<String, String> map) {
 		Page<Dependency> page = null;
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.dependencyService.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.dependencyService.getAll(Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.dependencyService.getAll(this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.dependencyService.getAll(Integer.parseInt(map.get("page")),
+			page = this.service.getAll(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -62,14 +60,8 @@ public class DependencyController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Dependency> postDependcncy(@RequestBody Dependency dependency) {
-		Dependency d = dependencyService.insert(dependency);
-
-		ResponseEntity<Dependency> response =
-				d != null ? new ResponseEntity<Dependency>(d, HttpStatus.CREATED)
-						: new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-		return response;
+	public Dependency postDependency(@RequestBody Dependency dependency) {
+		return this.service.insert(dependency);
 	}
 
 	@PutMapping(value = "/{id}")
@@ -81,10 +73,7 @@ public class DependencyController {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Dependency> deleteDependency() {
-		throw new ErrorResponse(
-				RegistrationSystemApplication.MESSENGER.getDependencyControllerMessenger()
-						.operationNotImplementedYet("delete", Dependency.class.getSimpleName()),
-				HttpStatus.NOT_IMPLEMENTED);
+	public Dependency deleteDependency(@PathVariable int id) {
+		return this.service.delete(id);
 	}
 }

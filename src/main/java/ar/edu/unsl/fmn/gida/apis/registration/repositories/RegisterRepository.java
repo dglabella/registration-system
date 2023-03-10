@@ -16,7 +16,7 @@ public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
 	List<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to);
 
-	List<Register> findAllByCheckInBetweenAndActiveTrueOrderByPersonFkAsc(Date from, Date to);
+	List<Register> findAllByCheckInBetweenAndActiveTrueOrderByPersonIdAsc(Date from, Date to);
 
 	Page<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
 
@@ -27,12 +27,12 @@ public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
 	Optional<Register> findByIdAndActiveTrue(Integer id);
 
-	Optional<Register> findByPersonFkAndCheckOutIsNullAndActiveTrue(int personFk);
+	Optional<Register> findByPersonIdAndCheckOutIsNullAndActiveTrue(int personId);
 
-	List<Register> findAllByPersonFkAndActiveTrueAndCheckInBetween(Integer personId, Date from,
+	List<Register> findAllByPersonIdAndActiveTrueAndCheckInBetween(Integer personId, Date from,
 			Date to);
 
-	Page<Register> findAllByPersonFkAndActiveTrueAndCheckInBetween(Integer personId, Date from,
+	Page<Register> findAllByPersonIdAndActiveTrueAndCheckInBetween(Integer personId, Date from,
 			Date to, Pageable pageable);
 
 	// @Query(value = "SELECT * " + "FROM registers "
