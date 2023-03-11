@@ -46,6 +46,18 @@ public class WeeklyService {
 						HttpStatus.INTERNAL_SERVER_ERROR));
 	}
 
+	public Weekly getCurrentWeeklyFromPersonWithResponsibilities(Integer personId) {
+		Weekly ret = this.repository.findByPersonIdAndEndIsNullAndActiveTrue(personId)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+								.currentWeeklyNotFound(personId),
+						HttpStatus.INTERNAL_SERVER_ERROR));
+
+		ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
+
+		return ret;
+	}
+
 	public Page<Weekly> getAll(int page, int quantity) {
 		return this.repository.findAllByActiveTrue(PageRequest.of(page, quantity));
 	}
@@ -89,6 +101,9 @@ public class WeeklyService {
 						HttpStatus.NOT_FOUND));
 
 		if (!weekly.equals(requestBody)) {
+
+			weekly.setEnd(new Date());
+
 			ret = this.repository.save(requestBody);
 			this.responsibilityService.insertAll(ret.getId(), requestBody.getResponsibilities());
 		}

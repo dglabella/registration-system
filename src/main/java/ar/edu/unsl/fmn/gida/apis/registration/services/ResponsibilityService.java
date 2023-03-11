@@ -33,6 +33,10 @@ public class ResponsibilityService {
 						HttpStatus.NOT_FOUND));
 	}
 
+	public List<Responsibility> getAllByWeeklyId(Integer weeklyId) {
+		return this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId);
+	}
+
 	public Responsibility insert(Integer weeklyId, Responsibility body) {
 		body.setWeeklyId(weeklyId);
 		this.validator.validateInsert(body);

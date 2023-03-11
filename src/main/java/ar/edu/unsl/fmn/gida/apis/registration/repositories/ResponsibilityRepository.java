@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.repositories;
 
+import java.util.List;
 import java.util.Optional;
 // import org.springframework.data.domain.Page;
 // import org.springframework.data.domain.Pageable;
@@ -11,5 +12,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
 public interface ResponsibilityRepository extends JpaRepository<Responsibility, Integer> {
 
     Optional<Responsibility> findByIdAndActiveTrue(int id);
+
+    List<Responsibility> findAllByWeeklyIdAndActiveTrue(Integer weeklyId);
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
@@ -121,7 +122,7 @@ public class RegisterController {
 	// }
 
 	@PostMapping(value = Urls.Privileges.user + Urls.registers)
-	public Register postRegister(@RequestBody Register register) {
-		return this.service.insert(register);
+	public Register postRegister(@RequestBody Check check) {
+		return this.service.insert(check);
 	}
 }

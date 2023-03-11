@@ -59,7 +59,8 @@ public class PersonService {
 				this.repository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
 
 		for (Person person : persons) {
-			person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
+			person.setCurrentWeekly(this.weeklyService
+					.getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 			person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
 		}
 

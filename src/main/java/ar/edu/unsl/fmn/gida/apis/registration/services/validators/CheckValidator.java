@@ -1,30 +1,27 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.ValidationMessenger;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 
-public class RegisterValidator extends Validator<Register> {
+public class CheckValidator extends Validator<Check> {
 
-	public RegisterValidator(ExpressionValidator expressionValidator,
+	public CheckValidator(ExpressionValidator expressionValidator,
 			ValidationMessenger entityValidationMessages) {
 		super(expressionValidator, entityValidationMessages);
 	}
 
 	@Override
-	public void validateInsert(Register entity) {
+	public void validateInsert(Check entity) {
 		/**
 		 * check nullability
 		 */
-		if (entity.getId() != null)
-			this.sendError(this.getEntityValidationMessenger().idNotRequired());
-
 		if (entity.getAccessId() == null)
 			this.sendError(this.getEntityValidationMessenger()
-					.attributeRequired(Register.class.getSimpleName(), "access id"));
+					.attributeRequired(Check.class.getSimpleName(), "access id"));
 
 		if (entity.getEncryptedData() == null)
 			this.sendError(this.getEntityValidationMessenger()
-					.attributeRequired(Register.class.getSimpleName(), "encrypted data"));
+					.attributeRequired(Check.class.getSimpleName(), "encrypted data"));
 
 		/**
 		 * check size
@@ -37,7 +34,7 @@ public class RegisterValidator extends Validator<Register> {
 	}
 
 	@Override
-	public void validateUpdate(Register entity) {
+	public void validateUpdate(Check entity) {
 		this.validateInsert(entity);
 	}
 }

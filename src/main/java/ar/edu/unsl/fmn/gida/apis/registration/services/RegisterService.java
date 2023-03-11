@@ -15,16 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.services.validators.RegisterValidator;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CheckValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.PersonConverter;
 
 @Service
 @Transactional
@@ -33,9 +32,8 @@ public class RegisterService {
 	@Autowired
 	private RegisterRepository repository;
 
-	private final RegisterValidator validator =
-			new RegisterValidator(new CustomExpressionValidator(),
-					RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
+	private final CheckValidator validator = new CheckValidator(new CustomExpressionValidator(),
+			RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
 
 	private final Cypher cypher = new QrCypher();
 
@@ -201,71 +199,87 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public Register insert(Register requestBody) {
-		// this.validator.validateInsert(requestBody);
+	// public Register insert(Register requestBody) {
+	// this.validator.validateInsert(requestBody);
 
-		// Integer personId = null;
-		// Register r1 = new Register();
-		// Register r1Aux = new Register();
-		// Register r2 = null;
-		// Register r2Aux = new Register();
-		// Optional<Register> optional;
+	// Integer personId = null;
+	// Register r1 = new Register();
+	// Register r1Aux = new Register();
+	// Register r2 = null;
+	// Register r2Aux = new Register();
+	// Optional<Register> optional;
 
-		// personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
+	// personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
 
-		// optional = this.repository.findByPersonIdAndCheckOutIsNullAndActiveTrue(person.getId());
+	// optional = this.repository.findByPersonIdAndCheckOutIsNullAndActiveTrue(person.getId());
 
-		// if (optional.isPresent()) {
-		// // do check out
-		// r1.setId(optional.get().getId());
-		// r1.setPersonId(optional.get().getPersonId());
-		// r1.setAccessId(optional.get().getAccessId());
-		// r1.setCheckIn(optional.get().getCheckIn());
-		// r1.setCheckOut(new Date());
+	// if (optional.isPresent()) {
+	// // do check out
+	// r1.setId(optional.get().getId());
+	// r1.setPersonId(optional.get().getPersonId());
+	// r1.setAccessId(optional.get().getAccessId());
+	// r1.setCheckIn(optional.get().getCheckIn());
+	// r1.setCheckOut(new Date());
 
-		// r1Aux.setId(r1.getId());
-		// r1Aux.setPersonId(r1.getPersonId());
-		// r1Aux.setAccessId(r1.getAccessId());
-		// r1Aux.setCheckIn(r1.getCheckIn());
-		// r1Aux.setCheckOut(r1.getCheckOut());
-		// this.repository.save(r1);
+	// r1Aux.setId(r1.getId());
+	// r1Aux.setPersonId(r1.getPersonId());
+	// r1Aux.setAccessId(r1.getAccessId());
+	// r1Aux.setCheckIn(r1.getCheckIn());
+	// r1Aux.setCheckOut(r1.getCheckOut());
+	// this.repository.save(r1);
 
-		// r1Aux.setPerson(person);
-		// r1Aux.setAccess(optional.get().getAccess());
+	// r1Aux.setPerson(person);
+	// r1Aux.setAccess(optional.get().getAccess());
 
-		// if (requestBody.getAccessId() != optional.get().getAccessId()) {
-		// r2 = new Register();
-		// r2.setPersonId(person.getId());
-		// r2.setAccessId(requestBody.getAccessId());
-		// r2.setCheckIn(new Date());
+	// if (requestBody.getAccessId() != optional.get().getAccessId()) {
+	// r2 = new Register();
+	// r2.setPersonId(person.getId());
+	// r2.setAccessId(requestBody.getAccessId());
+	// r2.setCheckIn(new Date());
 
-		// r2Aux.setId(r2.getId());
-		// r2Aux.setPersonId(r2.getPersonId());
-		// r2Aux.setAccessId(r2.getAccessId());
-		// r2Aux.setCheckIn(r2.getCheckIn());
-		// r2Aux.setCheckOut(r2.getCheckOut());
-		// this.repository.save(r2);
+	// r2Aux.setId(r2.getId());
+	// r2Aux.setPersonId(r2.getPersonId());
+	// r2Aux.setAccessId(r2.getAccessId());
+	// r2Aux.setCheckIn(r2.getCheckIn());
+	// r2Aux.setCheckOut(r2.getCheckOut());
+	// this.repository.save(r2);
 
-		// r2Aux.setPerson(person);
-		// r2Aux.setAccess(requestBody.getAccess());
-		// }
-		// } else {
-		// r1.setPersonId(person.getId());
-		// r1.setAccessId(requestBody.getAccessId());
-		// r1.setCheckIn(new Date());
+	// r2Aux.setPerson(person);
+	// r2Aux.setAccess(requestBody.getAccess());
+	// }
+	// } else {
+	// r1.setPersonId(person.getId());
+	// r1.setAccessId(requestBody.getAccessId());
+	// r1.setCheckIn(new Date());
 
-		// r1Aux.setId(r1.getId());
-		// r1Aux.setPersonId(r1.getPersonId());
-		// r1Aux.setAccessId(r1.getAccessId());
-		// r1Aux.setCheckIn(r1.getCheckIn());
-		// r1Aux.setCheckOut(r1.getCheckOut());
-		// this.repository.save(r1);
+	// r1Aux.setId(r1.getId());
+	// r1Aux.setPersonId(r1.getPersonId());
+	// r1Aux.setAccessId(r1.getAccessId());
+	// r1Aux.setCheckIn(r1.getCheckIn());
+	// r1Aux.setCheckOut(r1.getCheckOut());
+	// this.repository.save(r1);
 
-		// r1Aux.setPerson(person);
-		// r1Aux.setAccess(requestBody.getAccess());
-		// }
+	// r1Aux.setPerson(person);
+	// r1Aux.setAccess(requestBody.getAccess());
+	// }
 
-		// return r2 == null ? r1Aux : r2Aux;
+	// return r2 == null ? r1Aux : r2Aux;
+	// }
+
+
+	public Register insert(Check requestBody) {
+		this.validator.validateInsert(requestBody);
+
+		int personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
+		Optional<Register> optional =
+				this.repository.findByPersonIdAndCheckOutIsNullAndActiveTrue(personId);
+
+		if (optional.isPresent()) {
+
+		} else {
+
+		}
+
 		return null;
 	}
 

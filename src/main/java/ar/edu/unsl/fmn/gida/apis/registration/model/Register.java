@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -41,9 +40,6 @@ public class Register {
 	// ================================== extras ==================================
 	@Column(nullable = false)
 	private boolean active = true;
-
-	@Transient
-	private String encryptedData;
 
 	// ============================ model associations ============================
 	@JoinColumn(name = "personId", referencedColumnName = "id", insertable = false,
@@ -86,14 +82,6 @@ public class Register {
 
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-
-	public String getEncryptedData() {
-		return this.encryptedData;
-	}
-
-	public void setEncryptedData(String encryptedData) {
-		this.encryptedData = encryptedData;
 	}
 
 	public Person getPerson() {

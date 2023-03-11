@@ -38,7 +38,7 @@ public class Credential {
 	private boolean active = true;
 
 	// ============================ model associations ============================
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "personId", referencedColumnName = "id", insertable = false,
 			updatable = false)
 	@JsonBackReference
