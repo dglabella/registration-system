@@ -19,6 +19,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
 	Page<Person> findAllByActiveTrue(Pageable pageable);
 
+	Optional<Person> findOneByDniAndIdIsNot(String dni, int id);
+
 	Page<Person> findAllByPersonNameAndActiveTrue(String name, Pageable pageable);
 
 	Page<Person> findAllByPersonLastNameAndActiveTrue(String lastName, Pageable pageable);

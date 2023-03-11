@@ -127,11 +127,10 @@ public class PersonService {
 	public void update(int id, Person requestBody) {
 		this.validator.validateUpdate(requestBody);
 
-		this.repository.findByDniAndActiveTrue(requestBody.getDni()).ifPresent(u -> {
-			throw new ErrorResponse(
-					RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
-							.alreadyExistConstraint(Person.class.getSimpleName(), "dni",
-									requestBody.getDni()),
+		this.repository.findOneByDniAndIdIsNot(requestBody.getDni(), id).ifPresent(person -> {
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getPersonServiceMessenger()
+					.alreadyExistConstraint(Person.class.getSimpleName(), "dni", person.getDni()),
 					HttpStatus.CONFLICT);
 		});
 

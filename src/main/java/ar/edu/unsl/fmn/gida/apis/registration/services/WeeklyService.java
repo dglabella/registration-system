@@ -54,7 +54,6 @@ public class WeeklyService {
 						HttpStatus.INTERNAL_SERVER_ERROR));
 
 		ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
-
 		return ret;
 	}
 
