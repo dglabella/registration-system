@@ -1,5 +1,4 @@
-- A service 'sx' for an entity 'x' can ONLY call a service 'sy' for an entity 'y' if 'x' associated directly to 'y'
-(the intention here is modulate responsabilities for easy maintaining: when a use-case logic has to be modified)
+- PERSISTENT CONTEXT BE CARFULL!!!
 
 - check if a body is null in service layer
 

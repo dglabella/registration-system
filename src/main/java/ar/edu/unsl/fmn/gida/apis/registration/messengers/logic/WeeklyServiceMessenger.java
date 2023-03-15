@@ -8,38 +8,35 @@ public class WeeklyServiceMessenger extends ServiceMessenger {
 		super(messenger);
 	}
 
-	public String currentWeeklyNotFound(int personId) {
+	public String wrongWeeklyStartDate() {
 		String ret = null;
 
 		switch (this.getMessenger().getLang()) {
 			case "EN":
-				ret = "person " + personId
-						+ " has not a current weekly registered: there should be in the database but is not";
+				ret = "cannot insert a new weekly with start date before today, or before or equal to the current weekly";
 				break;
 			case "ES":
-				ret = "la persona " + personId
-						+ " no tiene semanario actual registrado: debería existir en la base de datos, pero no existe";
+				ret = "No es posible insertar un semanario nuevo con fecha de inicio anterior a la fecha de hoy, o anterior o igual a la fecha de inicio del semanario vigente";
 				break;
 			default:
-				ret = "person " + personId
-						+ " has not a current weekly registered: there should be in the database but is not";
+				ret = "cannot insert a new weekly with start date before today, or before or equal to the current weekly";
 		}
 
 		return ret;
 	}
 
-	public String wrongWeeklyDatetime() {
+	public String stringToDateParseError() {
 		String ret = null;
 
 		switch (this.getMessenger().getLang()) {
 			case "EN":
-				ret = "cannot insert/update a new weekly with start datetime before the current clock";
+				ret = "cannot parse the input date";
 				break;
 			case "ES":
-				ret = "No es posible insertar/actualizar un semanario con fecha de inicio anterior al día de hoy inclusive";
+				ret = "No se puede traducir la fecha recibida";
 				break;
 			default:
-				ret = "cannot insert/update a new weekly with start datetime before the current clock";
+				ret = "cannot parse the input date";
 		}
 
 		return ret;

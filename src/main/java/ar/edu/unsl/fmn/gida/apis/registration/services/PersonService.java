@@ -11,6 +11,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.PersonValidator;
@@ -48,8 +49,10 @@ public class PersonService {
 										.notFound(Person.class.getSimpleName(), id),
 								HttpStatus.NOT_FOUND));
 
-		person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
 		person.setCredential(this.credentialService.getOneByPersonId(id));
+
+		Weekly currentWeekly = this.weeklyService.getCurrentWeeklyFromPerson(person.getId());
+		person.setCurrentWeekly(currentWeekly);
 
 		return person;
 	}
@@ -120,8 +123,10 @@ public class PersonService {
 		// save qr
 		this.credentialService.insert(credential);
 
-		// save weekly
-		this.weeklyService.insert(person.getId(), requestBody.getCurrentWeekly());
+		// save weekly if exist
+		if (requestBody.getCurrentWeekly() != null) {
+			this.weeklyService.insert(person.getId(), requestBody.getCurrentWeekly());
+		}
 	}
 
 	public void update(int id, Person requestBody) {
@@ -135,19 +140,15 @@ public class PersonService {
 		});
 
 		// save person
-		Person person = this.repository.save(requestBody);
-
-		// save weekly
-		this.weeklyService.update(person.getId(), requestBody.getCurrentWeekly());
+		requestBody.setId(id);
+		this.repository.save(requestBody);
 	}
 
 	public Person delete(int id) {
 
-		Person person = new Person();
-
-		person = this.repository.findByIdAndActiveTrue(id)
-				.orElseThrow(
-						() -> new ErrorResponse(
+		Person person =
+				this.repository.findByIdAndActiveTrue(id)
+						.orElseThrow(() -> new ErrorResponse(
 								RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
 										.notFound(Person.class.getSimpleName(), id),
 								HttpStatus.NOT_FOUND));

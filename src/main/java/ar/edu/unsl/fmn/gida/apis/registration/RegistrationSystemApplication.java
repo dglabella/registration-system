@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
@@ -99,7 +99,7 @@ public class RegistrationSystemApplication {
 	}
 
 	public static void main(String[] args) {
-		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
+		System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
 		setUpConfigFile();
 		setUpMessagesLang();
 		SpringApplication.run(RegistrationSystemApplication.class, args);

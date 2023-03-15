@@ -19,7 +19,7 @@ public class ResponsibilityValidator extends Validator<Responsibility> {
         if (entity.getId() != null)
             this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-        if (!(entity.getWeeklyId() != null) || Constraints.Responsibility.WEEKLY_FK_NULLABLE)
+        if (!(entity.getWeeklyId() != null) || Constraints.Responsibility.WEEKLY_ID_NULLABLE)
             this.sendError(this.getEntityValidationMessenger()
                     .attributeRequired(Responsibility.class.getSimpleName(), "weekly id"));
 

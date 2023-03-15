@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.Day;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
@@ -25,7 +26,7 @@ public class Responsibility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = Constraints.Responsibility.WEEKLY_FK_NULLABLE)
+    @Column(nullable = Constraints.Responsibility.WEEKLY_ID_NULLABLE)
     private Integer weeklyId;
 
     // ================================ attributes ================================
@@ -34,9 +35,11 @@ public class Responsibility {
     private Day day;
 
     @Column(nullable = Constraints.Responsibility.ENTRANCE_TIME_NULLABLE)
+    @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalTime entranceTime;
 
     @Column(nullable = Constraints.Responsibility.DEPARTURE_TIME_NULLABLE)
+    @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalTime departureTime;
 
     // ================================ extras ================================

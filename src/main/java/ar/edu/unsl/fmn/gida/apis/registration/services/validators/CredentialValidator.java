@@ -19,7 +19,7 @@ public class CredentialValidator extends Validator<Credential> {
 		if (entity.getId() != null)
 			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-		if (!(entity.getPersonId() != null || Constraints.Credential.PERSON_FK_NULLABLE))
+		if (!(entity.getPersonId() != null || Constraints.Credential.PERSON_ID_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Credential.class.getSimpleName(), "person id"));
 

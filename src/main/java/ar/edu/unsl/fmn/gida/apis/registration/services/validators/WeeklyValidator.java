@@ -20,7 +20,7 @@ public class WeeklyValidator extends Validator<Weekly> {
 		if (entity.getId() != null)
 			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
-		if (!(entity.getPersonId() != null || Constraints.Weekly.PERSONFK_NULLABLE))
+		if (!(entity.getPersonId() != null || Constraints.Weekly.PERSON_ID_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Weekly.class.getSimpleName(), "person id"));
 

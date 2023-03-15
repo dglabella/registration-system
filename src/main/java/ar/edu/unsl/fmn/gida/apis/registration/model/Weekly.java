@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
@@ -26,17 +27,19 @@ public class Weekly {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = Constraints.Weekly.PERSONFK_NULLABLE)
+	@Column(nullable = Constraints.Weekly.PERSON_ID_NULLABLE)
 	private Integer personId;
 
 	// ================================ attributes ================================
 
 	@Column(nullable = Constraints.Weekly.START_NULLABLE)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
 	private Date start;
 
 	@Column(nullable = Constraints.Weekly.END_NULLABLE)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
 	private Date end;
 
 	// ================================== extras ==================================

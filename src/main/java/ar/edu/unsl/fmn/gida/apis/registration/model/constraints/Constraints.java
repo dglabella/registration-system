@@ -34,7 +34,7 @@ public interface Constraints {
 	}
 
 	interface Person {
-		boolean DEPENDENCY_FK_NULLABLE = false;
+		boolean DEPENDENCY_ID_NULLABLE = false;
 
 		int NAME_MIN_LENGHT = 1;
 		int NAME_MAX_LENGHT = 60;
@@ -61,7 +61,7 @@ public interface Constraints {
 	}
 
 	interface Weekly {
-		boolean PERSONFK_NULLABLE = false;
+		boolean PERSON_ID_NULLABLE = false;
 
 		boolean START_NULLABLE = false;
 		boolean END_NULLABLE = true;
@@ -80,7 +80,7 @@ public interface Constraints {
 	}
 
 	interface Credential {
-		boolean PERSON_FK_NULLABLE = false;
+		boolean PERSON_ID_NULLABLE = false;
 		boolean DATA_NULLABLE = false;
 		int DATA_MIN_LENGHT = 1;
 		int DATA_MAX_LENGHT = 255;
@@ -89,18 +89,15 @@ public interface Constraints {
 	}
 
 	interface Register {
-		boolean PERSON_FK_NULLABLE = false;
-		boolean ACCESS_FK_NULLABLE = false;
+		boolean PERSON_ID_NULLABLE = false;
+		boolean ACCESS_ID_NULLABLE = false;
 
-		boolean CHECK_IN_NULLABLE = false;
-		boolean CHECK_OUT_NULLABLE = true;
-
-		boolean ENCRYPTED_DATA_NULLABLE = true;
+		boolean TIME_NULLABLE = false;
 	}
 
 
 	interface Responsibility {
-		boolean WEEKLY_FK_NULLABLE = false;
+		boolean WEEKLY_ID_NULLABLE = false;
 
 		boolean DAY_NULLABLE = false;
 

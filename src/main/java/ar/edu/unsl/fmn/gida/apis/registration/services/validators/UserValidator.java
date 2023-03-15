@@ -14,12 +14,11 @@ public class UserValidator extends Validator<User> {
 
 	@Override
 	public void validateInsert(User entity) {
-		if (entity == null)
-			/**
-			 * check nullability
-			 */
-			if (entity.getId() != null)
-				this.sendError(this.getEntityValidationMessenger().idNotRequired());
+		/**
+		 * check nullability
+		 */
+		if (entity.getId() != null)
+			this.sendError(this.getEntityValidationMessenger().idNotRequired());
 
 		if (!(this.getExpressionValidator().isPresent(entity.getUserName())
 				|| Constraints.User.NAME_NULLABLE))

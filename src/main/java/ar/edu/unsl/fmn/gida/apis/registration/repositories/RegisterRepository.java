@@ -12,27 +12,25 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 @Repository
 public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
+	Optional<Register> findByIdAndActiveTrue(Integer id);
+
 	Page<Register> findAll(Pageable pageable);
 
-	List<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to);
+	List<Register> findAllByTimeBetweenAndActiveTrue(Date from, Date to);
 
-	List<Register> findAllByCheckInBetweenAndActiveTrueOrderByPersonIdAsc(Date from, Date to);
+	Page<Register> findAllByTimeBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
 
-	Page<Register> findAllByCheckInBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
+	List<Register> findAllByTimeBetweenAndActiveTrueOrderByPersonIdAsc(Date from, Date to);
 
-	Page<Register> findAllByCheckInBetweenAndActiveTrueOrderByIdDesc(Date from, Date to,
+	Page<Register> findAllByTimeBetweenAndActiveTrueOrderByIdDesc(Date from, Date to,
 			Pageable pageable);
 
 	List<Register> findAllByPersonIdAndActiveTrue(Integer id);
 
-	Optional<Register> findByIdAndActiveTrue(Integer id);
-
-	Optional<Register> findByPersonIdAndCheckOutIsNullAndActiveTrue(int personId);
-
-	List<Register> findAllByPersonIdAndActiveTrueAndCheckInBetween(Integer personId, Date from,
+	List<Register> findAllByPersonIdAndActiveTrueAndTimeBetween(Integer personId, Date from,
 			Date to);
 
-	Page<Register> findAllByPersonIdAndActiveTrueAndCheckInBetween(Integer personId, Date from,
+	Page<Register> findAllByPersonIdAndActiveTrueAndTimeBetween(Integer personId, Date from,
 			Date to, Pageable pageable);
 
 	// @Query(value = "SELECT * " + "FROM registers "

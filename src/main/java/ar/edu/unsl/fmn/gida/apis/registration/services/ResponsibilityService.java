@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.ResponsibilityRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.ResponsibilityValidator;
@@ -55,14 +56,17 @@ public class ResponsibilityService {
 		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
 	}
 
-	public Responsibility delete(Integer id) {
-		Responsibility ret = this.repository.findByIdAndActiveTrue(id)
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
-								.notFound(Responsibility.class.getSimpleName(), id),
-						HttpStatus.NOT_FOUND));
+	public List<Responsibility> deleteAllFromWeekly(Integer weeklyId) {
+		List<Responsibility> ret = this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId);
+		if (ret.size() == 0)
+			throw new ErrorResponse(
+					RegistrationSystemApplication.MESSENGER.getResponsibilityServiceMessenger()
+							.deleteNonExistentEntityCorruptDB(Weekly.class.getSimpleName(),
+									Responsibility.class.getSimpleName(), weeklyId),
+					HttpStatus.NOT_FOUND);
 
-		ret.setActive(false);
+		for (Responsibility r : ret)
+			r.setActive(false);
 
 		return ret;
 	}

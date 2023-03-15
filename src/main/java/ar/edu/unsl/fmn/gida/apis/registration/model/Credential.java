@@ -21,7 +21,7 @@ public class Credential {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = Constraints.Credential.PERSON_FK_NULLABLE)
+	@Column(nullable = Constraints.Credential.PERSON_ID_NULLABLE)
 	private Integer personId;
 
 	// ================================ attributes ================================

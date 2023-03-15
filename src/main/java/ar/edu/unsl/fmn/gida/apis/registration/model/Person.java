@@ -27,7 +27,7 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = Constraints.Person.DEPENDENCY_FK_NULLABLE)
+	@Column(nullable = Constraints.Person.DEPENDENCY_ID_NULLABLE)
 	private Integer dependencyId;
 
 	// ================================ attributes ================================

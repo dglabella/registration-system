@@ -39,21 +39,33 @@ public class WeeklyService {
 	}
 
 	public Weekly getCurrentWeeklyFromPerson(Integer personId) {
-		return this.repository.findByPersonIdAndEndIsNullAndActiveTrue(personId)
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
-								.currentWeeklyNotFound(personId),
-						HttpStatus.INTERNAL_SERVER_ERROR));
+		Date currentDate = new Date();
+
+		Weekly ret = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						currentDate, currentDate)
+				.orElse(null);
+
+		return ret;
 	}
 
 	public Weekly getCurrentWeeklyFromPersonWithResponsibilities(Integer personId) {
-		Weekly ret = this.repository.findByPersonIdAndEndIsNullAndActiveTrue(personId)
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
-								.currentWeeklyNotFound(personId),
-						HttpStatus.INTERNAL_SERVER_ERROR));
+		Weekly ret = null;
+		Date currentDate = new Date();
+		Weekly weekly = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						currentDate, currentDate)
+				.orElse(null);
 
-		ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
+		if (weekly != null) {
+			ret = new Weekly();
+			ret.setId(weekly.getId());
+			ret.setPersonId(weekly.getPersonId());
+			ret.setStart(weekly.getStart());
+			ret.setEnd(weekly.getEnd());
+			ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
+		}
+
 		return ret;
 	}
 
@@ -61,67 +73,92 @@ public class WeeklyService {
 		return this.repository.findAllByActiveTrue(PageRequest.of(page, quantity));
 	}
 
-	public Page<Weekly> getAllFromPerson(int personId, int page, int quantity) {
+	public Page<Weekly> getAllFromPersonWithResponsibilities(int personId, int page, int quantity) {
+		// this.repository.findAllByPersonIdAndActiveTrue(personId, PageRequest.of(page, quantity));
 		return this.repository.findAllByPersonIdAndActiveTrue(personId,
 				PageRequest.of(page, quantity));
+	}
+
+	public Weekly initPersonWeekly(Integer personId, Weekly requestBody) {
+		requestBody.setPersonId(personId);
+		this.validator.validateInsert(requestBody);
+
+		if (requestBody.getStart().compareTo(new Date()) <= 0)
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWeeklyServiceMessenger().wrongWeeklyStartDate(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+
+		return requestBody;
 	}
 
 	public Weekly insert(Integer personId, Weekly requestBody) {
 		requestBody.setPersonId(personId);
 		this.validator.validateInsert(requestBody);
 
-		// check if start date is ok for the new weekly
-		if (requestBody.getStart().compareTo(new Date()) < 0)
-			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getWeeklyServiceMessenger().wrongWeeklyDatetime(),
-					HttpStatus.UNPROCESSABLE_ENTITY);
+		// // check if start date is ok for the new weekly
+		// if (requestBody.getStart().compareTo(new Date()) < 0)
+		// throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+		// .getWeeklyServiceMessenger().wrongWeeklyDatetime(),
+		// HttpStatus.UNPROCESSABLE_ENTITY);
 
-		Weekly ret = this.repository.save(requestBody);
+		Date currentDate = new Date();
+		Weekly currentWeekly = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						currentDate, currentDate)
+				.orElse(null);
 
-		this.responsibilityService.insertAll(ret.getId(), requestBody.getResponsibilities());
+		if (currentWeekly != null) {
+			if (requestBody.getStart().compareTo(new Date()) < 0
+					|| requestBody.getStart().compareTo(currentWeekly.getStart()) <= 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getWeeklyServiceMessenger().wrongWeeklyStartDate(),
+						HttpStatus.UNPROCESSABLE_ENTITY);
 
-		return requestBody;
-	}
+			Weekly ret = this.repository.save(requestBody);
 
-	public Weekly update(Integer personId, Weekly requestBody) {
-		this.validator.validateUpdate(requestBody);
-
-		Weekly ret = requestBody;
-
-		// check if start date is ok for the new weekly
-		if (requestBody.getStart().compareTo(new Date()) < 0)
-			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getWeeklyServiceMessenger().wrongWeeklyDatetime(),
-					HttpStatus.UNPROCESSABLE_ENTITY);
-
-		Weekly weekly = this.repository.findByPersonIdAndEndIsNullAndActiveTrue(personId)
-				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getWeeklyServiceMessenger().currentWeeklyNotFound(personId),
-						HttpStatus.NOT_FOUND));
-
-		if (!weekly.equals(requestBody)) {
-
-			weekly.setEnd(new Date());
-
-			ret = this.repository.save(requestBody);
 			this.responsibilityService.insertAll(ret.getId(), requestBody.getResponsibilities());
 		}
 
 		return requestBody;
 	}
 
+	public Weekly closeWeekly(Integer weeklyId, Date end) {
+		Weekly ret = this.repository.findByIdAndActiveTrue(weeklyId)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+								.updateNonExistentEntity(Weekly.class.getSimpleName(), weeklyId),
+						HttpStatus.UNPROCESSABLE_ENTITY));
+
+		ret.setEnd(end);
+
+		return ret;
+	}
+
+	public Weekly closeWeeklyToday(Integer weeklyId) {
+		Weekly ret = this.repository.findByIdAndActiveTrue(weeklyId)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+								.updateNonExistentEntity(Weekly.class.getSimpleName(), weeklyId),
+						HttpStatus.UNPROCESSABLE_ENTITY));
+
+		ret.setEnd(new Date());
+
+		return ret;
+	}
+
 	public void delete(int personId) {
 		List<Weekly> weeklies = this.repository.findAllByPersonIdAndActiveTrue(personId);
 
-		if (weeklies.size() > 0) {
-			for (int i = 0; i < weeklies.size(); i++)
-				weeklies.get(i).setActive(false);
-		} else {
+		if (weeklies.size() == 0)
 			throw new ErrorResponse(
 					RegistrationSystemApplication.MESSENGER.getCredentialServiceMessenger()
 							.deleteNonExistentEntityCorruptDB(Weekly.class.getSimpleName(),
 									Person.class.getSimpleName(), personId),
 					HttpStatus.NOT_FOUND);
+
+		for (int i = 0; i < weeklies.size(); i++) {
+			weeklies.get(i).setActive(false);
+			this.responsibilityService.deleteAllFromWeekly(weeklies.get(i).getId());
 		}
 	}
 }

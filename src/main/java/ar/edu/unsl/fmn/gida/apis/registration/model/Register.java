@@ -10,8 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -22,20 +21,16 @@ public class Register {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = Constraints.Register.PERSON_FK_NULLABLE)
+	@Column(nullable = Constraints.Register.PERSON_ID_NULLABLE)
 	private Integer personId;
 
-	@Column(nullable = Constraints.Register.ACCESS_FK_NULLABLE)
+	@Column(nullable = Constraints.Register.ACCESS_ID_NULLABLE)
 	private Integer accessId;
 
 	// ================================ attributes ================================
-	@Column(nullable = Constraints.Register.CHECK_IN_NULLABLE)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date checkIn;
-
-	@Column(nullable = Constraints.Register.CHECK_OUT_NULLABLE)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date checkOut;
+	@Column(nullable = Constraints.Register.TIME_NULLABLE)
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+	private Date time;
 
 	// ================================== extras ==================================
 	@Column(nullable = false)
@@ -64,20 +59,12 @@ public class Register {
 		this.id = id;
 	}
 
-	public Date getCheckIn() {
-		return this.checkIn;
+	public Date getTime() {
+		return this.time;
 	}
 
-	public void setCheckIn(Date checkIn) {
-		this.checkIn = checkIn;
-	}
-
-	public Date getCheckOut() {
-		return this.checkOut;
-	}
-
-	public void setCheckOut(Date checkOut) {
-		this.checkOut = checkOut;
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 	public void setActive(boolean active) {
