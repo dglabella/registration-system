@@ -74,6 +74,34 @@ omitting either values, the default values will be assumed.
 (GET)               .../responsible/registers/person/search/lastname={aproximation}
                     (default page = 0, default page size = 100)
 
+(GET, POST)         .../responsible/weeklies/person/{id}
+
+{
+    "start": "2023-03-13",
+    "responsibilities":[
+        {
+            "day": "SUNDAY",
+            "entranceTime": "20:00",
+            "departureTime": "21:00"
+        },
+        {
+            "day": 1,
+            "entranceTime": "11:00",
+            "departureTime": "13:00"
+        },
+        {
+            "day": 2,
+            "entranceTime": "08:00",
+            "departureTime": "10:00"
+        },
+        {
+            "day": 2,
+            "entranceTime": "16:00",
+            "departureTime": "18:00"
+        }
+    ]
+}
+
 =================================================================================================
     ADMIN:
 =================================================================================================

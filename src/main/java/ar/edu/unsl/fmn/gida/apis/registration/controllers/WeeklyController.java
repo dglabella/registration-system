@@ -26,24 +26,6 @@ public class WeeklyController {
 	@Autowired
 	private WeeklyService service;
 
-	@GetMapping
-	public Page<Weekly> getAllWeeklies(@RequestParam Map<String, String> map) {
-		Page<Weekly> page = null;
-
-		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
-		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
-		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
-		} else {
-			page = this.service.getAll(Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("size")));
-		}
-
-		return page;
-	}
-
 	@GetMapping(value = "/person/{id}")
 	public Page<Weekly> getAllWeekliesFromPerson(@PathVariable int id,
 			@RequestParam Map<String, String> map) {

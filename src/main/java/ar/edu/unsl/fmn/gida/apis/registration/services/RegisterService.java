@@ -218,9 +218,8 @@ public class RegisterService {
 
 		List<Register> registers = this.repository.findAllByPersonIdAndActiveTrue(personId);
 
-		if (registers.size() > 0) {
+		if (registers.size() > 0)
 			for (int i = 0; i < registers.size(); i++)
 				registers.get(i).setActive(false);
-		}
 	}
 }

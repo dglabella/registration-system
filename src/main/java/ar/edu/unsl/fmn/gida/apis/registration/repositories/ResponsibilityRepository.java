@@ -14,5 +14,4 @@ public interface ResponsibilityRepository extends JpaRepository<Responsibility, 
     Optional<Responsibility> findByIdAndActiveTrue(int id);
 
     List<Responsibility> findAllByWeeklyIdAndActiveTrue(Integer weeklyId);
-
 }

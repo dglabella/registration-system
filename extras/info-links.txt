@@ -41,3 +41,15 @@ https://www.baeldung.com/spring-boot-jasypt
 about password encryption in spring boot
 
 https://reflectoring.io/spring-security-password-handling/#:~:text=A%20salt%20is%20a%20sequence,should%20match%20the%20stored%20password.
+
+===============================================================================================================================
+Audit with jpa
+
+https://www.baeldung.com/database-auditing-jpa
+
+===============================================================================================================================
+dirty checking hibernate
+
+https://javatute.com/hibernate/dirty-checking-in-hibernate/
+
+===============================================================================================================================
