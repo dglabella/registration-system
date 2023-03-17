@@ -42,35 +42,18 @@ public class WeeklyServiceMessenger extends ServiceMessenger {
 		return ret;
 	}
 
-	public String startDateBeforeCurrentWeeklyEndDate() {
+	public String startDateNotqualToCurrentWeeklyEndDate() {
 		String ret = null;
 
 		switch (this.getMessenger().getLang()) {
 			case "EN":
-				ret = "cannot insert a new weekly with start date before or equal to the current weekly end date";
+				ret = "cannot insert a new weekly with start date different to the current weekly end date";
 				break;
 			case "ES":
-				ret = "No es posible insertar un semanario nuevo con fecha de inicio anterior a la fecha de fin del semanario vigente";
+				ret = "No es posible insertar un semanario nuevo con fecha de inicio distina a la fecha de fin del semanario vigente";
 				break;
 			default:
-				ret = "cannot insert a new weekly with start date before or equal to the current weekly end date";
-		}
-
-		return ret;
-	}
-
-	public String startDateSpacedToCurrentWeeklyEndDate() {
-		String ret = null;
-
-		switch (this.getMessenger().getLang()) {
-			case "EN":
-				ret = "cannot insert a new weekly with start date after the current weekly end date";
-				break;
-			case "ES":
-				ret = "No es posible insertar un semanario nuevo con fecha de inicio posterior a la fecha de fin del semanario vigente";
-				break;
-			default:
-				ret = "cannot insert a new weekly with start date after the current weekly end date";
+				ret = "cannot insert a new weekly with start date different to the current weekly end date";
 		}
 
 		return ret;

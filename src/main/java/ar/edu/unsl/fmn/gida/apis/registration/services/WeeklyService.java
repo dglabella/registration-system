@@ -105,7 +105,8 @@ public class WeeklyService {
 		requestBody.setPersonId(personId);
 		this.validator.validateInsert(requestBody);
 
-		if (requestBody.getStart().compareTo(requestBody.getEnd()) >= 0)
+		if (requestBody.getEnd() != null
+				&& requestBody.getStart().compareTo(requestBody.getEnd()) >= 0)
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getWeeklyServiceMessenger().crossDates(), HttpStatus.UNPROCESSABLE_ENTITY);
 
@@ -122,15 +123,18 @@ public class WeeklyService {
 						HttpStatus.UNPROCESSABLE_ENTITY);
 
 			if (currentWeekly.getEnd() != null
-					&& requestBody.getStart().compareTo(currentWeekly.getEnd()) != 0)
-				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getWeeklyServiceMessenger().wrongWeeklyStartDates(),
+					&& requestBody.getStart().compareTo(currentWeekly.getEnd()) != 0) {
+				throw new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+								.startDateNotqualToCurrentWeeklyEndDate(),
 						HttpStatus.UNPROCESSABLE_ENTITY);
+			} else {
+				currentWeekly.setEnd(requestBody.getStart());
+			}
 
 		}
 
 		Weekly ret = this.repository.save(requestBody);
-
 		this.responsibilityService.insertAll(ret.getId(), requestBody.getResponsibilities());
 
 		return requestBody;
