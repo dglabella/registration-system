@@ -1,6 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.repositories;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,7 @@ public interface WeeklyRepository extends JpaRepository<Weekly, Integer> {
 	Optional<Weekly> findTopByPersonIdOrderByIdDesc(Integer personId);
 
 	Optional<Weekly> findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(
-			Integer personId, Date date1, Date date2);
+			Integer personId, LocalDate date1, LocalDate date2);
 
 	Page<Weekly> findAllByActiveTrue(Pageable pageable);
 

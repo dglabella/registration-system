@@ -104,4 +104,9 @@ public interface Constraints {
 		boolean ENTRANCE_TIME_NULLABLE = false;
 		boolean DEPARTURE_TIME_NULLABLE = false;
 	}
+
+	interface Check {
+		boolean ACCESS_ID_NULLABLE = false;
+		boolean ENCRYPTED_DATA_NULLABLE = false;
+	}
 }

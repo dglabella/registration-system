@@ -122,7 +122,7 @@ public class RegisterController {
 	// }
 
 	@PostMapping(value = Urls.Privileges.user + Urls.registers)
-	public Register postRegister(@RequestBody Check check) {
-		return this.service.insert(check);
+	public void postRegister(@RequestBody Check check) {
+		this.service.insert(check);
 	}
 }

@@ -1,9 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -65,7 +62,7 @@ public class WeeklyService {
 	}
 
 	public Weekly getCurrentWeeklyFromPerson(Integer personId) {
-		Date currentDate = new Date();
+		LocalDate currentDate = LocalDate.now();
 
 		return this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
@@ -75,7 +72,7 @@ public class WeeklyService {
 
 	public Weekly getCurrentWeeklyFromPersonWithResponsibilities(Integer personId) {
 		Weekly ret = null;
-		Date currentDate = new Date();
+		LocalDate currentDate = LocalDate.now();
 		Optional<Weekly> optional = this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						currentDate, currentDate);
@@ -151,7 +148,8 @@ public class WeeklyService {
 								.updateNonExistentEntity(Weekly.class.getSimpleName(), weeklyId),
 						HttpStatus.UNPROCESSABLE_ENTITY));
 
-		ret.setEnd(LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()));
+		// ret.setEnd(LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()));
+		ret.setEnd(LocalDate.now());
 
 		return ret;
 	}
@@ -164,6 +162,5 @@ public class WeeklyService {
 				weeklies.get(i).setActive(false);
 				this.responsibilityService.deleteAllFromWeekly(weeklies.get(i).getId());
 			}
-
 	}
 }

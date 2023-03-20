@@ -2,6 +2,7 @@ package ar.edu.unsl.fmn.gida.apis.registration.services.validators;
 
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.ValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
+import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 public class CheckValidator extends Validator<Check> {
 
@@ -15,11 +16,11 @@ public class CheckValidator extends Validator<Check> {
 		/**
 		 * check nullability
 		 */
-		if (entity.getAccessId() == null)
+		if (!(entity.getAccessId() != null) || Constraints.Check.ACCESS_ID_NULLABLE)
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Check.class.getSimpleName(), "access id"));
 
-		if (entity.getEncryptedData() == null)
+		if (!(entity.getEncryptedData() != null) || Constraints.Check.ENCRYPTED_DATA_NULLABLE)
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Check.class.getSimpleName(), "encrypted data"));
 

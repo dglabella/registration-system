@@ -2,10 +2,10 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,13 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CheckValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.QrDataConverter;
 
 @Service
 @Transactional
@@ -33,7 +34,7 @@ public class RegisterService {
 	private final CheckValidator validator = new CheckValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
 
-	private final Cypher cypher = new QrCypher();
+	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -194,14 +195,16 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public Register insert(Check requestBody) {
+	public void insert(Check requestBody) {
 		this.validator.validateInsert(requestBody);
+		Person person = this.converter.objectify(requestBody.getEncryptedData());
+		Register register = new Register();
 
-		int personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
-		// Optional<Register> optional =
-		// this.repository.findByPersonIdAndCheckOutIsNullAndActiveTrue(personId);
+		register.setAccessId(requestBody.getAccessId());
+		register.setPersonId(person.getId());
+		register.setTime(LocalDateTime.now());
 
-		return null;
+		this.repository.save(register);
 	}
 
 	public Register update(int id, Register requestBody) {
