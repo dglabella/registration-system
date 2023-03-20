@@ -1,8 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,18 +40,27 @@ public class ResponsibilityService {
 		body.setWeeklyId(weeklyId);
 		this.validator.validateInsert(body);
 
-		return body;
-	}
+		if (body.getEntranceTime().compareTo(body.getDepartureTime()) > 0)
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getResponsibilityServiceMessenger().crossTimes(),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		List<Responsibility> responsibilities =
+				this.repository.findAllByWeeklyIdAndDayAndActiveTrue(weeklyId, body.getDay());
 
-	public List<Responsibility> insertAll(Integer weeklyId, Iterable<Responsibility> iterable) {
-		for (Responsibility r : iterable) {
-			r.setWeeklyId(weeklyId);
-			this.validator.validateInsert(r);
+		if (responsibilities.size() > 0) {
+			for (Responsibility r : responsibilities) {
+				if (r.getEntranceTime().compareTo(body.getEntranceTime()) <= 0
+						&& body.getEntranceTime().compareTo(r.getDepartureTime()) < 0)
+					throw new ErrorResponse(
+							RegistrationSystemApplication.MESSENGER
+									.getResponsibilityServiceMessenger().overlappedTimes(),
+							HttpStatus.CONFLICT);
+			}
 		}
 
-		this.repository.saveAll(iterable);
+		this.repository.save(body);
 
-		return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+		return body;
 	}
 
 	public List<Responsibility> deleteAllFromWeekly(Integer weeklyId) {

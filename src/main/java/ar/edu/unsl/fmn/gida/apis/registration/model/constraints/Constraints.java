@@ -64,7 +64,7 @@ public interface Constraints {
 		boolean PERSON_ID_NULLABLE = false;
 
 		boolean START_NULLABLE = false;
-		boolean END_NULLABLE = true;
+		boolean END_NULLABLE = false;
 
 	}
 

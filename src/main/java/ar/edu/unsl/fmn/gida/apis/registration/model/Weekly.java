@@ -1,6 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -33,14 +31,12 @@ public class Weekly {
 	// ================================ attributes ================================
 
 	@Column(nullable = Constraints.Weekly.START_NULLABLE)
-	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
-	private Date start;
+	private LocalDate start;
 
 	@Column(nullable = Constraints.Weekly.END_NULLABLE)
-	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
-	private Date end;
+	private LocalDate end;
 
 	// ================================== extras ==================================
 	@Column(nullable = false)
@@ -77,19 +73,19 @@ public class Weekly {
 		this.personId = personId;
 	}
 
-	public Date getStart() {
+	public LocalDate getStart() {
 		return this.start;
 	}
 
-	public void setStart(Date start) {
+	public void setStart(LocalDate start) {
 		this.start = start;
 	}
 
-	public Date getEnd() {
+	public LocalDate getEnd() {
 		return this.end;
 	}
 
-	public void setEnd(Date end) {
+	public void setEnd(LocalDate end) {
 		this.end = end;
 	}
 

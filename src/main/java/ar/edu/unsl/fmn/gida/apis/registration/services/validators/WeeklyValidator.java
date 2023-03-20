@@ -29,6 +29,12 @@ public class WeeklyValidator extends Validator<Weekly> {
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Weekly.class.getSimpleName(), "start"));
 
+		if (!(entity.getEnd() != null || Constraints.Weekly.END_NULLABLE))
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(Weekly.class.getSimpleName(), "end"));
+
+
+
 		if (entity.getResponsibilities() == null || entity.getResponsibilities().size() == 0)
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(Weekly.class.getSimpleName(), "responsibilities"));

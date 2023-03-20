@@ -25,35 +25,18 @@ public class WeeklyServiceMessenger extends ServiceMessenger {
 		return ret;
 	}
 
-	public String wrongWeeklyStartDates() {
+	public String overlappedDates() {
 		String ret = null;
 
 		switch (this.getMessenger().getLang()) {
 			case "EN":
-				ret = "cannot insert a new weekly with start date before or equal to the current weekly start date";
+				ret = "cannot insert a new weekly with overlapped dates with other weeklies";
 				break;
 			case "ES":
-				ret = "No es posible insertar un semanario nuevo con fecha de inicio anterior o igual a la fecha de inicio del semanario vigente";
+				ret = "No es posible insertar un semanario nuevo que tenga fechas superpuestas con otros semanarios";
 				break;
 			default:
-				ret = "cannot insert a new weekly with start date before or equal to the current weekly start date";
-		}
-
-		return ret;
-	}
-
-	public String startDateNotqualToCurrentWeeklyEndDate() {
-		String ret = null;
-
-		switch (this.getMessenger().getLang()) {
-			case "EN":
-				ret = "cannot insert a new weekly with start date different to the current weekly end date";
-				break;
-			case "ES":
-				ret = "No es posible insertar un semanario nuevo con fecha de inicio distina a la fecha de fin del semanario vigente";
-				break;
-			default:
-				ret = "cannot insert a new weekly with start date different to the current weekly end date";
+				ret = "cannot insert a new weekly with overlapped dates with other weeklies";
 		}
 
 		return ret;

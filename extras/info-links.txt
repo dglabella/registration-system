@@ -27,7 +27,6 @@ Date params in URI
 https://www.baeldung.com/spring-date-parameters
 
 ===============================================================================================================================
-
 querying unrelated entities jpa
 
 https://www.baeldung.com/jpa-query-unrelated-entities

@@ -1,6 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +30,7 @@ public class Register {
 	// ================================ attributes ================================
 	@Column(nullable = Constraints.Register.TIME_NULLABLE)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-	private Date time;
+	private LocalDateTime time;
 
 	// ================================== extras ==================================
 	@Column(nullable = false)
@@ -59,11 +59,11 @@ public class Register {
 		this.id = id;
 	}
 
-	public Date getTime() {
+	public LocalDateTime getTime() {
 		return this.time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
 

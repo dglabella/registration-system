@@ -19,6 +19,8 @@ public interface WeeklyRepository extends JpaRepository<Weekly, Integer> {
 
 	Optional<Weekly> findByPersonIdAndEndIsNullAndActiveTrue(Integer personId);
 
+	Optional<Weekly> findTopByPersonIdOrderByIdDesc(Integer personId);
+
 	Optional<Weekly> findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(
 			Integer personId, Date date1, Date date2);
 

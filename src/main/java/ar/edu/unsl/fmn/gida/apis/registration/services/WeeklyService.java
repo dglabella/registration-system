@@ -1,5 +1,8 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
@@ -110,37 +114,25 @@ public class WeeklyService {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getWeeklyServiceMessenger().crossDates(), HttpStatus.UNPROCESSABLE_ENTITY);
 
-		Date currentDate = new Date();
-		Optional<Weekly> optional = this.repository
-				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-						currentDate, currentDate);
+		Optional<Weekly> optional = this.repository.findTopByPersonIdOrderByIdDesc(personId);
 
 		if (optional.isPresent()) {
-			Weekly currentWeekly = optional.get();
-			if (requestBody.getStart().compareTo(currentWeekly.getStart()) <= 0)
+			Weekly lastWeekly = optional.get();
+			if (requestBody.getStart().compareTo(lastWeekly.getEnd()) < 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getWeeklyServiceMessenger().wrongWeeklyStartDates(),
+						.getWeeklyServiceMessenger().overlappedDates(),
 						HttpStatus.UNPROCESSABLE_ENTITY);
-
-			if (currentWeekly.getEnd() != null
-					&& requestBody.getStart().compareTo(currentWeekly.getEnd()) != 0) {
-				throw new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
-								.startDateNotqualToCurrentWeeklyEndDate(),
-						HttpStatus.UNPROCESSABLE_ENTITY);
-			} else {
-				currentWeekly.setEnd(requestBody.getStart());
-			}
-
 		}
 
 		Weekly ret = this.repository.save(requestBody);
-		this.responsibilityService.insertAll(ret.getId(), requestBody.getResponsibilities());
+
+		for (Responsibility r : requestBody.getResponsibilities())
+			this.responsibilityService.insert(ret.getId(), r);
 
 		return requestBody;
 	}
 
-	public Weekly closeWeekly(Integer weeklyId, Date end) {
+	public Weekly closeWeekly(Integer weeklyId, LocalDate end) {
 		Weekly ret = this.repository.findByIdAndActiveTrue(weeklyId)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
@@ -159,7 +151,7 @@ public class WeeklyService {
 								.updateNonExistentEntity(Weekly.class.getSimpleName(), weeklyId),
 						HttpStatus.UNPROCESSABLE_ENTITY));
 
-		ret.setEnd(new Date());
+		ret.setEnd(LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault()));
 
 		return ret;
 	}

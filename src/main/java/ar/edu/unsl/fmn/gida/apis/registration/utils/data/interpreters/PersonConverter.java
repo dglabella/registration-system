@@ -3,8 +3,8 @@ package ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 
+@Deprecated
 public class PersonConverter implements Converter<Person> {
-
 	private final String SEPARATOR = "-";
 
 	private final int ID = 0;

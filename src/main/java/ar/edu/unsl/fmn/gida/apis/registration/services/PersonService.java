@@ -15,8 +15,8 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.PersonValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
+import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.QrDataConverter;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.qr.CustomQRGenerator;
 
 @Service
@@ -38,7 +38,7 @@ public class PersonService {
 	private final PersonValidator validator = new PersonValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getPersonValidationMessenger());
 
-	private final Cypher cypher = new QrCypher();
+	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
 	public Person getOne(int id) {
 		Person person = null;
@@ -117,7 +117,7 @@ public class PersonService {
 		Credential credential = null;
 		credential = new Credential();
 		credential.setPersonId(person.getId());
-		credential.setData(this.cypher.encrypt("" + person.getId()));
+		credential.setData(this.converter.stringify(person));
 		credential.setImg(new CustomQRGenerator().generate(credential.getData(), 350, 350));
 
 		// save qr

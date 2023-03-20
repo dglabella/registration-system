@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -196,15 +197,9 @@ public class RegisterService {
 	public Register insert(Check requestBody) {
 		this.validator.validateInsert(requestBody);
 
-		// int personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
+		int personId = Integer.parseInt(this.cypher.decrypt(requestBody.getEncryptedData()));
 		// Optional<Register> optional =
 		// this.repository.findByPersonIdAndCheckOutIsNullAndActiveTrue(personId);
-
-		// if (optional.isPresent()) {
-
-		// } else {
-
-		// }
 
 		return null;
 	}
