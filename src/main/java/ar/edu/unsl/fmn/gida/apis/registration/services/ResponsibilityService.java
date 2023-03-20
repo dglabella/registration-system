@@ -63,7 +63,12 @@ public class ResponsibilityService {
 		return body;
 	}
 
-	public List<Responsibility> deleteAllFromWeekly(Integer weeklyId) {
+	public List<Responsibility> delete(Integer id) {
+		throw new ErrorResponse("delete responsibility operation not available...",
+				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public List<Responsibility> deleteAll(Integer weeklyId) {
 		List<Responsibility> ret = this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId);
 		if (ret.size() == 0)
 			throw new ErrorResponse(

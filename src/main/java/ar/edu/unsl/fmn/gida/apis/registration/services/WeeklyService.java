@@ -154,13 +154,23 @@ public class WeeklyService {
 		return ret;
 	}
 
-	public void delete(int personId) {
+	public void delete(int id) {
+		Weekly weekly = this.repository.findByIdAndActiveTrue(id)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+								.deleteNonExistentEntity(Weekly.class.getSimpleName(), id),
+						HttpStatus.NOT_FOUND));
+
+		weekly.setActive(false);
+	}
+
+	public void deleteAll(int personId) {
 		List<Weekly> weeklies = this.repository.findAllByPersonIdAndActiveTrue(personId);
 
 		if (weeklies.size() > 0)
 			for (int i = 0; i < weeklies.size(); i++) {
 				weeklies.get(i).setActive(false);
-				this.responsibilityService.deleteAllFromWeekly(weeklies.get(i).getId());
+				this.responsibilityService.deleteAll(weeklies.get(i).getId());
 			}
 	}
 }

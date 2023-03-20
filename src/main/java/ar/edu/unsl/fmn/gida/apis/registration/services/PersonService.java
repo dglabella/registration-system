@@ -145,7 +145,6 @@ public class PersonService {
 	}
 
 	public Person delete(int id) {
-
 		Person person =
 				this.repository.findByIdAndActiveTrue(id)
 						.orElseThrow(() -> new ErrorResponse(
@@ -154,8 +153,8 @@ public class PersonService {
 								HttpStatus.NOT_FOUND));
 
 		this.credentialService.delete(person.getId());
-		this.weeklyService.delete(person.getId());
-		this.registerService.delete(person.getId());
+		this.weeklyService.deleteAll(id);
+		this.registerService.deleteAll(person.getId());
 
 		person.setActive(false);
 

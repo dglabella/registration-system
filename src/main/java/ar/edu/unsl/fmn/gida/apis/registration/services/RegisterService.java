@@ -212,7 +212,12 @@ public class RegisterService {
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	public void delete(int personId) {
+	public void delete(int id) {
+		throw new ErrorResponse("delete register operation not available...",
+				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public void deleteAll(int personId) {
 
 		List<Register> registers = this.repository.findAllByPersonIdAndActiveTrue(personId);
 

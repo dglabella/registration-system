@@ -91,7 +91,7 @@ public abstract class ServiceMessenger {
 
 		switch (this.messenger.getLang()) {
 			case "EN":
-				ret = "cannot delete '" + dependentEntityName + "' of  " + independentEntityName
+				ret = "cannot delete '" + dependentEntityName + "' of " + independentEntityName
 						+ "' with id " + independentEntityId
 						+ " because it does not exist. Corrupted DB integrity.";
 				break;
@@ -101,7 +101,7 @@ public abstract class ServiceMessenger {
 						+ " porque no existe. Integridad de BD corrupta.";
 				break;
 			default:
-				ret = "cannot delete '" + dependentEntityName + "' of  " + independentEntityName
+				ret = "cannot delete '" + dependentEntityName + "' of " + independentEntityName
 						+ "' with id " + independentEntityId
 						+ " because it does not exist. Corrupted DB integrity.";
 		}
