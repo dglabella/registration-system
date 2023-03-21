@@ -50,12 +50,12 @@ public class WeeklyController {
 	}
 
 	@PostMapping(value = "/person/{id}")
-	public void postRegister(@PathVariable int id, @RequestBody Weekly requestBody) {
+	public void postWeekly(@PathVariable int id, @RequestBody Weekly requestBody) {
 		this.service.insert(id, requestBody);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public void deleteRegister(@PathVariable int id) {
+	public void deleteWeekly(@PathVariable int id) {
 		this.service.delete(id);
 	}
 }

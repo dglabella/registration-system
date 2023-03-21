@@ -1,10 +1,10 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +36,7 @@ public class RegisterService {
 
 	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
-	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	private final DateTimeFormatter localDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public Register getOne(int id) {
 		Register r = this.repository.findById(id)
@@ -48,14 +48,17 @@ public class RegisterService {
 	}
 
 	public Page<Register> getAll(String from, String to, int page, int size) {
-		Date fromDate = null;
-		Date toDate = null;
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
-					: new Date(Long.MIN_VALUE);
-			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
-					: new Date();
+			fromDate = (from != null && from.trim().length() != 0)
+					? LocalDate.parse(from, this.localDateFormatter)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0)
+					? LocalDate.parse(to, this.localDateFormatter)
+					: LocalDate.now();
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -63,59 +66,66 @@ public class RegisterService {
 						HttpStatus.BAD_REQUEST);
 
 
-		} catch (ParseException exception) {
+		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
+
 		return this.repository.findAllByTimeBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
 				PageRequest.of(page, size));
 	}
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
 			int size) {
-		Date fromDate = null;
-		Date toDate = null;
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
-					: new Date(Long.MIN_VALUE);
-			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
-					: new Date();
+			fromDate = (from != null && from.trim().length() != 0)
+					? LocalDate.parse(from, this.localDateFormatter)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0)
+					? LocalDate.parse(to, this.localDateFormatter)
+					: LocalDate.now();
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
 
-
-		} catch (ParseException exception) {
+		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
+
 		return this.repository.findAllByPersonIdAndActiveTrueAndTimeBetween(personId, fromDate,
 				toDate, PageRequest.of(page, size));
 	}
 
 	public List<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to) {
-		Date fromDate = null;
-		Date toDate = null;
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
-					: new Date(Long.MIN_VALUE);
-			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
-					: new Date();
+			fromDate = (from != null && from.trim().length() != 0)
+					? LocalDate.parse(from, this.localDateFormatter)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0)
+					? LocalDate.parse(to, this.localDateFormatter)
+					: LocalDate.now();
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
 
-		} catch (ParseException exception) {
+		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
@@ -141,22 +151,24 @@ public class RegisterService {
 
 	public Page<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to,
 			int page, int size) {
-		Date fromDate = null;
-		Date toDate = null;
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0) ? this.dateFormatter.parse(from)
-					: new Date(Long.MIN_VALUE);
-			toDate = (to != null && to.trim().length() != 0) ? this.dateFormatter.parse(to)
-					: new Date();
+			fromDate = (from != null && from.trim().length() != 0)
+					? LocalDate.parse(from, this.localDateFormatter)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0)
+					? LocalDate.parse(to, this.localDateFormatter)
+					: LocalDate.now();
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
 
-
-		} catch (ParseException exception) {
+		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),

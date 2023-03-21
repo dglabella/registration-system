@@ -111,7 +111,8 @@ public class WeeklyService {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getWeeklyServiceMessenger().crossDates(), HttpStatus.UNPROCESSABLE_ENTITY);
 
-		Optional<Weekly> optional = this.repository.findTopByPersonIdOrderByIdDesc(personId);
+		Optional<Weekly> optional =
+				this.repository.findTopByPersonIdAndActiveTrueOrderByIdDesc(personId);
 
 		if (optional.isPresent()) {
 			Weekly lastWeekly = optional.get();
@@ -162,6 +163,7 @@ public class WeeklyService {
 						HttpStatus.NOT_FOUND));
 
 		weekly.setActive(false);
+		this.responsibilityService.deleteAll(id);
 	}
 
 	public void deleteAll(int personId) {

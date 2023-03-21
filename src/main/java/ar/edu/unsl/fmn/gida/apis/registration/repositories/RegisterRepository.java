@@ -1,6 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.repositories;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -16,22 +16,24 @@ public interface RegisterRepository extends JpaRepository<Register, Integer> {
 
 	Page<Register> findAll(Pageable pageable);
 
-	List<Register> findAllByTimeBetweenAndActiveTrue(Date from, Date to);
+	List<Register> findAllByTimeBetweenAndActiveTrue(LocalDate from, LocalDate to);
 
-	Page<Register> findAllByTimeBetweenAndActiveTrue(Date from, Date to, Pageable pageable);
+	Page<Register> findAllByTimeBetweenAndActiveTrue(LocalDate from, LocalDate to,
+			Pageable pageable);
 
-	List<Register> findAllByTimeBetweenAndActiveTrueOrderByPersonIdAsc(Date from, Date to);
+	List<Register> findAllByTimeBetweenAndActiveTrueOrderByPersonIdAsc(LocalDate from,
+			LocalDate to);
 
-	Page<Register> findAllByTimeBetweenAndActiveTrueOrderByIdDesc(Date from, Date to,
+	Page<Register> findAllByTimeBetweenAndActiveTrueOrderByIdDesc(LocalDate from, LocalDate to,
 			Pageable pageable);
 
 	List<Register> findAllByPersonIdAndActiveTrue(Integer id);
 
-	List<Register> findAllByPersonIdAndActiveTrueAndTimeBetween(Integer personId, Date from,
-			Date to);
+	List<Register> findAllByPersonIdAndActiveTrueAndTimeBetween(Integer personId, LocalDate from,
+			LocalDate to);
 
-	Page<Register> findAllByPersonIdAndActiveTrueAndTimeBetween(Integer personId, Date from,
-			Date to, Pageable pageable);
+	Page<Register> findAllByPersonIdAndActiveTrueAndTimeBetween(Integer personId, LocalDate from,
+			LocalDate to, Pageable pageable);
 
 	// @Query(value = "SELECT * " + "FROM registers "
 	// + "INNER JOIN persons ON registers.person_fk = persons.id "

@@ -54,8 +54,8 @@ public class RegisterController {
 		return page;
 	}
 
-	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/person/{id}")
-	public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int id,
+	@GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/person/{personId}")
+	public Page<Register> getRegistersFromPersonBetweenDates(@PathVariable int personId,
 			@RequestParam Map<String, String> map) {
 		Page<Register> page = null;
 
@@ -63,18 +63,17 @@ public class RegisterController {
 		String to = map.get("to");
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllFromPerson(personId, from, to, this.DEFAULT_PAGE_NUMBER,
 					this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllFromPerson(id, from, to, Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllFromPerson(personId, from, to,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllFromPerson(id, from, to, this.DEFAULT_PAGE_NUMBER,
+			page = this.service.getAllFromPerson(personId, from, to, this.DEFAULT_PAGE_NUMBER,
 					Integer.parseInt(map.get("size")));
 		} else {
-			System.out.println("ENTRE");
-			page = this.service.getAllFromPerson(id, from, to, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllFromPerson(personId, from, to,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -90,7 +89,6 @@ public class RegisterController {
 		String to = map.get("to");
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			System.out.println("HERE 1");
 			page = this.service.getAllFromPersonByDniApproach(value, from, to,
 					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
@@ -106,20 +104,6 @@ public class RegisterController {
 
 		return page;
 	}
-
-	// @GetMapping(value = Urls.Privileges.responsible + Urls.registers + "/person" + SEARCH_OP
-	// + SEARCH_OP_BY_DNI + "{value}")
-	// public List<Register> getRegistersFromPersonBetweenDatesByDni(@PathVariable String value,
-	// @RequestParam Map<String, String> map) {
-	// List<Register> ret = null;
-
-	// String from = map.get("from");
-	// String to = map.get("to");
-
-	// ret = this.service.getAllFromPersonByDniApproach(value, from, to);
-
-	// return ret;
-	// }
 
 	@PostMapping(value = Urls.Privileges.user + Urls.registers)
 	public void postRegister(@RequestBody Check check) {
