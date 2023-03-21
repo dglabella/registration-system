@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -36,7 +35,8 @@ public class RegisterService {
 
 	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
-	private final DateTimeFormatter localDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private final DateTimeFormatter localDateTimeFormatter =
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	public Register getOne(int id) {
 		Register r = this.repository.findById(id)
@@ -48,21 +48,17 @@ public class RegisterService {
 	}
 
 	public Page<Register> getAll(String from, String to, int page, int size) {
-		LocalDate fromDate = null;
-		LocalDate toDate = null;
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
-							this.localDateFormatter);
+					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0)
-					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
-							this.localDateFormatter);
-
-
+					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
@@ -82,24 +78,22 @@ public class RegisterService {
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
 			int size) {
-		LocalDate fromDate = null;
-		LocalDate toDate = null;
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
-							this.localDateFormatter);
+					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0)
-					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
-							this.localDateFormatter);
-
+					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
+
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
@@ -113,24 +107,22 @@ public class RegisterService {
 	}
 
 	public List<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to) {
-		LocalDate fromDate = null;
-		LocalDate toDate = null;
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
-							this.localDateFormatter);
+					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0)
-					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
-							this.localDateFormatter);
-
+					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
+
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
@@ -158,24 +150,22 @@ public class RegisterService {
 
 	public Page<Register> getAllFromPersonByDniApproach(String dniPattern, String from, String to,
 			int page, int size) {
-		LocalDate fromDate = null;
-		LocalDate toDate = null;
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
-							this.localDateFormatter);
+					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0)
-					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
-							this.localDateFormatter);
-
+					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
+
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
