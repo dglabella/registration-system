@@ -54,11 +54,14 @@ public class RegisterService {
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
 					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.MIN;
+					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
+							this.localDateFormatter);
 
 			toDate = (to != null && to.trim().length() != 0)
 					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.now();
+					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
+							this.localDateFormatter);
+
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -85,11 +88,13 @@ public class RegisterService {
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
 					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.MIN;
+					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
+							this.localDateFormatter);
 
 			toDate = (to != null && to.trim().length() != 0)
 					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.now();
+					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
+							this.localDateFormatter);
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -114,11 +119,13 @@ public class RegisterService {
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
 					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.MIN;
+					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
+							this.localDateFormatter);
 
 			toDate = (to != null && to.trim().length() != 0)
 					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.now();
+					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
+							this.localDateFormatter);
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -157,11 +164,13 @@ public class RegisterService {
 		try {
 			fromDate = (from != null && from.trim().length() != 0)
 					? LocalDate.parse(from, this.localDateFormatter)
-					: LocalDate.MIN;
+					: LocalDate.parse(LocalDate.MIN.format(localDateFormatter),
+							this.localDateFormatter);
 
 			toDate = (to != null && to.trim().length() != 0)
 					? LocalDate.parse(to, this.localDateFormatter)
-					: LocalDate.now();
+					: LocalDate.parse(LocalDate.now().format(localDateFormatter),
+							this.localDateFormatter);
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
