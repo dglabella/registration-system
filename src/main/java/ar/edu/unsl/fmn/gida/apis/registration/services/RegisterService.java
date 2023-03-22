@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,8 @@ public class RegisterService {
 
 	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
-	private final DateTimeFormatter localDateTimeFormatter =
-			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private final String TIME_PART_FROM = "T00:00:00";
+	private final String TIME_PART_TO = "T00:00:00";
 
 	public Register getOne(int id) {
 		Register r = this.repository.findById(id)
@@ -52,18 +51,24 @@ public class RegisterService {
 		LocalDateTime toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDateTime.parse(from, this.localDateTimeFormatter)
-					: LocalDateTime.MIN;
+			if (from != null && from.trim().length() != 0) {
+				from += this.TIME_PART_FROM;
+				fromDate = LocalDateTime.parse(from);
+			} else {
+				fromDate = LocalDateTime.MIN;
+			}
 
-			toDate = (to != null && to.trim().length() != 0)
-					? LocalDateTime.parse(to, this.localDateTimeFormatter)
-					: LocalDateTime.MIN;
+			if (to != null && to.trim().length() != 0) {
+				to += this.TIME_PART_TO;
+				toDate = LocalDateTime.parse(to);
+			} else {
+				toDate = LocalDateTime.now();
+			}
+
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
 						HttpStatus.BAD_REQUEST);
-
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
@@ -71,6 +76,9 @@ public class RegisterService {
 					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
 					HttpStatus.BAD_REQUEST);
 		}
+
+		System.out.println("FROM DATE = " + fromDate);
+		System.out.println(" TO  DATE = " + toDate);
 
 		return this.repository.findAllByTimeBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
 				PageRequest.of(page, size));
@@ -82,12 +90,10 @@ public class RegisterService {
 		LocalDateTime toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDateTime.parse(from)
 					: LocalDateTime.MIN;
 
-			toDate = (to != null && to.trim().length() != 0)
-					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
 					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -111,12 +117,10 @@ public class RegisterService {
 		LocalDateTime toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDateTime.parse(from)
 					: LocalDateTime.MIN;
 
-			toDate = (to != null && to.trim().length() != 0)
-					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
 					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -154,12 +158,10 @@ public class RegisterService {
 		LocalDateTime toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0)
-					? LocalDateTime.parse(from, this.localDateTimeFormatter)
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDateTime.parse(from)
 					: LocalDateTime.MIN;
 
-			toDate = (to != null && to.trim().length() != 0)
-					? LocalDateTime.parse(to, this.localDateTimeFormatter)
+			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
 					: LocalDateTime.MIN;
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
