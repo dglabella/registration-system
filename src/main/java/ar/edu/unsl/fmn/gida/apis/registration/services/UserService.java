@@ -117,6 +117,7 @@ public class UserService implements UserDetailsService {
 						.getUserServiceMessenger().oldPasswordNotMatching(),
 						HttpStatus.UNPROCESSABLE_ENTITY);
 			}
+			requestBody.setPassword(this.encoder.encode(requestBody.getPassword()));
 		} else {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getUserServiceMessenger().oldPasswordIsNull(),
@@ -124,7 +125,6 @@ public class UserService implements UserDetailsService {
 		}
 
 		requestBody.setId(id);
-		requestBody.setPassword(this.encoder.encode(requestBody.getPassword()));
 		requestBody.setEnabled(true); // because user is active = false by default
 		requestBody.setPrivilege(loggedUser.getPrivilege());
 

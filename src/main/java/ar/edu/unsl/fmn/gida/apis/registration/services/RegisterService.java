@@ -29,6 +29,9 @@ public class RegisterService {
 	@Autowired
 	private RegisterRepository repository;
 
+	@Autowired
+	private PersonService personService;
+
 	private final CheckValidator validator = new CheckValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
 
@@ -208,7 +211,7 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public void insert(Check requestBody) {
+	public Person insert(Check requestBody) {
 		this.validator.validateInsert(requestBody);
 		Person person = this.converter.objectify(requestBody.getEncryptedData());
 		Register register = new Register();
@@ -218,6 +221,8 @@ public class RegisterService {
 		register.setTime(LocalDateTime.now());
 
 		this.repository.save(register);
+
+		return this.personService.getOne(person.getId());
 	}
 
 	public Register update(int id, Register requestBody) {

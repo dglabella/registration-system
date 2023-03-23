@@ -14,6 +14,34 @@ public class UserValidator extends Validator<User> {
 
 	@Override
 	public void validateInsert(User entity) {
+		this.validateUpdate(entity);
+		/**
+		 * check nullability
+		 */
+		if (!(this.getExpressionValidator().isPresent(entity.getPassword())
+				|| Constraints.User.PASSWORD_NULLABLE))
+			this.sendError(this.getEntityValidationMessenger()
+					.attributeRequired(User.class.getSimpleName(), "password"));
+
+		/**
+		 * check size
+		 */
+		if (!(Constraints.User.PASSWORD_MIN_LENGHT <= entity.getPassword().length()
+				&& entity.getPassword().length() <= Constraints.User.PASSWORD_MAX_LENGHT))
+			this.sendError(this.getEntityValidationMessenger().invalidAttributeSize(
+					User.class.getSimpleName(), "password", Constraints.User.PASSWORD_MIN_LENGHT,
+					Constraints.User.PASSWORD_MAX_LENGHT));
+
+		/**
+		 * check pattern
+		 */
+		if (!this.getExpressionValidator().isPasswordValid(entity.getPassword()))
+			this.sendError(((UserValidationMessenger) this.getEntityValidationMessenger())
+					.invalidPassword());
+	}
+
+	@Override
+	public void validateUpdate(User entity) {
 		/**
 		 * check nullability
 		 */
@@ -44,11 +72,6 @@ public class UserValidator extends Validator<User> {
 				|| Constraints.User.ACCOUNT_NULLABLE))
 			this.sendError(this.getEntityValidationMessenger()
 					.attributeRequired(User.class.getSimpleName(), "account"));
-
-		if (!(this.getExpressionValidator().isPresent(entity.getPassword())
-				|| Constraints.User.PASSWORD_NULLABLE))
-			this.sendError(this.getEntityValidationMessenger()
-					.attributeRequired(User.class.getSimpleName(), "password"));
 
 		/**
 		 * check size
@@ -83,12 +106,6 @@ public class UserValidator extends Validator<User> {
 					User.class.getSimpleName(), "account", Constraints.User.ACCOUNT_MIN_LENGHT,
 					Constraints.User.ACCOUNT_MAX_LENGHT));
 
-		if (!(Constraints.User.PASSWORD_MIN_LENGHT <= entity.getPassword().length()
-				&& entity.getPassword().length() <= Constraints.User.PASSWORD_MAX_LENGHT))
-			this.sendError(this.getEntityValidationMessenger().invalidAttributeSize(
-					User.class.getSimpleName(), "password", Constraints.User.PASSWORD_MIN_LENGHT,
-					Constraints.User.PASSWORD_MAX_LENGHT));
-
 		/**
 		 * check pattern
 		 */
@@ -112,14 +129,5 @@ public class UserValidator extends Validator<User> {
 		if (!this.getExpressionValidator().isAccountValid(entity.getAccount()))
 			this.sendError(((UserValidationMessenger) this.getEntityValidationMessenger())
 					.invalidAccount());
-
-		if (!this.getExpressionValidator().isPasswordValid(entity.getPassword()))
-			this.sendError(((UserValidationMessenger) this.getEntityValidationMessenger())
-					.invalidPassword());
-	}
-
-	@Override
-	public void validateUpdate(User entity) {
-		this.validateInsert(entity);
 	}
 }
