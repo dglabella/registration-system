@@ -16,6 +16,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
+import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CheckValidator;
@@ -30,7 +31,7 @@ public class RegisterService {
 	private RegisterRepository repository;
 
 	@Autowired
-	private PersonService personService;
+	private PersonRepository personRepository;
 
 	private final CheckValidator validator = new CheckValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
@@ -220,9 +221,13 @@ public class RegisterService {
 		register.setPersonId(person.getId());
 		register.setTime(LocalDateTime.now());
 
-		this.repository.save(register);
+		register = this.repository.save(register);
 
-		return this.personService.getOne(person.getId());
+		return this.personRepository.findById(person.getId())
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getRegisterServiceMessenger()
+								.notFound(Person.class.getSimpleName(), person.getId()),
+						HttpStatus.BAD_REQUEST));
 	}
 
 	public Register update(int id, Register requestBody) {
