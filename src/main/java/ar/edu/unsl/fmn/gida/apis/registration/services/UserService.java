@@ -111,7 +111,7 @@ public class UserService implements UserDetailsService {
 					HttpStatus.CONFLICT);
 		});
 
-		if (requestBody.getOldPassword() != null) {
+		if (requestBody.getOldPassword() != null && requestBody.getPassword() != null) {
 			if (!this.encoder.matches(requestBody.getOldPassword(), loggedUser.getPassword())) {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getUserServiceMessenger().oldPasswordNotMatching(),

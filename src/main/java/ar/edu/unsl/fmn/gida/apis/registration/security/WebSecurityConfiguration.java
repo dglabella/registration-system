@@ -80,7 +80,10 @@ public class WebSecurityConfiguration {
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
-		config.addAllowedOrigin("http://localhost:3000");
+		// config.addAllowedOrigin("http://localhost:3000/");
+		// config.addAllowedOrigin("http://192.168.0.50:3000/");
+		// config.addAllowedOrigin("http://190.107.106.213:3000/");
+		config.addAllowedOrigin("*");
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}

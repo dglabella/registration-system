@@ -116,7 +116,7 @@ public class WeeklyService {
 
 		if (optional.isPresent()) {
 			Weekly lastWeekly = optional.get();
-			if (requestBody.getStart().compareTo(lastWeekly.getEnd()) < 0)
+			if (requestBody.getStart().compareTo(lastWeekly.getEnd()) <= 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getWeeklyServiceMessenger().overlappedDates(),
 						HttpStatus.UNPROCESSABLE_ENTITY);

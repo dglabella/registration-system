@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,16 +32,16 @@ public class RegisterService {
 	@Autowired
 	private RegisterRepository repository;
 
-	@Autowired
-	private PersonRepository personRepository;
-
 	private final CheckValidator validator = new CheckValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
 
 	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
+	// private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
 	private final String TIME_PART_FROM = "T00:00:00";
 	private final String TIME_PART_TO = "T00:00:00";
+	// private final String MIN_LOCALDATETIME = "1973-05-10T00:00:00.850903500";
 
 	public Register getOne(int id) {
 		Register r = this.repository.findById(id)
@@ -59,6 +61,9 @@ public class RegisterService {
 				from += this.TIME_PART_FROM;
 				fromDate = LocalDateTime.parse(from);
 			} else {
+				// fromDate = LocalDateTime.parse(this.MIN_LOCALDATETIME);
+				// fromDate = LocalDateTime.of(1973, 5, 10, 8, 0, 0);
+				// fromDate = LocalDateTime.parse(this.MIN_LOCALDATETIME);
 				fromDate = LocalDateTime.MIN;
 			}
 
@@ -86,6 +91,7 @@ public class RegisterService {
 
 		return this.repository.findAllByTimeBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
 				PageRequest.of(page, size));
+		// return null;
 	}
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
@@ -212,7 +218,7 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public Person insert(Check requestBody) {
+	public Register insert(Check requestBody) {
 		this.validator.validateInsert(requestBody);
 		Person person = this.converter.objectify(requestBody.getEncryptedData());
 		Register register = new Register();
@@ -221,13 +227,7 @@ public class RegisterService {
 		register.setPersonId(person.getId());
 		register.setTime(LocalDateTime.now());
 
-		register = this.repository.save(register);
-
-		return this.personRepository.findById(person.getId())
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getRegisterServiceMessenger()
-								.notFound(Person.class.getSimpleName(), person.getId()),
-						HttpStatus.BAD_REQUEST));
+		return this.repository.save(register);
 	}
 
 	public Register update(int id, Register requestBody) {

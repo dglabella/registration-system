@@ -54,8 +54,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// System.out.println("JwtAuthenticationFilter - successfulAuthentication");
 		// System.out.println();
 
-		System.out.println(
-				"principal class in authentication: " + authResult.getPrincipal().getClass());
+		// System.out.println(
+		// "principal class in authentication: " + authResult.getPrincipal().getClass());
 
 		User user = (User) authResult.getPrincipal();
 		// System.out.println(
