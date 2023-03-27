@@ -1,11 +1,14 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -30,6 +33,10 @@ public class Access {
 	private boolean active = true;
 
 	// ============================ model associations ============================;
+
+	@Transient
+	@JsonManagedReference
+	private List<Register> registers;
 
 	// =============================== constructors ===============================
 	public Access() {}
@@ -61,5 +68,13 @@ public class Access {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public List<Register> getRegisters() {
+		return this.registers;
+	}
+
+	public void setRegisters(List<Register> registers) {
+		this.registers = registers;
 	}
 }

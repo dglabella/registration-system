@@ -63,6 +63,10 @@ public class Person {
 	@JsonManagedReference
 	private Credential credential;
 
+	@Transient
+	@JsonManagedReference
+	private List<Register> registers;
+
 	@Enumerated(EnumType.ORDINAL)
 	@ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
 	private List<Role> roles;
@@ -137,6 +141,14 @@ public class Person {
 
 	public void setCredential(Credential credential) {
 		this.credential = credential;
+	}
+
+	public List<Register> getRegisters() {
+		return this.registers;
+	}
+
+	public void setRegisters(List<Register> registers) {
+		this.registers = registers;
 	}
 
 	public List<Role> getRoles() {

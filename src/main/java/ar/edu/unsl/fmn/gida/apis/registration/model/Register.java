@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -40,11 +40,13 @@ public class Register {
 	@JoinColumn(name = "personId", referencedColumnName = "id", insertable = false,
 			updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	private Person person;
 
 	@JoinColumn(name = "accessId", referencedColumnName = "id", insertable = false,
 			updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	private Access access;
 
 	// =============================== constructors ===============================

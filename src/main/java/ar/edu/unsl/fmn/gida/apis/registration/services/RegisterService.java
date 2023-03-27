@@ -1,7 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
-import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CheckValidator;
@@ -41,7 +38,6 @@ public class RegisterService {
 
 	private final String TIME_PART_FROM = "T00:00:00";
 	private final String TIME_PART_TO = "T00:00:00";
-	// private final String MIN_LOCALDATETIME = "1973-05-10T00:00:00.850903500";
 
 	public Register getOne(int id) {
 		Register r = this.repository.findById(id)
@@ -61,9 +57,6 @@ public class RegisterService {
 				from += this.TIME_PART_FROM;
 				fromDate = LocalDateTime.parse(from);
 			} else {
-				// fromDate = LocalDateTime.parse(this.MIN_LOCALDATETIME);
-				// fromDate = LocalDateTime.of(1973, 5, 10, 8, 0, 0);
-				// fromDate = LocalDateTime.parse(this.MIN_LOCALDATETIME);
 				fromDate = LocalDateTime.MIN;
 			}
 
@@ -86,12 +79,13 @@ public class RegisterService {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		System.out.println("FROM DATE = " + fromDate);
-		System.out.println(" TO  DATE = " + toDate);
+		Page<Register> registersPage =
+				this.repository.findAllByTimeBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
+						PageRequest.of(page, size));
 
-		return this.repository.findAllByTimeBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
-				PageRequest.of(page, size));
-		// return null;
+		System.out.println("Person trae: " + registersPage.getContent().get(0).getPerson());
+
+		return registersPage;
 	}
 
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
@@ -104,7 +98,7 @@ public class RegisterService {
 					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
-					: LocalDateTime.MIN;
+					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
@@ -131,7 +125,7 @@ public class RegisterService {
 					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
-					: LocalDateTime.MIN;
+					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
@@ -172,7 +166,7 @@ public class RegisterService {
 					: LocalDateTime.MIN;
 
 			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
-					: LocalDateTime.MIN;
+					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
@@ -189,6 +183,8 @@ public class RegisterService {
 		List<Register> registers =
 				this.repository.findAllByTimeBetweenAndActiveTrue(fromDate, toDate);
 
+		System.out.println("----------------------el registro getPersonId traee-----------------"
+				+ registers.get(0).getPerson());
 		List<Register> ret = new ArrayList<>();
 
 		for (Register r : registers) {
