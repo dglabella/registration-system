@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
@@ -30,6 +31,7 @@ public class PersonController {
 	private final String SEARCH_OP_BY_DNI = "/dni=";
 	private final String SEARCH_OP_BY_NAME = "/name=";
 	private final String SEARCH_OP_BY_LASTNAME = "/lastname=";
+	private final String SEARCH_OP_BY_DNI_EXACT = "/dniexact=";
 
 	@Autowired
 	private PersonService service;
@@ -122,6 +124,32 @@ public class PersonController {
 		} else {
 			page = this.service.getAllByLastNameApproach(value, Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
+		}
+
+		return page;
+	}
+
+	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI_EXACT + "{value}")
+	public Page<Register> getOneByDniWithRegistersBetweenDates(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
+
+		Page<Register> page = null;
+
+		String from = map.get("from");
+		String to = map.get("to");
+
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
+			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
+		} else {
+			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;

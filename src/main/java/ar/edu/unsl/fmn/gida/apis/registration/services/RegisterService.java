@@ -94,11 +94,20 @@ public class RegisterService {
 		LocalDateTime toDate = null;
 
 		try {
-			fromDate = (from != null && from.trim().length() != 0) ? LocalDateTime.parse(from)
-					: LocalDateTime.MIN;
+			if (from != null && from.trim().length() != 0) {
+				from += this.TIME_PART_FROM;
+				fromDate = LocalDateTime.parse(from);
+			} else {
+				fromDate = LocalDateTime.MIN;
+			}
 
-			toDate = (to != null && to.trim().length() != 0) ? LocalDateTime.parse(to)
-					: LocalDateTime.now();
+			if (to != null && to.trim().length() != 0) {
+				to += this.TIME_PART_TO;
+				toDate = LocalDateTime.parse(to);
+			} else {
+				toDate = LocalDateTime.now();
+			}
+			
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
