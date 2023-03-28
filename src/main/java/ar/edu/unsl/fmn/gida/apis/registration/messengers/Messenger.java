@@ -16,6 +16,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.RegisterServiceMe
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.ResponsibilityServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.UserServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.WeeklyServiceMessenger;
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.WorkAttendanceServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.AccessValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.CredentialValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.DependencyValidationMessenger;
@@ -24,6 +25,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.RegisterVali
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.ResponsibilityValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.UserValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.WeeklyValidationMessenger;
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.WorkAttendanceValidationMessenger;
 
 public class Messenger {
 
@@ -47,6 +49,7 @@ public class Messenger {
 	private ResponsibilityServiceMessenger responsibilityServiceMessenger;
 	private UserServiceMessenger userServiceMessenger;
 	private WeeklyServiceMessenger weeklyServiceMessenger;
+	private WorkAttendanceServiceMessenger workAttendanceServiceMessenger;
 
 	private AccessValidationMessenger accessValidationMessenger;
 	private CredentialValidationMessenger credentialValidationMessenger;
@@ -56,6 +59,7 @@ public class Messenger {
 	private ResponsibilityValidationMessenger responsibilityValidationMessenger;
 	private UserValidationMessenger userValidationMessenger;
 	private WeeklyValidationMessenger weeklyValidationMessenger;
+	private WorkAttendanceValidationMessenger workAttendanceValidationMessenger;
 
 	public Messenger(String lang) {
 		this.lang = lang;
@@ -78,6 +82,7 @@ public class Messenger {
 		this.responsibilityServiceMessenger = new ResponsibilityServiceMessenger(this);
 		this.userServiceMessenger = new UserServiceMessenger(this);
 		this.weeklyServiceMessenger = new WeeklyServiceMessenger(this);
+		this.workAttendanceServiceMessenger = new WorkAttendanceServiceMessenger(this);
 
 		this.accessValidationMessenger = new AccessValidationMessenger(this);
 		this.credentialValidationMessenger = new CredentialValidationMessenger(this);
@@ -87,6 +92,7 @@ public class Messenger {
 		this.responsibilityValidationMessenger = new ResponsibilityValidationMessenger(this);
 		this.userValidationMessenger = new UserValidationMessenger(this);
 		this.weeklyValidationMessenger = new WeeklyValidationMessenger(this);
+		this.workAttendanceValidationMessenger = new WorkAttendanceValidationMessenger(this);
 	}
 
 	public String getLang() {
@@ -157,6 +163,10 @@ public class Messenger {
 		return this.weeklyServiceMessenger;
 	}
 
+	public WorkAttendanceServiceMessenger getWorkAttendanceServiceMessenger() {
+		return this.workAttendanceServiceMessenger;
+	}
+
 	public AccessValidationMessenger getAccessValidationMessenger() {
 		return this.accessValidationMessenger;
 	}
@@ -187,5 +197,9 @@ public class Messenger {
 
 	public WeeklyValidationMessenger getWeeklyValidationMessenger() {
 		return this.weeklyValidationMessenger;
+	}
+
+	public WorkAttendanceValidationMessenger getWorkAttendanceValidationMessenger() {
+		return this.workAttendanceValidationMessenger;
 	}
 }

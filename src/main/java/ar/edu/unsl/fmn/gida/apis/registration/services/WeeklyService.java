@@ -32,6 +32,9 @@ public class WeeklyService {
 	@Autowired
 	private ResponsibilityService responsibilityService;
 
+	@Autowired
+	private WorkAttendanceService workAttendanceService;
+
 	private final WeeklyValidator validator = new WeeklyValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getWeeklyValidationMessenger());
 
@@ -128,6 +131,8 @@ public class WeeklyService {
 			this.responsibilityService.insert(ret.getId(), r);
 
 
+		this.workAttendanceService.createWorkAttendancesForPersonBetweenDates(personId,
+				ret.getStart(), ret.getEnd());
 
 		return requestBody;
 	}

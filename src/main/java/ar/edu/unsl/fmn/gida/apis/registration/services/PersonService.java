@@ -57,9 +57,8 @@ public class PersonService {
 		return person;
 	}
 
-	public Page<Person> getAll(int page, int quantityPerPage) {
-		Page<Person> persons =
-				this.repository.findAllByActiveTrue(PageRequest.of(page, quantityPerPage));
+	public Page<Person> getAll(int page, int size) {
+		Page<Person> persons = this.repository.findAllByActiveTrue(PageRequest.of(page, size));
 
 		for (Person person : persons) {
 			person.setCurrentWeekly(this.weeklyService
