@@ -67,6 +67,10 @@ public class Person {
 	@JsonManagedReference
 	private List<Register> registers;
 
+	@Transient
+	@JsonManagedReference
+	private List<WorkAttendance> workAttendances;
+
 	@Enumerated(EnumType.ORDINAL)
 	@ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
 	private List<Role> roles;
@@ -149,6 +153,14 @@ public class Person {
 
 	public void setRegisters(List<Register> registers) {
 		this.registers = registers;
+	}
+
+	public List<WorkAttendance> getWorkAttendances() {
+		return this.workAttendances;
+	}
+
+	public void setWorkAttendances(List<WorkAttendance> workAttendances) {
+		this.workAttendances = workAttendances;
 	}
 
 	public List<Role> getRoles() {

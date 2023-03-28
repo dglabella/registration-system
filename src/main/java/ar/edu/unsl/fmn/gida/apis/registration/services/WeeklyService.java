@@ -127,6 +127,8 @@ public class WeeklyService {
 		for (Responsibility r : requestBody.getResponsibilities())
 			this.responsibilityService.insert(ret.getId(), r);
 
+
+
 		return requestBody;
 	}
 

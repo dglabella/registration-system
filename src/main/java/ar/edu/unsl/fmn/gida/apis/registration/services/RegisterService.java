@@ -83,8 +83,6 @@ public class RegisterService {
 				this.repository.findAllByTimeBetweenAndActiveTrueOrderByIdDesc(fromDate, toDate,
 						PageRequest.of(page, size));
 
-		System.out.println("Person trae: " + registersPage.getContent().get(0).getPerson());
-
 		return registersPage;
 	}
 
@@ -183,8 +181,6 @@ public class RegisterService {
 		List<Register> registers =
 				this.repository.findAllByTimeBetweenAndActiveTrue(fromDate, toDate);
 
-		System.out.println("----------------------el registro getPersonId traee-----------------"
-				+ registers.get(0).getPerson());
 		List<Register> ret = new ArrayList<>();
 
 		for (Register r : registers) {

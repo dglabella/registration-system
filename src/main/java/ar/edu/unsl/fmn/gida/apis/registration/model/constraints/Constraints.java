@@ -109,4 +109,13 @@ public interface Constraints {
 		boolean ACCESS_ID_NULLABLE = false;
 		boolean ENCRYPTED_DATA_NULLABLE = false;
 	}
+
+	interface WorkAttendance {
+		boolean PERSON_ID_NULLABLE = false;
+
+		boolean DATE_NULLABLE = false;
+		boolean STATE_NULLABLE = false;
+		boolean JUSTIFIED_NULLABLE = false;
+		boolean REASON_NULLABLE = true;
+	}
 }
