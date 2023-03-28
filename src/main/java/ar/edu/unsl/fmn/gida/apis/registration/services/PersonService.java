@@ -11,6 +11,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
@@ -98,6 +99,18 @@ public class PersonService {
 				PageRequest.of(page, size));
 	}
 
+	public Page<Register> getOneByDniWithRegistersBetweenDates(String dni, String from, String to, int page, int size) {
+		Page<Register> registers;
+		Person person = this.repository.findByDniAndActiveTrue(dni)
+				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getPersonServiceMessenger().notFoundByDniErrorMessage(dni),
+						HttpStatus.NOT_FOUND));
+		
+		registers = registerService.getAllFromPerson(person.getId(), from, to, page, size);
+
+		return registers;
+	}
+	
 	public void insert(Person requestBody) {
 		this.validator.validateInsert(requestBody);
 
