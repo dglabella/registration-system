@@ -130,10 +130,10 @@ public class PersonController {
 	}
 
 	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI_EXACT + "{value}")
-	public Page<Register> getOneByDniWithRegistersBetweenDates(@PathVariable String value,
+	public Person getOneByDniWithRegistersBetweenDates(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 
-		Page<Register> page = null;
+		Person page = null;
 
 		String from = map.get("from");
 		String to = map.get("to");

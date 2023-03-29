@@ -100,7 +100,7 @@ public class PersonService {
 				PageRequest.of(page, size));
 	}
 
-	public Page<Register> getOneByDniWithRegistersBetweenDates(String dni, String from, String to, int page, int size) {
+	public Person getOneByDniWithRegistersBetweenDates(String dni, String from, String to, int page, int size) {
 		Page<Register> registers;
 		Person person = this.repository.findByDniAndActiveTrue(dni)
 				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -109,7 +109,9 @@ public class PersonService {
 		
 		registers = registerService.getAllFromPerson(person.getId(), from, to, page, size);
 
-		return registers;
+		person.setRegisters(registers.getContent());
+
+		return person;
 	}
 	
 	public void insert(Person requestBody) {
