@@ -25,8 +25,8 @@ public class WorkAttendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = Constraints.WorkAttendance.PERSON_ID_NULLABLE)
-    private Integer personId;
+    @Column(nullable = Constraints.WorkAttendance.WEEKLY_ID_NULLABLE)
+    private Integer weeklyId;
 
     // ================================ attributes ================================
     @Column(nullable = Constraints.WorkAttendance.DATE_NULLABLE)
@@ -47,19 +47,11 @@ public class WorkAttendance {
     private boolean active = true;
 
     // ============================ model associations ============================
-    @JoinColumn(name = "personId", referencedColumnName = "id", insertable = false,
+    @JoinColumn(name = "weeklyId", referencedColumnName = "id", insertable = false,
             updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    private Person person;
-
-    public Person getPerson() {
-        return this.person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+    private Weekly weekly;
 
     // =============================== constructors ===============================
 
@@ -73,12 +65,12 @@ public class WorkAttendance {
         this.id = id;
     }
 
-    public Integer getPersonId() {
-        return this.personId;
+    public Integer getWeeklyId() {
+        return this.weeklyId;
     }
 
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
+    public void setWeeklyId(Integer weeklyId) {
+        this.weeklyId = weeklyId;
     }
 
     public LocalDate getDate() {
@@ -115,5 +107,13 @@ public class WorkAttendance {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Weekly getWeekly() {
+        return this.weekly;
+    }
+
+    public void setWeekly(Weekly weekly) {
+        this.weekly = weekly;
     }
 }

@@ -12,6 +12,5 @@ public interface WorkAttendanceRepository extends JpaRepository<WorkAttendance, 
 
     Optional<WorkAttendance> findByIdAndActiveTrue(int id);
 
-    Page<WorkAttendance> findAllByPersonIdAndActiveTrue(int personId, Pageable pageable);
-
+    Page<WorkAttendance> findAllByWeeklyIdAndActiveTrue(int weeklyId, Pageable pageable);
 }

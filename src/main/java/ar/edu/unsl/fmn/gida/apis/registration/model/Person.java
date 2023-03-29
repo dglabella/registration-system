@@ -48,8 +48,6 @@ public class Person {
 	private boolean active = true;
 
 	// ============================ model associations ============================
-
-	// @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "dependencyId", referencedColumnName = "id", insertable = false,
 			updatable = false)
@@ -66,10 +64,6 @@ public class Person {
 	@Transient
 	@JsonManagedReference
 	private List<Register> registers;
-
-	@Transient
-	@JsonManagedReference
-	private List<WorkAttendance> workAttendances;
 
 	@Enumerated(EnumType.ORDINAL)
 	@ElementCollection(targetClass = Role.class, fetch = FetchType.LAZY)
@@ -153,14 +147,6 @@ public class Person {
 
 	public void setRegisters(List<Register> registers) {
 		this.registers = registers;
-	}
-
-	public List<WorkAttendance> getWorkAttendances() {
-		return this.workAttendances;
-	}
-
-	public void setWorkAttendances(List<WorkAttendance> workAttendances) {
-		this.workAttendances = workAttendances;
 	}
 
 	public List<Role> getRoles() {

@@ -127,12 +127,13 @@ public class WeeklyService {
 
 		Weekly ret = this.repository.save(requestBody);
 
+		// insert each responsibility
 		for (Responsibility r : requestBody.getResponsibilities())
 			this.responsibilityService.insert(ret.getId(), r);
 
-
-		this.workAttendanceService.createWorkAttendancesForPersonBetweenDates(personId,
-				ret.getStart(), ret.getEnd());
+		// create all work attendances for this weekly
+		this.workAttendanceService.createWorkAttendancesBetweenDates(ret.getId(), ret.getStart(),
+				ret.getEnd(), ret.getResponsibilities());
 
 		return requestBody;
 	}

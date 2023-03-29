@@ -53,6 +53,10 @@ public class Weekly {
 	@JsonManagedReference
 	private List<Responsibility> responsibilities;
 
+	@Transient
+	@JsonManagedReference
+	private List<WorkAttendance> workAttendances;
+
 	// =============================== constructors ===============================
 	public Weekly() {}
 
@@ -107,6 +111,14 @@ public class Weekly {
 
 	public void setResponsibilities(List<Responsibility> responsibilities) {
 		this.responsibilities = responsibilities;
+	}
+
+	public List<WorkAttendance> getWorkAttendances() {
+		return this.workAttendances;
+	}
+
+	public void setWorkAttendances(List<WorkAttendance> workAttendances) {
+		this.workAttendances = workAttendances;
 	}
 
 	@Override

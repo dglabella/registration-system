@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ar.edu.unsl.fmn.gida.apis.registration.enums.Day;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -32,7 +32,7 @@ public class Responsibility {
     // ================================ attributes ================================
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = Constraints.Responsibility.DAY_NULLABLE)
-    private Day day;
+    private DayOfWeek day;
 
     @Column(nullable = Constraints.Responsibility.ENTRANCE_TIME_NULLABLE)
     @JsonFormat(pattern = "HH:mm", shape = JsonFormat.Shape.STRING)
@@ -73,11 +73,11 @@ public class Responsibility {
         this.weeklyId = weeklyId;
     }
 
-    public Day getDay() {
+    public DayOfWeek getDay() {
         return this.day;
     }
 
-    public void setDay(Day day) {
+    public void setDay(DayOfWeek day) {
         this.day = day;
     }
 
