@@ -38,6 +38,16 @@ public class DependencyService {
 
 	public Dependency insert(Dependency requestBody) {
 		this.validator.validateInsert(requestBody);
+
+		this.repository.findByDependencyNameAndActiveTrue(requestBody.getDependencyName())
+				.ifPresent((dependency) -> {
+					throw new ErrorResponse(
+							RegistrationSystemApplication.MESSENGER.getDependencyServiceMessenger()
+									.alreadyExistConstraint(Dependency.class.getSimpleName(),
+											"dependency name", dependency.getDependencyName()),
+							HttpStatus.CONFLICT);
+				});
+
 		return this.repository.save(requestBody);
 	}
 

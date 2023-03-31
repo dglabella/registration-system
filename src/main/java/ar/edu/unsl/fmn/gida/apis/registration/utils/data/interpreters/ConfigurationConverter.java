@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
+import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConversionException;
 
 public class ConfigurationConverter implements Converter<Map<String, String>> {
 
@@ -25,7 +25,7 @@ public class ConfigurationConverter implements Converter<Map<String, String>> {
 	public ConfigurationConverter() {}
 
 	@Override
-	public Map<String, String> objectify(String data) throws ConvertionException {
+	public Map<String, String> objectify(String data) {
 		Map<String, String> ret = new HashMap<>();
 
 		String[] nameProp = new String[2];
@@ -39,7 +39,7 @@ public class ConfigurationConverter implements Converter<Map<String, String>> {
 			if (scanner.hasNextLine()) {
 				line = scanner.nextLine();
 				if (!line.equals(this.TAG_BEGIN)) {
-					throw new ConvertionException(
+					throw new ConversionException(
 							"file \"configs.CONF\": " + this.TAG_BEGIN + " tag is missing");
 				}
 			}
@@ -53,7 +53,7 @@ public class ConfigurationConverter implements Converter<Map<String, String>> {
 					nameProp = line.split(this.ASSIGN_OP);
 					if (nameProp[this.PREFIX] == null
 							|| !nameProp[this.PREFIX].equals(this.PREFIX_NAME_PROP))
-						throw new ConvertionException("file \"configs.CONF\": \""
+						throw new ConversionException("file \"configs.CONF\": \""
 								+ this.PREFIX_NAME_PROP
 								+ "\" prefix expected. It needs to be explicit. Maybe the assign operator ( "
 								+ this.ASSIGN_OP + " ) is missing or in a wrong place");
@@ -62,7 +62,7 @@ public class ConfigurationConverter implements Converter<Map<String, String>> {
 					valueProp = line.split(this.ASSIGN_OP);
 					if (valueProp[this.PREFIX] == null
 							|| !valueProp[this.PREFIX].equals(this.PREFIX_VALUE_PROP))
-						throw new ConvertionException("file \"configs.CONF\": \""
+						throw new ConversionException("file \"configs.CONF\": \""
 								+ this.PREFIX_VALUE_PROP
 								+ "\" prefix expected. It needs to be explicit. Maybe the assign operator ( "
 								+ this.ASSIGN_OP + " ) is missing or in a wrong place");
@@ -70,7 +70,7 @@ public class ConfigurationConverter implements Converter<Map<String, String>> {
 					line = scanner.nextLine(); // should be SEPARATOR_TAG or TAG_END
 					if (line == null
 							|| (!line.equals(this.TAG_SEPARATOR) && !line.equals(this.TAG_END)))
-						throw new ConvertionException("file \"configs.CONF\": \""
+						throw new ConversionException("file \"configs.CONF\": \""
 								+ this.TAG_SEPARATOR + "\" tag is missing (separator tag)");
 
 					// All is ok, then
@@ -84,7 +84,7 @@ public class ConfigurationConverter implements Converter<Map<String, String>> {
 	}
 
 	@Override
-	public String stringify(Map<String, String> object) throws ConvertionException {
+	public String stringify(Map<String, String> object) {
 
 		List<String[]> configLines = new ArrayList<String[]>();
 		object.forEach((k, v) -> configLines.add(new String[] {k, v}));

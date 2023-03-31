@@ -13,4 +13,6 @@ public interface DependencyRepository extends JpaRepository<Dependency, Integer>
 	Optional<Dependency> findByIdAndActiveTrue(Integer id);
 
 	Page<Dependency> findAllByActiveTrue(Pageable pageable);
+
+	Optional<Dependency> findByDependencyNameAndActiveTrue(String dependencyName);
 }

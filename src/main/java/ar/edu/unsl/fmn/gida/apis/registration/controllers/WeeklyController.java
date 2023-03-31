@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
+import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 import ar.edu.unsl.fmn.gida.apis.registration.services.WeeklyService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
@@ -26,6 +27,9 @@ public class WeeklyController {
 
 	@Autowired
 	private WeeklyService service;
+
+	@Autowired
+	private PersonService personService;
 
 	@GetMapping(value = "/person/{id}")
 	public Page<Weekly> getAllWeekliesFromPerson(@PathVariable int id,
@@ -51,7 +55,7 @@ public class WeeklyController {
 
 	@PostMapping(value = "/person/{id}")
 	public void postWeekly(@PathVariable int id, @RequestBody Weekly requestBody) {
-		this.service.insert(id, requestBody);
+		this.service.insert(this.personService.getOne(id).getId(), requestBody);
 	}
 
 	@DeleteMapping(value = "/{id}")

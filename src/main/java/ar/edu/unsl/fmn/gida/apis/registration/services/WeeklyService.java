@@ -1,10 +1,9 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
+import ar.edu.unsl.fmn.gida.apis.registration.enums.WorkAttendanceState;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
+import ar.edu.unsl.fmn.gida.apis.registration.model.WorkAttendance;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WeeklyRepository;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.WeeklyValidator;
@@ -22,9 +24,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.services.validators.WeeklyValidato
 @Service
 @Transactional
 public class WeeklyService {
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	@Autowired
 	private WeeklyRepository repository;
@@ -79,6 +78,21 @@ public class WeeklyService {
 		Optional<Weekly> optional = this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						currentDate, currentDate);
+
+		if (optional.isPresent()) {
+			ret = optional.get();
+			ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
+		}
+
+		return ret;
+	}
+
+	public Weekly getWeeklyWithResponsibilitiesFromPersonContainingDate(int personId,
+			LocalDate localDate) {
+		Weekly ret = null;
+		Optional<Weekly> optional = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						localDate, localDate);
 
 		if (optional.isPresent()) {
 			ret = optional.get();
@@ -182,5 +196,30 @@ public class WeeklyService {
 				weeklies.get(i).setActive(false);
 				this.responsibilityService.deleteAll(weeklies.get(i).getId());
 			}
+	}
+
+	public void workAttendanceCalculation(Weekly weekly, LocalDate date,
+			List<Register> dateRegisters) {
+
+		List<Responsibility> dateResponsibilities = new ArrayList<>();
+		for (Responsibility r : weekly.getResponsibilities())
+			if (r.getDay() == date.getDayOfWeek())
+				dateResponsibilities.add(r);
+
+		WorkAttendance workAttendance =
+				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
+
+
+		// automaton here
+		if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
+			workAttendance.setState(WorkAttendanceState.INCONSISTENT);
+		} else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
+				&& isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
+				&& !isFullAttendance(dateResponsibilities, dateRegisters)) {
+			workAttendance.setState(WorkAttendanceState.PARTIAL);
+		} else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
+				&& isFullAttendance(dateResponsibilities, dateRegisters)) {
+			workAttendance.setState(WorkAttendanceState.FULL);
+		}
 	}
 }

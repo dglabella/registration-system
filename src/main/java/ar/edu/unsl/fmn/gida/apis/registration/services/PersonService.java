@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,9 @@ import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
+import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
+import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CheckValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.services.validators.PersonValidator;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
@@ -36,8 +39,13 @@ public class PersonService {
 	@Autowired
 	private RegisterService registerService;
 
-	private final PersonValidator validator = new PersonValidator(new CustomExpressionValidator(),
-			RegistrationSystemApplication.MESSENGER.getPersonValidationMessenger());
+	private final PersonValidator personValidator =
+			new PersonValidator(new CustomExpressionValidator(),
+					RegistrationSystemApplication.MESSENGER.getPersonValidationMessenger());
+
+	private final CheckValidator checkValidator =
+			new CheckValidator(new CustomExpressionValidator(),
+					RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
 
 	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
@@ -71,10 +79,13 @@ public class PersonService {
 	}
 
 	public Person getOneByDni(String dni) {
-		Person person = this.repository.findByDniAndActiveTrue(dni)
-				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getPersonServiceMessenger().notFoundByDniErrorMessage(dni),
-						HttpStatus.NOT_FOUND));
+		Person person =
+				this.repository.findByDniAndActiveTrue(dni)
+						.orElseThrow(
+								() -> new ErrorResponse(
+										RegistrationSystemApplication.MESSENGER
+												.getPersonServiceMessenger().notFoundByDni(dni),
+										HttpStatus.NOT_FOUND));
 
 		person.setCurrentWeekly(this.weeklyService.getCurrentWeeklyFromPerson(person.getId()));
 
@@ -102,10 +113,13 @@ public class PersonService {
 	public Page<Register> getOneByDniWithRegistersBetweenDates(String dni, String from, String to,
 			int page, int size) {
 		Page<Register> registers;
-		Person person = this.repository.findByDniAndActiveTrue(dni)
-				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getPersonServiceMessenger().notFoundByDniErrorMessage(dni),
-						HttpStatus.NOT_FOUND));
+		Person person =
+				this.repository.findByDniAndActiveTrue(dni)
+						.orElseThrow(
+								() -> new ErrorResponse(
+										RegistrationSystemApplication.MESSENGER
+												.getPersonServiceMessenger().notFoundByDni(dni),
+										HttpStatus.NOT_FOUND));
 
 		registers = registerService.getAllFromPerson(person.getId(), from, to, page, size);
 
@@ -113,7 +127,7 @@ public class PersonService {
 	}
 
 	public void insert(Person requestBody) {
-		this.validator.validateInsert(requestBody);
+		this.personValidator.validateInsert(requestBody);
 
 		this.repository.findByDniAndActiveTrue(requestBody.getDni()).ifPresent(u -> {
 			throw new ErrorResponse(
@@ -126,15 +140,23 @@ public class PersonService {
 		// save person
 		Person person = this.repository.save(requestBody);
 
-		// QR generation code
-		Credential credential = null;
-		credential = new Credential();
-		credential.setPersonId(person.getId());
-		credential.setData(this.converter.stringify(person));
-		credential.setImg(new CustomQRGenerator().generate(credential.getData(), 350, 350));
 
-		// save qr
-		this.credentialService.insert(credential);
+		try {
+			// QR generation code
+			Credential credential = null;
+			credential = new Credential();
+			credential.setPersonId(person.getId());
+			credential.setData(this.converter.stringify(person));
+			credential.setImg(new CustomQRGenerator().generate(credential.getData(), 350, 350));
+
+			// save qr
+			this.credentialService.insert(credential);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getPersonServiceMessenger().qrGenerationFailed(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 		// save weekly if exist
 		if (requestBody.getCurrentWeekly() != null) {
@@ -143,7 +165,7 @@ public class PersonService {
 	}
 
 	public void update(int id, Person requestBody) {
-		this.validator.validateUpdate(requestBody);
+		this.personValidator.validateUpdate(requestBody);
 
 		this.repository.findOneByDniAndIdIsNot(requestBody.getDni(), id).ifPresent(person -> {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -170,6 +192,52 @@ public class PersonService {
 		this.registerService.deleteAll(person.getId());
 
 		person.setActive(false);
+
+		return person;
+	}
+
+	public Person checkQr(Check requestBody) {
+		this.checkValidator.validateInsert(requestBody);
+
+		int personId;
+		try {
+			// decode QR
+			personId = this.converter.objectify(requestBody.getEncryptedData()).getId();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getPersonServiceMessenger().qrDecodeFailed(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		Person person = this.repository.findByIdAndActiveTrue(personId)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
+								.notFound(Person.class.getSimpleName(), personId),
+						HttpStatus.NOT_FOUND));
+
+		// save register
+		LocalDate checkingDate = this.registerService
+				.insert(person.getId(), requestBody.getAccessId()).getTime().toLocalDate();
+
+		Weekly weekly = this.weeklyService
+				.getWeeklyWithResponsibilitiesFromPersonContainingDate(personId, checkingDate);
+
+		ESTE ???????????????????????????????????????????????????
+		List<Register> dateRegisters =
+				this.registerService.getAllFromPersonWithDate(personId, checkingDate);
+		
+		O ESTE ?????????????????????????????????????????????????
+		this.registerService.getAllFromPerson(personId, from, to);
+
+		if (weekly != null) {
+			// do calculation for work attendance
+			this.weeklyService.workAttendanceCalculation(weekly, checkingDate, dateRegisters);
+		}
+		// throw new ErrorResponse(
+		// RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+		// .notFoundByPersonIdAndContainingDate(personId, checkingDate.toString()),
+		// HttpStatus.NOT_FOUND);
 
 		return person;
 	}

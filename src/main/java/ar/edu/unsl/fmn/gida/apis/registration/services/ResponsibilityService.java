@@ -44,6 +44,7 @@ public class ResponsibilityService {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getResponsibilityServiceMessenger().crossTimes(),
 					HttpStatus.UNPROCESSABLE_ENTITY);
+
 		List<Responsibility> responsibilities =
 				this.repository.findAllByWeeklyIdAndDayAndActiveTrue(weeklyId, body.getDay());
 

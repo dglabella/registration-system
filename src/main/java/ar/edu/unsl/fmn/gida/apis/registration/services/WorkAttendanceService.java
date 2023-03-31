@@ -15,8 +15,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
 import ar.edu.unsl.fmn.gida.apis.registration.model.WorkAttendance;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.WorkAttendanceRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.services.validators.WorkAttendanceValidator;
 
 @Service
 @Transactional
@@ -24,11 +22,6 @@ public class WorkAttendanceService {
 
 	@Autowired
 	private WorkAttendanceRepository repository;
-
-	private final WorkAttendanceValidator validator =
-			new WorkAttendanceValidator(new CustomExpressionValidator(),
-					RegistrationSystemApplication.MESSENGER.getPersonValidationMessenger());
-
 
 	public WorkAttendance getOne(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
@@ -66,6 +59,7 @@ public class WorkAttendanceService {
 				workAttendance.setWeeklyId(weeklyId);
 				workAttendance.setDate(localDate);
 				workAttendance.setState(WorkAttendanceState.ABSENT);
+
 				workAttendances.add(workAttendance);
 			}
 
@@ -83,5 +77,13 @@ public class WorkAttendanceService {
 	public void delete(int id) {
 		throw new ErrorResponse("work attendances delete not implemented",
 				HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	public WorkAttendance getOneFromWeeklyIdAndDate(Integer weeklyId, LocalDate date) {
+		return this.repository.findByWeeklyIAndDateAndActiveTrue(weeklyId, date)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWorkAttendanceServiceMessenger()
+								.notFoundByWeeklyIdAndDate(weeklyId, date),
+						HttpStatus.NOT_FOUND));
 	}
 }

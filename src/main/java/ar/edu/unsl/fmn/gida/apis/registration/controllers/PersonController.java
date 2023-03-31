@@ -10,16 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
 @RestController
-@RequestMapping(value = Urls.Privileges.responsible + Urls.persons)
+// @RequestMapping(value = Urls.Privileges.responsible + Urls.persons)
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class PersonController {
 
@@ -42,7 +43,7 @@ public class PersonController {
 		return person;
 	}
 
-	@GetMapping
+	@GetMapping(value = Urls.Privileges.responsible + Urls.persons)
 	public Page<Person> getAllPersons(@RequestParam Map<String, String> map) {
 		Page<Person> page = null;
 
@@ -60,7 +61,8 @@ public class PersonController {
 		return page;
 	}
 
-	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI + "{value}")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.persons + SEARCH_OP + SEARCH_OP_BY_DNI
+			+ "{value}")
 	public Page<Person> getPersonsByDniApproach(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 
@@ -83,7 +85,8 @@ public class PersonController {
 		return page;
 	}
 
-	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_NAME + "{value}")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.persons + SEARCH_OP + SEARCH_OP_BY_NAME
+			+ "{value}")
 	public Page<Person> getPersonsByNameApproach(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 
@@ -106,7 +109,8 @@ public class PersonController {
 		return page;
 	}
 
-	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_LASTNAME + "{value}")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.persons + SEARCH_OP
+			+ SEARCH_OP_BY_LASTNAME + "{value}")
 	public Page<Person> getPersonsByLastnameApproach(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 
@@ -129,7 +133,8 @@ public class PersonController {
 		return page;
 	}
 
-	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI_EXACT + "{value}")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.persons + SEARCH_OP
+			+ SEARCH_OP_BY_DNI_EXACT + "{value}")
 	public Page<Register> getOneByDniWithRegistersBetweenDates(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 
@@ -155,17 +160,22 @@ public class PersonController {
 		return page;
 	}
 
-	@PostMapping
+	@PostMapping(value = Urls.Privileges.responsible + Urls.persons)
 	public void postPerson(@RequestBody Person person) {
 		this.service.insert(person);
 	}
 
-	@PutMapping(value = "/{id}")
+	@PostMapping(value = Urls.Privileges.user + Urls.persons + "/check")
+	public Person checkPersonQr(@RequestBody Check check) {
+		return this.service.checkQr(check);
+	}
+
+	@PutMapping(value = Urls.Privileges.responsible + Urls.persons + "/{id}")
 	public void updatePerson(@PathVariable int id, @RequestBody Person person) {
 		this.service.update(id, person);
 	}
 
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = Urls.Privileges.responsible + Urls.persons + "/{id}")
 	public void deletePerson(@PathVariable int id) {
 		this.service.delete(id);
 	}

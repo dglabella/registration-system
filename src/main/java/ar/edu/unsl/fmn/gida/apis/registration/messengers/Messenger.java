@@ -25,7 +25,6 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.RegisterVali
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.ResponsibilityValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.UserValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.WeeklyValidationMessenger;
-import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.WorkAttendanceValidationMessenger;
 
 public class Messenger {
 
@@ -59,7 +58,6 @@ public class Messenger {
 	private ResponsibilityValidationMessenger responsibilityValidationMessenger;
 	private UserValidationMessenger userValidationMessenger;
 	private WeeklyValidationMessenger weeklyValidationMessenger;
-	private WorkAttendanceValidationMessenger workAttendanceValidationMessenger;
 
 	public Messenger(String lang) {
 		this.lang = lang;
@@ -92,7 +90,6 @@ public class Messenger {
 		this.responsibilityValidationMessenger = new ResponsibilityValidationMessenger(this);
 		this.userValidationMessenger = new UserValidationMessenger(this);
 		this.weeklyValidationMessenger = new WeeklyValidationMessenger(this);
-		this.workAttendanceValidationMessenger = new WorkAttendanceValidationMessenger(this);
 	}
 
 	public String getLang() {
@@ -197,9 +194,5 @@ public class Messenger {
 
 	public WeeklyValidationMessenger getWeeklyValidationMessenger() {
 		return this.weeklyValidationMessenger;
-	}
-
-	public WorkAttendanceValidationMessenger getWorkAttendanceValidationMessenger() {
-		return this.workAttendanceValidationMessenger;
 	}
 }
