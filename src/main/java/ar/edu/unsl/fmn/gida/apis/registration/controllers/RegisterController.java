@@ -1,20 +1,14 @@
 package ar.edu.unsl.fmn.gida.apis.registration.controllers;
 
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
-import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
-import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 import ar.edu.unsl.fmn.gida.apis.registration.services.RegisterService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
@@ -28,14 +22,9 @@ public class RegisterController {
 	private final String SEARCH_OP = "/search";
 
 	private final String SEARCH_OP_BY_DNI = "/dni=";
-	private final String SEARCH_OP_BY_NAME = "/name=";
-	private final String SEARCH_OP_BY_LASTNAME = "/lastname=";
 
 	@Autowired
 	private RegisterService service;
-
-	@Autowired
-	private PersonService personService;
 
 	@GetMapping(value = Urls.Privileges.responsible + Urls.registers)
 	public Page<Register> getRegistersBetweenDates(@RequestParam Map<String, String> map) {
@@ -109,10 +98,5 @@ public class RegisterController {
 		}
 
 		return page;
-	}
-
-	@PostMapping(value = Urls.Privileges.user + Urls.registers)
-	public Person postRegister(@RequestBody Check check) {
-		return this.personService.getOne(this.service.insert(check).getPersonId());
 	}
 }

@@ -1,6 +1,7 @@
-- PERSISTENT CONTEXT BE CARFULL!!!
-
 - check if a body is null in service layer
+
+- check if entity exists in service layers: when is needed and when is not ? 
+(example: inser a weekly for a persons that does not exist)
 
 - http status code errors must be coherent in all services
 

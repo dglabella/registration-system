@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters;
 
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 
 @Deprecated
@@ -15,7 +14,7 @@ public class PersonConverter implements Converter<Person> {
 
 
 	@Override
-	public Person objectify(String data) throws ConvertionException {
+	public Person objectify(String data) {
 		Person person = new Person();
 		String[] splitedData = data.split(SEPARATOR);
 
@@ -27,9 +26,8 @@ public class PersonConverter implements Converter<Person> {
 		return person;
 	}
 
-
 	@Override
-	public String stringify(Person object) throws ConvertionException {
+	public String stringify(Person object) {
 		return object.getId() + SEPARATOR + object.getDni() + SEPARATOR + object.getPersonLastName()
 				+ SEPARATOR + object.getPersonName();
 	}

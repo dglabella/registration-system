@@ -8,6 +8,26 @@ public class WeeklyServiceMessenger extends ServiceMessenger {
 		super(messenger);
 	}
 
+	public String notFoundByPersonIdAndContainingDate(int personId, String date) {
+		String ret = null;
+
+		switch (this.getMessenger().getLang()) {
+			case "EN":
+				ret = "there is no weekly from person " + personId + " that contains the date "
+						+ date;
+				break;
+			case "ES":
+				ret = "no existe semanario de la persona " + personId + " que contenga a la fecha "
+						+ date;
+				break;
+			default:
+				ret = "there is no weekly from person " + personId + " that contains the date "
+						+ date;
+		}
+
+		return ret;
+	}
+
 	public String crossDates() {
 		String ret = null;
 
@@ -16,7 +36,7 @@ public class WeeklyServiceMessenger extends ServiceMessenger {
 				ret = "cannot insert a new weekly with cross dates";
 				break;
 			case "ES":
-				ret = "No es posible insertar un semanario con fechas cruzadas";
+				ret = "no es posible insertar un semanario con fechas cruzadas";
 				break;
 			default:
 				ret = "cannot insert a new weekly with cross dates";

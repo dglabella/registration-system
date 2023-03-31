@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -13,14 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
 import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
-import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.RegisterRepository;
-import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CustomExpressionValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.services.validators.CheckValidator;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
-import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.QrDataConverter;
 
 @Service
 @Transactional
@@ -28,13 +23,6 @@ public class RegisterService {
 
 	@Autowired
 	private RegisterRepository repository;
-
-	private final CheckValidator validator = new CheckValidator(new CustomExpressionValidator(),
-			RegistrationSystemApplication.MESSENGER.getRegisterValidationMessenger());
-
-	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
-
-	// private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private final String TIME_PART_FROM = "T00:00:00";
 	private final String TIME_PART_TO = "T00:00:00";
@@ -86,6 +74,47 @@ public class RegisterService {
 		return registersPage;
 	}
 
+	public List<Register> getAllFromPersonWithDate(int personId, LocalDate date) {
+		return this.repository.findAllByPersonIdAndActiveTrueAndTimeBetween(personId,
+				date.atStartOfDay(), date.plusDays(1).atStartOfDay());
+	}
+
+	public List<Register> getAllFromPerson(Integer personId, String from, String to) {
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
+
+		try {
+			if (from != null && from.trim().length() != 0) {
+				from += this.TIME_PART_FROM;
+				fromDate = LocalDateTime.parse(from);
+			} else {
+				fromDate = LocalDateTime.MIN;
+			}
+
+			if (to != null && to.trim().length() != 0) {
+				to += this.TIME_PART_TO;
+				toDate = LocalDateTime.parse(to);
+			} else {
+				toDate = LocalDateTime.now();
+			}
+
+			if (fromDate.compareTo(toDate) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						HttpStatus.BAD_REQUEST);
+
+
+		} catch (DateTimeParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		return this.repository.findAllByPersonIdAndActiveTrueAndTimeBetween(personId, fromDate,
+				toDate);
+	}
+
 	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
 			int size) {
 		LocalDateTime fromDate = null;
@@ -105,7 +134,7 @@ public class RegisterService {
 			} else {
 				toDate = LocalDateTime.now();
 			}
-			
+
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
@@ -219,16 +248,16 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public Register insert(Check requestBody) {
-		this.validator.validateInsert(requestBody);
-		Person person = this.converter.objectify(requestBody.getEncryptedData());
+	public Register insert(int personId, int accessId) {
 		Register register = new Register();
 
-		register.setAccessId(requestBody.getAccessId());
-		register.setPersonId(person.getId());
+		register.setAccessId(accessId);
+		register.setPersonId(personId);
 		register.setTime(LocalDateTime.now());
 
-		return this.repository.save(register);
+		Register ret = this.repository.save(register);
+
+		return ret;
 	}
 
 	public Register update(int id, Register requestBody) {

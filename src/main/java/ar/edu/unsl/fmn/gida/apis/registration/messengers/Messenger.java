@@ -16,6 +16,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.RegisterServiceMe
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.ResponsibilityServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.UserServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.WeeklyServiceMessenger;
+import ar.edu.unsl.fmn.gida.apis.registration.messengers.logic.WorkAttendanceServiceMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.AccessValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.CredentialValidationMessenger;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.validation.DependencyValidationMessenger;
@@ -47,6 +48,7 @@ public class Messenger {
 	private ResponsibilityServiceMessenger responsibilityServiceMessenger;
 	private UserServiceMessenger userServiceMessenger;
 	private WeeklyServiceMessenger weeklyServiceMessenger;
+	private WorkAttendanceServiceMessenger workAttendanceServiceMessenger;
 
 	private AccessValidationMessenger accessValidationMessenger;
 	private CredentialValidationMessenger credentialValidationMessenger;
@@ -78,6 +80,7 @@ public class Messenger {
 		this.responsibilityServiceMessenger = new ResponsibilityServiceMessenger(this);
 		this.userServiceMessenger = new UserServiceMessenger(this);
 		this.weeklyServiceMessenger = new WeeklyServiceMessenger(this);
+		this.workAttendanceServiceMessenger = new WorkAttendanceServiceMessenger(this);
 
 		this.accessValidationMessenger = new AccessValidationMessenger(this);
 		this.credentialValidationMessenger = new CredentialValidationMessenger(this);
@@ -155,6 +158,10 @@ public class Messenger {
 
 	public WeeklyServiceMessenger getWeeklyServiceMessenger() {
 		return this.weeklyServiceMessenger;
+	}
+
+	public WorkAttendanceServiceMessenger getWorkAttendanceServiceMessenger() {
+		return this.workAttendanceServiceMessenger;
 	}
 
 	public AccessValidationMessenger getAccessValidationMessenger() {

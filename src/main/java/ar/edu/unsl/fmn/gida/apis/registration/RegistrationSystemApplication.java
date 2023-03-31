@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +88,7 @@ public class RegistrationSystemApplication {
 				// ...
 			}
 			dataInputStream.close();
-		} catch (IOException exception) {
+		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -100,6 +99,7 @@ public class RegistrationSystemApplication {
 
 	public static void main(String[] args) {
 		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
+
 		setUpConfigFile();
 		setUpMessagesLang();
 		SpringApplication.run(RegistrationSystemApplication.class, args);

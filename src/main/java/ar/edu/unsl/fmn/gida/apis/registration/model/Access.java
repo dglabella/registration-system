@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ar.edu.unsl.fmn.gida.apis.registration.model.constraints.Constraints;
 
 @Entity
@@ -35,7 +34,6 @@ public class Access {
 	// ============================ model associations ============================;
 
 	@Transient
-	@JsonManagedReference
 	private List<Register> registers;
 
 	// =============================== constructors ===============================

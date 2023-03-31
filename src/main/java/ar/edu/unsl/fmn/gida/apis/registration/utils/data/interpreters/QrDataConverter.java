@@ -1,6 +1,5 @@
 package ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters;
 
-import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ConvertionException;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 
@@ -13,7 +12,7 @@ public class QrDataConverter implements Converter<Person> {
     }
 
     @Override
-    public Person objectify(String data) throws ConvertionException {
+    public Person objectify(String data) {
         Person ret = new Person();
 
         ret.setId(Integer.parseInt(this.cypher.decrypt(data)));
@@ -22,7 +21,8 @@ public class QrDataConverter implements Converter<Person> {
     }
 
     @Override
-    public String stringify(Person object) throws ConvertionException {
+    public String stringify(Person object) {
+
         return this.cypher.encrypt("" + object.getId().intValue());
     }
 }
