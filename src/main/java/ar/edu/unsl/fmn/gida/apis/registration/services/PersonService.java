@@ -109,8 +109,9 @@ public class PersonService {
 		return this.repository.findAllByPersonLastNameContainingAndActiveTrue(string,
 				PageRequest.of(page, size));
 	}
-	public Page<Register> getOneByDniWithRegistersBetweenDates(String dni, String from, String to,
-			int page, int size) {
+
+	public Person getOneByDniWithRegistersBetweenDates(String dni, String from, String to, int page,
+			int size) {
 		Page<Register> registers;
 		Person person =
 				this.repository.findByDniAndActiveTrue(dni)
