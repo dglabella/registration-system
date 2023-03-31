@@ -57,13 +57,13 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().crossDates(),
 						HttpStatus.BAD_REQUEST);
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationError(),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -100,14 +100,14 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().crossDates(),
 						HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationError(),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -137,14 +137,14 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().crossDates(),
 						HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationError(),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -164,14 +164,14 @@ public class RegisterService {
 					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().crossDates(),
 						HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationError(),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -205,14 +205,14 @@ public class RegisterService {
 					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().dateValueSpecificationErrorMessage(),
+						.getRegisterServiceMessenger().crossDates(),
 						HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-					.getRegisterServiceMessenger().dateFormatSpecificationErrorMessage(),
+					.getRegisterServiceMessenger().dateFormatSpecificationError(),
 					HttpStatus.BAD_REQUEST);
 		}
 

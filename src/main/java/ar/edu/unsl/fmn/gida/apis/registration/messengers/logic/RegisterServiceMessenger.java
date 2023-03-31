@@ -8,7 +8,7 @@ public class RegisterServiceMessenger extends ServiceMessenger {
 		super(messenger);
 	}
 
-	public String dateValueSpecificationErrorMessage() {
+	public String crossDates() {
 		String ret = null;
 
 		switch (this.getMessenger().getLang()) {
@@ -24,7 +24,7 @@ public class RegisterServiceMessenger extends ServiceMessenger {
 		return ret;
 	}
 
-	public String dateFormatSpecificationErrorMessage() {
+	public String dateFormatSpecificationError() {
 		String ret = null;
 
 		switch (this.getMessenger().getLang()) {

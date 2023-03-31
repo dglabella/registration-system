@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,64 @@ public class WorkAttendanceService {
 
 	public Page<WorkAttendance> getAllFromPerson(int weeklyId, int page, int size) {
 		return this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId, PageRequest.of(page, size));
+	}
+
+	public List<WorkAttendance> getAllWorkAttendancesBetweenDates(String from, String to){
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
+
+		try {
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
+					: LocalDate.now();
+			if (fromDate.compareTo(toDate) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getWorkAttendanceServiceMessenger().crossDate(),
+						HttpStatus.BAD_REQUEST);
+
+
+		} catch (DateTimeParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWorkAttendanceServiceMessenger().dateFormatSpecificationError(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		List<WorkAttendance> workAttendances =
+				this.repository.findAllByDateBetweenAndActiveTrue(fromDate, toDate);
+		
+		return workAttendances;
+	}
+
+	public Page<WorkAttendance> getAllWorkAttendancesBetweenDates(String from, String to, int page, int size){
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
+
+		try {
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
+					: LocalDate.now();
+			if (fromDate.compareTo(toDate) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getWorkAttendanceServiceMessenger().crossDate(),
+						HttpStatus.BAD_REQUEST);
+
+
+		} catch (DateTimeParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWorkAttendanceServiceMessenger().dateFormatSpecificationError(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		Page<WorkAttendance> workAttendances =
+				this.repository.findAllByDateBetweenAndActiveTrue(fromDate, toDate, PageRequest.of(page, size));
+		
+		return workAttendances;
 	}
 
 	public WorkAttendance insert(WorkAttendance requestBody) {
@@ -80,7 +139,7 @@ public class WorkAttendanceService {
 	}
 
 	public WorkAttendance getOneFromWeeklyIdAndDate(Integer weeklyId, LocalDate date) {
-		return this.repository.findByWeeklyIAndDateAndActiveTrue(weeklyId, date)
+		return this.repository.findByWeeklyIdAndDateAndActiveTrue(weeklyId, date)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getWorkAttendanceServiceMessenger()
 								.notFoundByWeeklyIdAndDate(weeklyId, date),

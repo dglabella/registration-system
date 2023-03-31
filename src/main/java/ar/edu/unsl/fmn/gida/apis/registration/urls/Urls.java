@@ -7,6 +7,7 @@ public interface Urls {
 	String accesses = "/accesses";
 	String dependencies = "/dependencies";
 	String weeklies = "/weeklies";
+	String workAttendances = "/workattendances";
 	String users = "/users";
 	String credentials = "/credentials";
 

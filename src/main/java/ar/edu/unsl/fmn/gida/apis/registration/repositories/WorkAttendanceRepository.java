@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.repositories;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,11 @@ public interface WorkAttendanceRepository extends JpaRepository<WorkAttendance, 
 
     Optional<WorkAttendance> findByIdAndActiveTrue(int id);
 
-    Optional<WorkAttendance> findByWeeklyIAndDateAndActiveTrue(Integer weeklyId, LocalDate date);
+    Optional<WorkAttendance> findByWeeklyIdAndDateAndActiveTrue(Integer weeklyId, LocalDate date);
 
     Page<WorkAttendance> findAllByWeeklyIdAndActiveTrue(int weeklyId, Pageable pageable);
+
+    List<WorkAttendance> findAllByDateBetweenAndActiveTrue(LocalDate from, LocalDate to);
+
+    Page<WorkAttendance> findAllByDateBetweenAndActiveTrue(LocalDate from, LocalDate to, Pageable pageable);
 }
