@@ -209,17 +209,16 @@ public class WeeklyService {
 		WorkAttendance workAttendance =
 				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
 
-
 		// automaton here
-		if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
-			workAttendance.setState(WorkAttendanceState.INCONSISTENT);
-		} else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
-				&& isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
-				&& !isFullAttendance(dateResponsibilities, dateRegisters)) {
-			workAttendance.setState(WorkAttendanceState.PARTIAL);
-		} else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
-				&& isFullAttendance(dateResponsibilities, dateRegisters)) {
-			workAttendance.setState(WorkAttendanceState.FULL);
-		}
+		// if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
+		// workAttendance.setState(WorkAttendanceState.INCONSISTENT);
+		// } else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
+		// && isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
+		// && !isFullAttendance(dateResponsibilities, dateRegisters)) {
+		// workAttendance.setState(WorkAttendanceState.PARTIAL);
+		// } else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
+		// && isFullAttendance(dateResponsibilities, dateRegisters)) {
+		// workAttendance.setState(WorkAttendanceState.FULL);
+		// }
 	}
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
 import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
@@ -136,26 +135,26 @@ public class PersonController {
 	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI_EXACT + "{value}")
 	public Person getOneByDniWithRegistersBetweenDates(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
-		Person page = null;
+		Person person = null;
 
 		String from = map.get("from");
 		String to = map.get("to");
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+			person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
 					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+			person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
 					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+			person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
 					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
+			person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
 					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
-		return page;
+		return person;
 	}
 
 	@PostMapping(value = Urls.Privileges.responsible + Urls.persons)
