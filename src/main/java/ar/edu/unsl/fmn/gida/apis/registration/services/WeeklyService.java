@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -210,15 +211,29 @@ public class WeeklyService {
 				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
 
 		// automaton here
-		// if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
-		// workAttendance.setState(WorkAttendanceState.INCONSISTENT);
-		// } else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
-		// && isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
-		// && !isFullAttendance(dateResponsibilities, dateRegisters)) {
-		// workAttendance.setState(WorkAttendanceState.PARTIAL);
-		// } else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
-		// && isFullAttendance(dateResponsibilities, dateRegisters)) {
-		// workAttendance.setState(WorkAttendanceState.FULL);
-		// }
+		if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
+			workAttendance.setState(WorkAttendanceState.INCONSISTENT);
+		} else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
+				&& isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
+				&& !isFullAttendance(dateResponsibilities, dateRegisters)) {
+			workAttendance.setState(WorkAttendanceState.PARTIAL);
+		} else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
+				&& isFullAttendance(dateResponsibilities, dateRegisters)) {
+			workAttendance.setState(WorkAttendanceState.FULL);
+		}
+	}
+
+	private boolean isFulfilledAtLeastOneResponsibility(List<Responsibility> dateResponsibilities,
+			List<Register> dateRegisters) {
+
+		for (Register register : dateRegisters) {
+
+			for (Responsibility responsibility : dateResponsibilities) {
+				Duration.between(null, null);
+			}
+
+		}
+
+		return false;
 	}
 }
