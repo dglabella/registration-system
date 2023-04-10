@@ -29,4 +29,10 @@ public interface WeeklyRepository extends JpaRepository<Weekly, Integer> {
 	List<Weekly> findAllByPersonIdAndActiveTrue(Integer personId);
 
 	Page<Weekly> findAllByPersonIdAndActiveTrue(Integer personId, PageRequest pageble);
+
+	List<Weekly> findAllByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(
+			Integer personId, LocalDate date1, LocalDate date2);
+
+	Page<Weekly> findAllByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(
+			Integer personId, LocalDate date1, LocalDate date2, PageRequest pageble);
 }

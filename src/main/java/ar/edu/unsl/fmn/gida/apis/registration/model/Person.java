@@ -63,6 +63,10 @@ public class Person {
 
 	@Transient
 	@JsonManagedReference
+	private List<Weekly> weeklies;
+
+	@Transient
+	@JsonManagedReference
 	private List<Register> registers;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -139,6 +143,14 @@ public class Person {
 
 	public void setCredential(Credential credential) {
 		this.credential = credential;
+	}
+
+	public List<Weekly> getWeeklies() {
+		return this.weeklies;
+	}
+
+	public void setWeeklies(List<Weekly> weeklies) {
+		this.weeklies = weeklies;
 	}
 
 	public List<Register> getRegisters() {

@@ -32,11 +32,15 @@ public class WorkAttendanceService {
 						HttpStatus.NOT_FOUND));
 	}
 
-	public Page<WorkAttendance> getAllFromPerson(int weeklyId, int page, int size) {
-		return this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId, PageRequest.of(page, size));
+	public WorkAttendance getOneFromWeeklyIdAndDate(Integer weeklyId, LocalDate date) {
+		return this.repository.findByWeeklyIdAndDateAndActiveTrue(weeklyId, date)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWorkAttendanceServiceMessenger()
+								.notFoundByWeeklyIdAndDate(weeklyId, date),
+						HttpStatus.NOT_FOUND));
 	}
 
-	public List<WorkAttendance> getAllWorkAttendancesBetweenDates(String from, String to){
+	public List<WorkAttendance> getAllBetweenDates(String from, String to) {
 		LocalDate fromDate = null;
 		LocalDate toDate = null;
 
@@ -48,8 +52,7 @@ public class WorkAttendanceService {
 					: LocalDate.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getWorkAttendanceServiceMessenger().crossDate(),
-						HttpStatus.BAD_REQUEST);
+						.getWorkAttendanceServiceMessenger().crossDate(), HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
@@ -61,11 +64,65 @@ public class WorkAttendanceService {
 
 		List<WorkAttendance> workAttendances =
 				this.repository.findAllByDateBetweenAndActiveTrue(fromDate, toDate);
-		
+
 		return workAttendances;
 	}
 
-	public Page<WorkAttendance> getAllWorkAttendancesBetweenDates(String from, String to, int page, int size){
+	public List<WorkAttendance> getAllBetweenDates(LocalDate from, LocalDate to) {
+
+		if (from.compareTo(to) > 0)
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWorkAttendanceServiceMessenger().crossDate(), HttpStatus.BAD_REQUEST);
+
+		List<WorkAttendance> workAttendances =
+				this.repository.findAllByDateBetweenAndActiveTrue(from, to);
+
+		return workAttendances;
+	}
+
+	public Page<WorkAttendance> getAllBetweenDates(LocalDate from, LocalDate to, int page,
+			int size) {
+
+		if (from.compareTo(to) > 0)
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWorkAttendanceServiceMessenger().crossDate(), HttpStatus.BAD_REQUEST);
+
+		Page<WorkAttendance> workAttendances = this.repository
+				.findAllByDateBetweenAndActiveTrue(from, to, PageRequest.of(page, size));
+
+		return workAttendances;
+	}
+
+	public Page<WorkAttendance> getAllBetweenDates(String from, String to, int page, int size) {
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
+
+		try {
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
+					: LocalDate.now();
+
+			if (fromDate.compareTo(toDate) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getWorkAttendanceServiceMessenger().crossDate(), HttpStatus.BAD_REQUEST);
+
+		} catch (DateTimeParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWorkAttendanceServiceMessenger().dateFormatSpecificationError(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		Page<WorkAttendance> workAttendances = this.repository
+				.findAllByDateBetweenAndActiveTrue(fromDate, toDate, PageRequest.of(page, size));
+
+		return workAttendances;
+	}
+
+	public List<WorkAttendance> getAllByStateBetweenDates(WorkAttendanceState state, String from,
+			String to) {
 		LocalDate fromDate = null;
 		LocalDate toDate = null;
 
@@ -77,8 +134,36 @@ public class WorkAttendanceService {
 					: LocalDate.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getWorkAttendanceServiceMessenger().crossDate(),
-						HttpStatus.BAD_REQUEST);
+						.getWorkAttendanceServiceMessenger().crossDate(), HttpStatus.BAD_REQUEST);
+
+
+		} catch (DateTimeParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getWorkAttendanceServiceMessenger().dateFormatSpecificationError(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		List<WorkAttendance> workAttendances =
+				this.repository.findAllByStateAndDateBetweenAndActiveTrue(fromDate, toDate);
+
+		return workAttendances;
+	}
+
+	public Page<WorkAttendance> getAllByStateBetweenDates(WorkAttendanceState state, String from,
+			String to, int page, int size) {
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
+
+		try {
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
+					: LocalDate.MIN;
+
+			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
+					: LocalDate.now();
+			if (fromDate.compareTo(toDate) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getWorkAttendanceServiceMessenger().crossDate(), HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
@@ -89,9 +174,28 @@ public class WorkAttendanceService {
 		}
 
 		Page<WorkAttendance> workAttendances =
-				this.repository.findAllByDateBetweenAndActiveTrue(fromDate, toDate, PageRequest.of(page, size));
-		
+				this.repository.findAllByStateAndDateBetweenAndActiveTrue(fromDate, toDate,
+						PageRequest.of(page, size));
+
+		int lastId = -1;
+		for (WorkAttendance workAttendance : workAttendances.getContent()) {
+			if (workAttendance.getId() != lastId) {
+
+			}
+		}
+
 		return workAttendances;
+	}
+
+	public List<WorkAttendance> getAllFromWeeklyAndBetweenDates(Integer weeklyId, LocalDate from,
+			LocalDate to) {
+		return this.repository.findAllByWeeklyIdAndActiveTrueAndDateBetween(weeklyId, from, to);
+	}
+
+	public List<WorkAttendance> getAllFromWeeklyAndStateBetweenDates(Integer weeklyId,
+			WorkAttendanceState state, LocalDate from, LocalDate to) {
+		return this.repository.findAllByWeeklyIdAndStateAndActiveTrueAndDateBetween(weeklyId, state,
+				from, to);
 	}
 
 	public WorkAttendance insert(WorkAttendance requestBody) {
@@ -136,13 +240,5 @@ public class WorkAttendanceService {
 	public void delete(int id) {
 		throw new ErrorResponse("work attendances delete not implemented",
 				HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	public WorkAttendance getOneFromWeeklyIdAndDate(Integer weeklyId, LocalDate date) {
-		return this.repository.findByWeeklyIdAndDateAndActiveTrue(weeklyId, date)
-				.orElseThrow(() -> new ErrorResponse(
-						RegistrationSystemApplication.MESSENGER.getWorkAttendanceServiceMessenger()
-								.notFoundByWeeklyIdAndDate(weeklyId, date),
-						HttpStatus.NOT_FOUND));
 	}
 }

@@ -37,16 +37,16 @@ public class WeeklyController {
 		Page<Weekly> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllFromPersonWithResponsibilities(id, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllFromPersonEachWithResponsibilities(id,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllFromPersonWithResponsibilities(id,
+			page = this.service.getAllFromPersonEachWithResponsibilities(id,
 					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllFromPersonWithResponsibilities(id, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllFromPersonEachWithResponsibilities(id,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAllFromPersonWithResponsibilities(id,
+			page = this.service.getAllFromPersonEachWithResponsibilities(id,
 					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 

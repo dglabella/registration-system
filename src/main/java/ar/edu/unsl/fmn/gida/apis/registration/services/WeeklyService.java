@@ -64,28 +64,38 @@ public class WeeklyService {
 		return ret;
 	}
 
-	public Weekly getCurrentWeeklyFromPerson(Integer personId) {
-		LocalDate currentDate = LocalDate.now();
+	// public Weekly getCurrentWeeklyFromPerson(Integer personId) {
+	// LocalDate currentDate = LocalDate.now();
 
+	// return this.repository
+	// .findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+	// currentDate, currentDate)
+	// .orElse(null);
+	// }
+
+	// public Weekly getCurrentWeeklyFromPersonWithResponsibilities(Integer personId) {
+	// Weekly ret = null;
+	// LocalDate currentDate = LocalDate.now();
+	// Optional<Weekly> optional = this.repository
+	// .findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+	// currentDate, currentDate);
+
+	// if (optional.isPresent()) {
+	// ret = optional.get();
+	// ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
+	// }
+
+	// return ret;
+	// }
+
+	public Weekly getOneFromPersonContainingDate(int personId, LocalDate now) {
 		return this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-						currentDate, currentDate)
-				.orElse(null);
-	}
-
-	public Weekly getCurrentWeeklyFromPersonWithResponsibilities(Integer personId) {
-		Weekly ret = null;
-		LocalDate currentDate = LocalDate.now();
-		Optional<Weekly> optional = this.repository
-				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-						currentDate, currentDate);
-
-		if (optional.isPresent()) {
-			ret = optional.get();
-			ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
-		}
-
-		return ret;
+						now, now)
+				.orElseThrow(() -> new ErrorResponse(
+						RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
+								.notFoundByPersonIdAndContainingDate(personId, now.toString()),
+						HttpStatus.NOT_FOUND));
 	}
 
 	public Weekly getWeeklyWithResponsibilitiesFromPersonContainingDate(int personId,
@@ -103,12 +113,17 @@ public class WeeklyService {
 		return ret;
 	}
 
+	public List<Weekly> getAllFromPerson(int personId) {
+		return this.repository.findAllByPersonIdAndActiveTrue(personId);
+	}
+
 	public Page<Weekly> getAllFromPerson(int personId, int page, int quantity) {
 		return this.repository.findAllByPersonIdAndActiveTrue(personId,
 				PageRequest.of(page, quantity));
 	}
 
-	public Page<Weekly> getAllFromPersonWithResponsibilities(int personId, int page, int quantity) {
+	public Page<Weekly> getAllFromPersonEachWithResponsibilities(int personId, int page,
+			int quantity) {
 
 		Page<Weekly> weekliesPage = this.repository.findAllByPersonIdAndActiveTrue(personId,
 				PageRequest.of(page, quantity));
@@ -118,6 +133,35 @@ public class WeeklyService {
 		}
 
 		return weekliesPage;
+	}
+
+	public List<Weekly> getAllFromPersonEachWithWorkAttendancesBetweenDates(Integer personId,
+			LocalDate from, LocalDate to) {
+
+		List<Weekly> weeklies = this.repository
+				.findAllByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						from, to);
+
+		for (Weekly w : weeklies) {
+			w.setWorkAttendances(this.workAttendanceService
+					.getAllFromWeeklyAndBetweenDates(w.getId(), from, to));
+		}
+
+		return weeklies;
+	}
+
+	public List<Weekly> getAllFromPersonEachWithWorkAttendancesByStateBetweenDates(Integer personId,
+			WorkAttendanceState state, LocalDate from, LocalDate to) {
+		List<Weekly> weeklies = this.repository
+				.findAllByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						from, to);
+
+		for (Weekly w : weeklies) {
+			w.setWorkAttendances(this.workAttendanceService
+					.getAllFromWeeklyAndStateBetweenDates(w.getId(), state, from, to));
+		}
+
+		return weeklies;
 	}
 
 	public Weekly insert(Integer personId, Weekly requestBody) {
@@ -211,16 +255,17 @@ public class WeeklyService {
 				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
 
 		// automaton here
-		if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
-			workAttendance.setState(WorkAttendanceState.INCONSISTENT);
-		} else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
-				&& isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
-				&& !isFullAttendance(dateResponsibilities, dateRegisters)) {
-			workAttendance.setState(WorkAttendanceState.PARTIAL);
-		} else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
-				&& isFullAttendance(dateResponsibilities, dateRegisters)) {
-			workAttendance.setState(WorkAttendanceState.FULL);
-		}
+
+		// if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
+		// workAttendance.setState(WorkAttendanceState.INCONSISTENT);
+		// } else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
+		// && isFulfilledAtLeastOneResponsibility(dateResponsibilities, dateRegisters)
+		// && !isFullAttendance(dateResponsibilities, dateRegisters)) {
+		// workAttendance.setState(WorkAttendanceState.PARTIAL);
+		// } else if (workAttendance.getState() == WorkAttendanceState.PARTIAL
+		// && isFullAttendance(dateResponsibilities, dateRegisters)) {
+		// workAttendance.setState(WorkAttendanceState.FULL);
+		// }
 	}
 
 	private boolean isFulfilledAtLeastOneResponsibility(List<Responsibility> dateResponsibilities,
@@ -236,4 +281,5 @@ public class WeeklyService {
 
 		return false;
 	}
+
 }

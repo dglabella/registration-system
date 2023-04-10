@@ -43,17 +43,20 @@ public class PersonController {
 	}
 
 	@GetMapping(value = Urls.Privileges.responsible + Urls.persons)
-	public Page<Person> getAllPersons(@RequestParam Map<String, String> map) {
+	public Page<Person> getPersons(@RequestParam Map<String, String> map) {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllEachWithCredential(this.DEFAULT_PAGE_NUMBER,
+					this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAll(Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllEachWithCredential(Integer.parseInt(map.get("page")),
+					this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAll(this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
+			page = this.service.getAllEachWithCredential(this.DEFAULT_PAGE_NUMBER,
+					Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAll(Integer.parseInt(map.get("page")),
+			page = this.service.getAllEachWithCredential(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
 
@@ -68,17 +71,17 @@ public class PersonController {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByDniApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByDniApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllByDniApproach(value, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllByDniApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAllByDniApproach(value, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllByDniApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -92,17 +95,17 @@ public class PersonController {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByPersonNameApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByPersonNameApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllByNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllByPersonNameApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAllByNameApproach(value, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllByPersonNameApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;
@@ -116,23 +119,24 @@ public class PersonController {
 		Page<Person> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByPersonLastNameApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByLastNameApproach(value, Integer.parseInt(map.get("page")),
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllByPersonLastNameApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllByLastNameApproach(value, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllByPersonLastNameApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAllByLastNameApproach(value, Integer.parseInt(map.get("page")),
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllByPersonLastNameApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;
 	}
 
-	@GetMapping(value = SEARCH_OP + SEARCH_OP_BY_DNI_EXACT + "{value}")
+	@GetMapping(value = Urls.Privileges.responsible + Urls.persons + SEARCH_OP
+			+ SEARCH_OP_BY_DNI_EXACT + "{value}")
 	public Person getOneByDniWithRegistersBetweenDates(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 		Person person = null;
