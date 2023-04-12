@@ -64,30 +64,6 @@ public class WeeklyService {
 		return ret;
 	}
 
-	// public Weekly getCurrentWeeklyFromPerson(Integer personId) {
-	// LocalDate currentDate = LocalDate.now();
-
-	// return this.repository
-	// .findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-	// currentDate, currentDate)
-	// .orElse(null);
-	// }
-
-	// public Weekly getCurrentWeeklyFromPersonWithResponsibilities(Integer personId) {
-	// Weekly ret = null;
-	// LocalDate currentDate = LocalDate.now();
-	// Optional<Weekly> optional = this.repository
-	// .findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-	// currentDate, currentDate);
-
-	// if (optional.isPresent()) {
-	// ret = optional.get();
-	// ret.setResponsibilities(this.responsibilityService.getAllByWeeklyId(ret.getId()));
-	// }
-
-	// return ret;
-	// }
-
 	public Weekly getOneFromPersonContainingDate(int personId, LocalDate now) {
 		return this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
@@ -161,8 +137,8 @@ public class WeeklyService {
 			weeklies.add(optionalWeekly.get());
 
 		for (Weekly w : weeklies) {
-			w.setWorkAttendances(this.workAttendanceService
-					.getAllFromWeeklyAndBetweenDates(w.getId(), from, to));
+			w.setWorkAttendances(
+					this.workAttendanceService.getAllFromWeeklyBetweenDates(w.getId(), from, to));
 		}
 
 		return weeklies;
@@ -195,7 +171,7 @@ public class WeeklyService {
 
 		for (Weekly w : weeklies) {
 			w.setWorkAttendances(this.workAttendanceService
-					.getAllFromWeeklyAndStateBetweenDates(w.getId(), state, from, to));
+					.getAllFromWeeklyByStateBetweenDates(w.getId(), state, from, to));
 		}
 
 		return weeklies;

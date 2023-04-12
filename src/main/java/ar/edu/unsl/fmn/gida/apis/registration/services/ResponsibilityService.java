@@ -69,6 +69,47 @@ public class ResponsibilityService {
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
+	// public Responsibility insertAll(Integer weeklyId, List<Responsibility> responsibilities) {
+	// for (Responsibility r : responsibilities) {
+	// this.validator.validateInsert(r);
+
+	// if (r.getEntranceTime().compareTo(r.getDepartureTime()) > 0)
+	// throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+	// .getResponsibilityServiceMessenger().crossTimes(),
+	// HttpStatus.UNPROCESSABLE_ENTITY);
+	// }
+
+	// List<List<Responsibility>> sameDayResponsabilities = new ArrayList<>(7);
+	// for (List<Responsibility> list : sameDayResponsabilities) {
+	// list = new ArrayList<>();
+	// }
+
+	// for (Responsibility r : responsibilities) {
+	// for (Responsibility res : sameDayResponsabilities.get(r.getDay().ordinal())) {
+	// if (res.g) {
+
+	// }
+	// }
+	// sameDayResponsabilities.get(r.getDay().ordinal()).add(r);
+	// }
+
+
+	// if (responsibilities.size() > 0) {
+	// for (Responsibility r : responsibilities) {
+	// if (r.getEntranceTime().compareTo(body.getEntranceTime()) <= 0
+	// && body.getEntranceTime().compareTo(r.getDepartureTime()) < 0)
+	// throw new ErrorResponse(
+	// RegistrationSystemApplication.MESSENGER
+	// .getResponsibilityServiceMessenger().overlappedTimes(),
+	// HttpStatus.CONFLICT);
+	// }
+	// }
+
+	// this.repository.save(body);
+
+	// return body;
+	// }
+
 	public List<Responsibility> deleteAll(Integer weeklyId) {
 		List<Responsibility> ret = this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId);
 		if (ret.size() == 0)

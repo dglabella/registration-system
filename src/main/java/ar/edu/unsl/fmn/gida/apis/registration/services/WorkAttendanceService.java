@@ -155,12 +155,12 @@ public class WorkAttendanceService {
 		throw new ErrorResponse("not implemented yet", HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	public List<WorkAttendance> getAllFromWeeklyAndBetweenDates(Integer weeklyId, LocalDate from,
+	public List<WorkAttendance> getAllFromWeeklyBetweenDates(Integer weeklyId, LocalDate from,
 			LocalDate to) {
 		return this.repository.findAllByWeeklyIdAndActiveTrueAndDateBetween(weeklyId, from, to);
 	}
 
-	public List<WorkAttendance> getAllFromWeeklyAndStateBetweenDates(Integer weeklyId,
+	public List<WorkAttendance> getAllFromWeeklyByStateBetweenDates(Integer weeklyId,
 			WorkAttendanceState state, LocalDate from, LocalDate to) {
 		return this.repository.findAllByWeeklyIdAndStateAndActiveTrueAndDateBetween(weeklyId, state,
 				from, to);

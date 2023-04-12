@@ -2,10 +2,12 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -138,7 +140,7 @@ public class PersonService {
 		return personPage;
 	}
 
-	public Page<Person> getAllByDniApproachOrderByIdAscWithCredential(String dni, int page,
+	public Page<Person> getAllByDniApproachOrderByIdAscEachWithCredential(String dni, int page,
 			int size) {
 		Page<Person> personsPage = this.repository
 				.findAllByDniContainingAndActiveTrueOrderByIdAsc(dni, PageRequest.of(page, size));
@@ -148,6 +150,7 @@ public class PersonService {
 			// person.setCurrentWeekly(this.weeklyService
 			// .getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 		}
+
 		return personsPage;
 	}
 
@@ -177,11 +180,9 @@ public class PersonService {
 		return personsPage;
 	}
 
-	public Person getWithAllWorkAttendancesByDniBetweenDates(String dni, String from, String to) {
-		Optional<Person> optional = this.repository.findByDniAndActiveTrue(dni);
-		Person person =
-				optional.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getPersonServiceMessenger().notFoundByDni(dni), HttpStatus.NOT_FOUND));
+	public Page<Person> getAllEachWithWorkAttendancesBetweenDates(String from, String to, int page,
+			int size) {
+		Page<Person> personsPage = this.repository.findAllByActiveTrue(PageRequest.of(page, size));
 
 		LocalDate fromDate;
 		LocalDate toDate;
@@ -204,16 +205,52 @@ public class PersonService {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		List<Weekly> weeklies =
-				this.weeklyService.getAllFromPersonEachWithWorkAttendancesBetweenDates(
-						person.getId(), fromDate, toDate);
+		for (Person person : personsPage.getContent()) {
+			List<Weekly> weeklies =
+					this.weeklyService.getAllFromPersonEachWithWorkAttendancesBetweenDates(
+							person.getId(), fromDate, toDate);
+			person.setWeeklies(weeklies);
+		}
 
-		person.setWeeklies(weeklies);
-
-		return person;
+		return personsPage;
 	}
 
-	public Person getAllWorkAttendancesByDniBetweenDates(String dni, String from, String to,
+	public Page<Person> getAllEachWithWorkAttendancesByStateBetweenDates(WorkAttendanceState state,
+			String from, String to, int page, int size) {
+		Page<Person> personsPage = this.repository.findAllByActiveTrue(PageRequest.of(page, size));
+
+		LocalDate fromDate;
+		LocalDate toDate;
+
+		try {
+			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
+					: LocalDate.of(1973, 5, 10);
+
+			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
+					: LocalDate.now();
+			if (fromDate.compareTo(toDate) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
+
+
+		} catch (DateTimeParseException exception) {
+			exception.printStackTrace();
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getRegisterServiceMessenger().dateFormatSpecificationError(),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		for (Person person : personsPage.getContent()) {
+			List<Weekly> weeklies =
+					this.weeklyService.getAllFromPersonEachWithWorkAttendancesByStateBetweenDates(
+							person.getId(), state, fromDate, toDate);
+			person.setWeeklies(weeklies);
+		}
+
+		return personsPage;
+	}
+
+	public Page<Person> getByDniWithWorkAttendancesBetweenDates(String dni, String from, String to,
 			int page, int size) {
 		Optional<Person> optional = this.repository.findByDniAndActiveTrue(dni);
 		Person person =
@@ -247,15 +284,13 @@ public class PersonService {
 
 		person.setWeeklies(weeklies);
 
-		return person;
+		List<Person> content = new ArrayList<>(1);
+		content.add(person);
+		return new PageImpl<Person>(content, PageRequest.of(0, 1), 1);
 	}
 
-	public Person getAllByDniBetweenDates(String dni, String from, String to, int page, int size) {
-		throw new ErrorResponse("no implemented yet", HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	public Person getAllWorkAttendanceByDniAndStateBetweenDates(String dni,
-			WorkAttendanceState state, String from, String to) {
+	public Page<Person> getByDniWithWorkAttendanceByStateBetweenDates(String dni,
+			WorkAttendanceState state, String from, String to, int page, int size) {
 		Optional<Person> optional = this.repository.findByDniAndActiveTrue(dni);
 		Person person =
 				optional.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -274,7 +309,6 @@ public class PersonService {
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
 
-
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
@@ -288,12 +322,9 @@ public class PersonService {
 
 		person.setWeeklies(weeklies);
 
-		return person;
-	}
-
-	public Person getAllWorkAttendanceByDniAndStateBetweenDates(String dni,
-			WorkAttendanceState state, String from, String to, int page, int size) {
-		throw new ErrorResponse("no implemented yet", HttpStatus.NOT_IMPLEMENTED);
+		List<Person> content = new ArrayList<>(1);
+		content.add(person);
+		return new PageImpl<Person>(content, PageRequest.of(0, 1), 1);
 	}
 
 	public void insert(Person requestBody) {
@@ -309,7 +340,6 @@ public class PersonService {
 
 		// save person
 		Person person = this.repository.save(requestBody);
-
 
 		try {
 			// QR generation code
