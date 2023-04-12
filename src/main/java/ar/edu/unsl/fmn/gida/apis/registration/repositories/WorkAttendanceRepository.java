@@ -26,11 +26,11 @@ public interface WorkAttendanceRepository extends JpaRepository<WorkAttendance, 
 	Page<WorkAttendance> findAllByDateBetweenAndActiveTrue(LocalDate from, LocalDate to,
 			Pageable pageable);
 
-	List<WorkAttendance> findAllByStateAndDateBetweenAndActiveTrue(LocalDate fromDate,
-			LocalDate toDate);
+	List<WorkAttendance> findAllByStateAndDateBetweenAndActiveTrue(WorkAttendanceState state,
+			LocalDate from, LocalDate to);
 
-	Page<WorkAttendance> findAllByStateAndDateBetweenAndActiveTrue(LocalDate fromDate,
-			LocalDate toDate, Pageable pageable);
+	Page<WorkAttendance> findAllByStateAndDateBetweenAndActiveTrue(WorkAttendanceState state,
+			LocalDate from, LocalDate to, Pageable pageable);
 
 	List<WorkAttendance> findAllByWeeklyIdAndActiveTrueAndDateBetween(Integer weeklyId,
 			LocalDate from, LocalDate to);

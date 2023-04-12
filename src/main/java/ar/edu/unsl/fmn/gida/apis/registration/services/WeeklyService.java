@@ -138,9 +138,27 @@ public class WeeklyService {
 	public List<Weekly> getAllFromPersonEachWithWorkAttendancesBetweenDates(Integer personId,
 			LocalDate from, LocalDate to) {
 
-		List<Weekly> weeklies = this.repository
-				.findAllByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-						from, to);
+		List<Weekly> weeklies = new ArrayList<>();
+
+		// get a weekly that 'from date' is in [start, end]
+		Optional<Weekly> optionalWeekly = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						from, from);
+
+		if (optionalWeekly.isPresent())
+			weeklies.add(optionalWeekly.get());
+
+		weeklies.addAll(this.repository
+				.findAllByPersonIdAndActiveTrueAndStartGreaterThanEqualAndEndLessThanEqual(personId,
+						from, to));
+
+		// get a weekly that 'to date' is in [start, end]
+		optionalWeekly = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						to, to);
+
+		if (optionalWeekly.isPresent())
+			weeklies.add(optionalWeekly.get());
 
 		for (Weekly w : weeklies) {
 			w.setWorkAttendances(this.workAttendanceService
@@ -152,9 +170,28 @@ public class WeeklyService {
 
 	public List<Weekly> getAllFromPersonEachWithWorkAttendancesByStateBetweenDates(Integer personId,
 			WorkAttendanceState state, LocalDate from, LocalDate to) {
-		List<Weekly> weeklies = this.repository
-				.findAllByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
-						from, to);
+		List<Weekly> weeklies = new ArrayList<>();
+
+		// get a weekly that 'from date' is in [start, end]
+		Optional<Weekly> optionalWeekly = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						from, from);
+
+		if (optionalWeekly.isPresent())
+			weeklies.add(optionalWeekly.get());
+
+		weeklies.addAll(this.repository
+				.findAllByPersonIdAndActiveTrueAndStartGreaterThanEqualAndEndLessThanEqual(personId,
+						from, to));
+
+		// get a weekly that 'to date' is in [start, end]
+		optionalWeekly = this.repository
+				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
+						to, to);
+
+		if (optionalWeekly.isPresent())
+			weeklies.add(optionalWeekly.get());
+
 
 		for (Weekly w : weeklies) {
 			w.setWorkAttendances(this.workAttendanceService

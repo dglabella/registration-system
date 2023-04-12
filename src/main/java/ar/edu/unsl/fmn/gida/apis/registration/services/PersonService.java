@@ -88,6 +88,7 @@ public class PersonService {
 										HttpStatus.NOT_FOUND));
 
 		person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+
 		// person.setCurrentWeekly(
 		// this.weeklyService.getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 
@@ -187,7 +188,7 @@ public class PersonService {
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
-					: LocalDate.MIN;
+					: LocalDate.of(1973, 5, 10);
 
 			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
 					: LocalDate.now();
@@ -224,7 +225,7 @@ public class PersonService {
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
-					: LocalDate.MIN;
+					: LocalDate.of(1973, 5, 10);
 
 			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
 					: LocalDate.now();
@@ -265,7 +266,7 @@ public class PersonService {
 
 		try {
 			fromDate = (from != null && from.trim().length() != 0) ? LocalDate.parse(from)
-					: LocalDate.MIN;
+					: LocalDate.of(1973, 5, 10);
 
 			toDate = (to != null && to.trim().length() != 0) ? LocalDate.parse(to)
 					: LocalDate.now();
