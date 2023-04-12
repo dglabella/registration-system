@@ -33,4 +33,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findOneByEmailAndIdIsNot(String email, int id);
 
 	Optional<User> findOneByAccountAndIdIsNot(String account, int id);
+
+	Page<User> findAllByUserNameContainingAndActiveTrue(String lastNamePattern, Pageable pageable);
 }

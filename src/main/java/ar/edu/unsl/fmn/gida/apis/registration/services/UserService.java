@@ -195,4 +195,14 @@ public class UserService implements UserDetailsService {
 						.getUserServiceMessenger().notFoundByAccount(account)));
 		return user;
 	}
+
+	// ---------------------------------- INICIO CRISTIAN
+	// --------------------------------------------------
+	public Page<User> getAllByUserNameApproachEachWithCredential(String name, int page, int size) {
+		Page<User> usersPage = this.repository.findAllByUserNameContainingAndActiveTrue(name,
+				PageRequest.of(page, size));
+		return usersPage;
+	}
+	// ---------------------------------- FIN CRISTIAN
+	// -----------------------------------------------------
 }

@@ -25,8 +25,12 @@ import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class UserController {
+
 	private final int DEFAULT_PAGE_NUMBER = 0;
 	private final int DEFAULT_PAGE_SIZE = 20;
+
+	private final String SEARCH_OP = "/search";
+	private final String SEARCH_OP_BY_NAME = "/name=";
 
 	@Autowired
 	private UserService service;
@@ -57,6 +61,34 @@ public class UserController {
 	public User getUser(@PathVariable String account) {
 		return (User) this.service.loadUserByUsername(account);
 	}
+
+	// ---------------------------------- INICIO CRISTIAN
+	// -----------------------------------------------------
+	@GetMapping(
+			value = Urls.Privileges.user + Urls.users + SEARCH_OP + SEARCH_OP_BY_NAME + "{value}")
+	public Page<User> getUsersByNameApproach(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
+
+		Page<User> page = null;
+
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
+			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
+		} else {
+			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
+		}
+
+		return page;
+	}
+	// ---------------------------------- FIN CRISTIAN
+	// -----------------------------------------------------
 
 	@PostMapping(Urls.Privileges.admin + Urls.signup)
 	public void postUser(@RequestBody User user) {
