@@ -1,5 +1,6 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,46 +70,36 @@ public class ResponsibilityService {
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	// public Responsibility insertAll(Integer weeklyId, List<Responsibility> responsibilities) {
-	// for (Responsibility r : responsibilities) {
-	// this.validator.validateInsert(r);
+	public List<Responsibility> insertAll(Integer weeklyId, List<Responsibility> responsibilities) {
+		for (Responsibility r : responsibilities) {
+			r.setWeeklyId(weeklyId);
+			this.validator.validateInsert(r);
 
-	// if (r.getEntranceTime().compareTo(r.getDepartureTime()) > 0)
-	// throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-	// .getResponsibilityServiceMessenger().crossTimes(),
-	// HttpStatus.UNPROCESSABLE_ENTITY);
-	// }
+			if (r.getEntranceTime().compareTo(r.getDepartureTime()) > 0)
+				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+						.getResponsibilityServiceMessenger().crossTimes(),
+						HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 
-	// List<List<Responsibility>> sameDayResponsabilities = new ArrayList<>(7);
-	// for (List<Responsibility> list : sameDayResponsabilities) {
-	// list = new ArrayList<>();
-	// }
+		List<List<Responsibility>> sameDayResponsabilities = new ArrayList<>(7);
+		for (int i = 0; i < 7; i++)
+			sameDayResponsabilities.add(new ArrayList<>());
 
-	// for (Responsibility r : responsibilities) {
-	// for (Responsibility res : sameDayResponsabilities.get(r.getDay().ordinal())) {
-	// if (res.g) {
+		for (Responsibility r : responsibilities) {
+			for (Responsibility res : sameDayResponsabilities.get(r.getDay().ordinal())) {
+				if (!(r.getDepartureTime().compareTo(res.getEntranceTime()) <= 0
+						|| res.getDepartureTime().compareTo(r.getEntranceTime()) <= 0)) {
+					throw new ErrorResponse(
+							RegistrationSystemApplication.MESSENGER
+									.getResponsibilityServiceMessenger().overlappedTimes(),
+							HttpStatus.CONFLICT);
+				}
+				sameDayResponsabilities.get(r.getDay().ordinal()).add(r);
+			}
+		}
 
-	// }
-	// }
-	// sameDayResponsabilities.get(r.getDay().ordinal()).add(r);
-	// }
-
-
-	// if (responsibilities.size() > 0) {
-	// for (Responsibility r : responsibilities) {
-	// if (r.getEntranceTime().compareTo(body.getEntranceTime()) <= 0
-	// && body.getEntranceTime().compareTo(r.getDepartureTime()) < 0)
-	// throw new ErrorResponse(
-	// RegistrationSystemApplication.MESSENGER
-	// .getResponsibilityServiceMessenger().overlappedTimes(),
-	// HttpStatus.CONFLICT);
-	// }
-	// }
-
-	// this.repository.save(body);
-
-	// return body;
-	// }
+		return this.repository.saveAll(responsibilities);
+	}
 
 	public List<Responsibility> deleteAll(Integer weeklyId) {
 		List<Responsibility> ret = this.repository.findAllByWeeklyIdAndActiveTrue(weeklyId);

@@ -3,7 +3,10 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -186,22 +189,24 @@ public class WeeklyService {
 			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
 					.getWeeklyServiceMessenger().crossDates(), HttpStatus.UNPROCESSABLE_ENTITY);
 
-		Optional<Weekly> optional =
-				this.repository.findTopByPersonIdAndActiveTrueOrderByIdDesc(personId);
+		List<Weekly> weeklies = this.repository.findAllByPersonIdAndActiveTrue(personId);
 
-		if (optional.isPresent()) {
-			Weekly lastWeekly = optional.get();
-			if (requestBody.getStart().compareTo(lastWeekly.getEnd()) <= 0)
-				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getWeeklyServiceMessenger().overlappedDates(),
-						HttpStatus.UNPROCESSABLE_ENTITY);
+		if (weeklies.size() > 0) {
+			for (Weekly w : weeklies) {
+				if (!(requestBody.getEnd().compareTo(w.getStart()) <= 0
+						|| w.getEnd().compareTo(requestBody.getStart()) <= 0)) {
+					throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+							.getWeeklyServiceMessenger().overlappedDates(), HttpStatus.CONFLICT);
+				}
+			}
 		}
 
 		Weekly ret = this.repository.save(requestBody);
 
-		// insert each responsibility
-		for (Responsibility r : requestBody.getResponsibilities())
-			this.responsibilityService.insert(ret.getId(), r);
+		// // insert each responsibility
+		// for (Responsibility r : requestBody.getResponsibilities())
+		// this.responsibilityService.insert(ret.getId(), r);
+		this.responsibilityService.insertAll(ret.getId(), ret.getResponsibilities());
 
 		// create all work attendances for this weekly
 		this.workAttendanceService.createWorkAttendancesBetweenDates(ret.getId(), ret.getStart(),
@@ -267,7 +272,7 @@ public class WeeklyService {
 		WorkAttendance workAttendance =
 				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
 
-		// automaton here
+		// // automaton here
 
 		// if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
 		// workAttendance.setState(WorkAttendanceState.INCONSISTENT);
@@ -281,18 +286,92 @@ public class WeeklyService {
 		// }
 	}
 
-	private boolean isFulfilledAtLeastOneResponsibility(List<Responsibility> dateResponsibilities,
-			List<Register> dateRegisters) {
+	// private boolean isFulfilledAtLeastOneResponsibility(List<Responsibility>
+	// dateResponsibilities,
+	// List<Register> dateRegisters) {
 
-		for (Register register : dateRegisters) {
+	// Map<Integer, Integer> map = new HashMap<>();
 
-			for (Responsibility responsibility : dateResponsibilities) {
-				Duration.between(null, null);
+
+	// for (Register register : dateRegisters) {
+	// long min = Long.MAX_VALUE;
+	// for (Responsibility responsibility : dateResponsibilities) {
+	// long minDifference = Math.abs(Math.min(
+	// Duration.between(responsibility.getEntranceTime(), register.getTime())
+	// .getSeconds(),
+	// Duration.between(responsibility.getDepartureTime(), register.getTime())
+	// .getSeconds()));
+
+	// if (min > minDifference) {
+
+	// }
+	// }
+
+	// }
+
+	// return false;
+	// }
+
+	public static boolean isFulfilledAtLeastOneResponsibilityCRIS(
+			List<Responsibility> dateResponsibilities, List<Register> dateRegisters,
+			int tolerance) {
+
+		ListIterator<Register> iteratorRegister = dateRegisters.listIterator();
+		ListIterator<Responsibility> iteratorResponsability = dateResponsibilities.listIterator();
+		HashMap<Integer, boolean[]> checkResponsabilities = new HashMap<Integer, boolean[]>();
+
+		while (iteratorResponsability.hasNext()) {
+			checkResponsabilities.put(iteratorResponsability.next().getId(), new boolean[2]);
+		}
+
+		Register register = null;
+		while (iteratorRegister.hasNext()) {
+			register = iteratorRegister.next();
+			iteratorResponsability = dateResponsibilities.listIterator();
+
+			Responsibility responsability = null;
+
+			while (iteratorResponsability.hasNext()) {
+				responsability = iteratorResponsability.next();
+
+				// System.out.println("register check " + register.getTime());
+				// System.out.println("responsability entrance" + responsability.getEntranceTime());
+				// System.out.println("responsability departure" +
+				// responsability.getDepartureTime());
+				// System.out.println("DURATION = "
+				// + Duration.between(responsability.getEntranceTime(), register.getTime())
+				// .getSeconds());
+
+				long diffEntrance = Math
+						.abs(Duration.between(responsability.getEntranceTime(), register.getTime())
+								.getSeconds());
+
+				long diffDeparture = Math
+						.abs(Duration.between(responsability.getDepartureTime(), register.getTime())
+								.getSeconds());
+
+				if (diffEntrance < diffDeparture) {
+
+					if (tolerance >= diffEntrance) {
+						checkResponsabilities.get(responsability.getId())[0] = true;
+					}
+
+				} else {
+
+					if (tolerance >= diffDeparture) {
+						checkResponsabilities.get(responsability.getId())[1] = true;
+					}
+				}
+				// System.out.println("min value = " + minValue);
 			}
+		}
 
+		for (Integer registroId : checkResponsabilities.keySet()) {
+			if (checkResponsabilities.get(registroId)[0]
+					&& checkResponsabilities.get(registroId)[1])
+				return true;
 		}
 
 		return false;
 	}
-
 }
