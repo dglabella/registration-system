@@ -273,7 +273,6 @@ public class WeeklyService {
 				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
 
 		// // automaton here
-
 		// if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
 		// workAttendance.setState(WorkAttendanceState.INCONSISTENT);
 		// } else if (workAttendance.getState() == WorkAttendanceState.INCONSISTENT
@@ -286,33 +285,7 @@ public class WeeklyService {
 		// }
 	}
 
-	// private boolean isFulfilledAtLeastOneResponsibility(List<Responsibility>
-	// dateResponsibilities,
-	// List<Register> dateRegisters) {
-
-	// Map<Integer, Integer> map = new HashMap<>();
-
-
-	// for (Register register : dateRegisters) {
-	// long min = Long.MAX_VALUE;
-	// for (Responsibility responsibility : dateResponsibilities) {
-	// long minDifference = Math.abs(Math.min(
-	// Duration.between(responsibility.getEntranceTime(), register.getTime())
-	// .getSeconds(),
-	// Duration.between(responsibility.getDepartureTime(), register.getTime())
-	// .getSeconds()));
-
-	// if (min > minDifference) {
-
-	// }
-	// }
-
-	// }
-
-	// return false;
-	// }
-
-	public static boolean isFulfilledAtLeastOneResponsibilityCRIS(
+	public WorkAttendanceState isFulfilledAtLeastOneResponsibility(
 			List<Responsibility> dateResponsibilities, List<Register> dateRegisters,
 			int tolerance) {
 
@@ -334,14 +307,6 @@ public class WeeklyService {
 			while (iteratorResponsability.hasNext()) {
 				responsability = iteratorResponsability.next();
 
-				// System.out.println("register check " + register.getTime());
-				// System.out.println("responsability entrance" + responsability.getEntranceTime());
-				// System.out.println("responsability departure" +
-				// responsability.getDepartureTime());
-				// System.out.println("DURATION = "
-				// + Duration.between(responsability.getEntranceTime(), register.getTime())
-				// .getSeconds());
-
 				long diffEntrance = Math
 						.abs(Duration.between(responsability.getEntranceTime(), register.getTime())
 								.getSeconds());
@@ -362,16 +327,25 @@ public class WeeklyService {
 						checkResponsabilities.get(responsability.getId())[1] = true;
 					}
 				}
-				// System.out.println("min value = " + minValue);
 			}
 		}
 
+		int count = 0;
 		for (Integer registroId : checkResponsabilities.keySet()) {
 			if (checkResponsabilities.get(registroId)[0]
 					&& checkResponsabilities.get(registroId)[1])
-				return true;
+				count++;
 		}
 
-		return false;
+		WorkAttendanceState ret = WorkAttendanceState.ABSENT;
+		if (count == dateResponsibilities.size()) {
+			ret = WorkAttendanceState.FULL;
+		} else if (count > 0) {
+			ret = WorkAttendanceState.PARTIAL;
+		} else if (dateRegisters.size() > 0) {
+			ret = WorkAttendanceState.INCONSISTENT;
+		}
+
+		return ret;
 	}
 }

@@ -106,14 +106,7 @@ public class RegistrationSystemApplication {
 		MESSENGER = new Messenger(CONFIGURATION.get(Configuration.NAME_LANG));
 	}
 
-	public static void main(String[] args) {
-		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
-
-		// setUpConfigFile();
-		// setUpMessagesLang();
-		// SpringApplication.run(RegistrationSystemApplication.class, args);
-
-
+	private static void workAttendanceTest() {
 		List<Responsibility> dateResponsibilities = new ArrayList<>();
 		List<Register> dateRegisters = new ArrayList<>();
 
@@ -146,17 +139,40 @@ public class RegistrationSystemApplication {
 
 		Register reg2 = new Register();
 		reg2.setId(5563);
-		reg2.setTime(LocalDateTime.of(2023, 4, 14, 12, 20, 0));
+		reg2.setTime(LocalDateTime.of(2023, 4, 14, 10, 20, 0));
 		dateRegisters.add(reg2);
+
+		Register reg5 = new Register();
+		reg5.setId(6998);
+		reg5.setTime(LocalDateTime.of(2023, 4, 14, 10, 48, 45));
+		dateRegisters.add(reg5);
+
+		Register reg6 = new Register();
+		reg6.setId(6682);
+		reg6.setTime(LocalDateTime.of(2023, 4, 14, 12, 59, 0));
+		dateRegisters.add(reg6);
 
 		Register reg3 = new Register();
 		reg3.setId(5595);
-		reg3.setTime(LocalDateTime.of(2023, 4, 14, 17, 16, 26));
+		reg3.setTime(LocalDateTime.of(2023, 4, 14, 16, 16, 26));
 		dateRegisters.add(reg3);
 
-		System.out.println("hay al menos una responsabilidad finalizada? "
-				+ WeeklyService.isFulfilledAtLeastOneResponsibilityCRIS(dateResponsibilities,
-						dateRegisters, 1800));
+		Register reg4 = new Register();
+		reg4.setId(5785);
+		reg4.setTime(LocalDateTime.of(2023, 4, 14, 18, 16, 26));
+		dateRegisters.add(reg4);
+
+		// System.out.println("hay al menos una responsabilidad finalizada? "
+		// + WeeklyService.isFulfilledAtLeastOneResponsibilityCRIS(dateResponsibilities,
+		// dateRegisters, 1800));
+	}
+
+	public static void main(String[] args) {
+		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
+
+		setUpConfigFile();
+		setUpMessagesLang();
+		SpringApplication.run(RegistrationSystemApplication.class, args);
 	}
 
 	/*
