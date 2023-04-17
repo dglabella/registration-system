@@ -41,7 +41,7 @@ public class WeeklyService {
 	private final WeeklyValidator validator = new WeeklyValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getWeeklyValidationMessenger());
 
-	public Weekly getOne(int id) {
+	public Weekly get(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(
 						() -> new ErrorResponse(
@@ -50,7 +50,7 @@ public class WeeklyService {
 								HttpStatus.NOT_FOUND));
 	}
 
-	public Weekly getOneWithResponsibilities(int id) {
+	public Weekly getWithResponsibilities(int id) {
 		Weekly ret = null;
 		Optional<Weekly> optional = this.repository.findByIdAndActiveTrue(id);
 
@@ -67,7 +67,7 @@ public class WeeklyService {
 		return ret;
 	}
 
-	public Weekly getOneFromPersonContainingDate(int personId, LocalDate now) {
+	public Weekly getFromPersonContainingDate(int personId, LocalDate now) {
 		return this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						now, now)
@@ -77,7 +77,7 @@ public class WeeklyService {
 						HttpStatus.NOT_FOUND));
 	}
 
-	public Weekly getWeeklyWithResponsibilitiesFromPersonContainingDate(int personId,
+	public Weekly getFromPersonWithResponsibilitiesContainingDate(int personId,
 			LocalDate localDate) {
 		Weekly ret = null;
 		Optional<Weekly> optional = this.repository
@@ -266,11 +266,15 @@ public class WeeklyService {
 
 		List<Responsibility> dateResponsibilities = new ArrayList<>();
 		for (Responsibility r : weekly.getResponsibilities())
-			if (r.getDay() == date.getDayOfWeek())
+			if (r.getDay().ordinal() == date.getDayOfWeek().ordinal())
 				dateResponsibilities.add(r);
 
 		WorkAttendance workAttendance =
-				this.workAttendanceService.getOneFromWeeklyIdAndDate(weekly.getId(), date);
+				this.workAttendanceService.getFromWeeklyIdAndDate(weekly.getId(), date);
+
+		workAttendance.setState(
+				this.calculateWorkAttendanceState(dateResponsibilities, dateRegisters, 1800));
+
 
 		// // automaton here
 		// if (workAttendance.getState() == WorkAttendanceState.ABSENT) {
@@ -285,7 +289,7 @@ public class WeeklyService {
 		// }
 	}
 
-	public WorkAttendanceState isFulfilledAtLeastOneResponsibility(
+	public WorkAttendanceState calculateWorkAttendanceState(
 			List<Responsibility> dateResponsibilities, List<Register> dateRegisters,
 			int tolerance) {
 

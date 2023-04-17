@@ -163,7 +163,7 @@ public class RegistrationSystemApplication {
 		dateRegisters.add(reg4);
 
 		// System.out.println("hay al menos una responsabilidad finalizada? "
-		// + WeeklyService.isFulfilledAtLeastOneResponsibilityCRIS(dateResponsibilities,
+		// + WeeklyService.calculateWorkAttendanceState(dateResponsibilities,
 		// dateRegisters, 1800));
 	}
 

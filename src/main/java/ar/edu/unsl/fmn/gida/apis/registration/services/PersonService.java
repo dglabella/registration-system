@@ -74,7 +74,7 @@ public class PersonService {
 		person.setCredential(this.credentialService.getOneByPersonId(id));
 
 		Weekly currentWeekly =
-				this.weeklyService.getOneFromPersonContainingDate(person.getId(), LocalDate.now());
+				this.weeklyService.getFromPersonContainingDate(person.getId(), LocalDate.now());
 		person.setCurrentWeekly(currentWeekly);
 
 		return person;
@@ -420,14 +420,17 @@ public class PersonService {
 		LocalDate checkingDate = this.registerService
 				.insert(person.getId(), requestBody.getAccessId()).getTime().toLocalDate();
 
-		Weekly weekly = this.weeklyService
-				.getWeeklyWithResponsibilitiesFromPersonContainingDate(personId, checkingDate);
+		// Weekly weekly =
+		// this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
+		// checkingDate);
+
+		Weekly weekly = this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
+				requestBody.getTime().toLocalDate());
 
 		List<Register> dateRegisters =
 				this.registerService.getAllFromPersonWithDate(personId, checkingDate);
 
 		// this.registerService.getAllFromPerson(personId, from, to);
-
 		if (weekly != null) {
 			// do calculation for work attendance
 			this.weeklyService.workAttendanceCalculation(weekly, checkingDate, dateRegisters);

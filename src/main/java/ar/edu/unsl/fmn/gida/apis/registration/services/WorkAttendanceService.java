@@ -32,7 +32,7 @@ public class WorkAttendanceService {
 						HttpStatus.NOT_FOUND));
 	}
 
-	public WorkAttendance getOneFromWeeklyIdAndDate(Integer weeklyId, LocalDate date) {
+	public WorkAttendance getFromWeeklyIdAndDate(Integer weeklyId, LocalDate date) {
 		return this.repository.findByWeeklyIdAndDateAndActiveTrue(weeklyId, date)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getWorkAttendanceServiceMessenger()
