@@ -149,32 +149,6 @@ public class PersonController {
 		return page;
 	}
 
-	// @GetMapping(value = Urls.Privileges.responsible + Urls.persons + SEARCH_OP
-	// + SEARCH_OP_BY_DNI_EXACT + "{value}")
-	// public Person getOneByDniWithRegistersBetweenDates(@PathVariable String value,
-	// @RequestParam Map<String, String> map) {
-	// Person person = null;
-
-	// String from = map.get("from");
-	// String to = map.get("to");
-
-	// if (!map.containsKey("page") && !map.containsKey("size")) {
-	// person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
-	// this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
-	// } else if (map.containsKey("page") && !map.containsKey("size")) {
-	// person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
-	// Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
-	// } else if (!map.containsKey("page") && map.containsKey("size")) {
-	// person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
-	// this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
-	// } else {
-	// person = this.service.getOneByDniWithRegistersBetweenDates(value, from, to,
-	// Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
-	// }
-
-	// return person;
-	// }
-
 	@PostMapping(value = Urls.Privileges.responsible + Urls.persons)
 	public void postPerson(@RequestBody Person person) {
 		this.service.insert(person);

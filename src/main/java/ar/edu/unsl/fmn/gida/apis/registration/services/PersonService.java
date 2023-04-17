@@ -99,7 +99,7 @@ public class PersonService {
 
 	public Person getOneByDniWithRegistersBetweenDates(String dni, String from, String to, int page,
 			int size) {
-		Page<Register> registers;
+		List<Register> registers;
 		Person person =
 				this.repository.findByDniAndActiveTrue(dni)
 						.orElseThrow(
@@ -108,9 +108,10 @@ public class PersonService {
 												.getPersonServiceMessenger().notFoundByDni(dni),
 										HttpStatus.NOT_FOUND));
 
-		registers = this.registerService.getAllFromPerson(person.getId(), from, to, page, size);
+		// registers = this.registerService.getAllFromPerson(person.getId(), from, to, page, size);
+		registers = this.registerService.getAllFromPerson(person.getId(), from, to);
 
-		person.setRegisters(registers.getContent());
+		person.setRegisters(registers);
 
 		return person;
 	}
@@ -418,27 +419,33 @@ public class PersonService {
 
 		// save register
 		LocalDate checkingDate = this.registerService
-				.insert(person.getId(), requestBody.getAccessId()).getTime().toLocalDate();
+				.insert(person.getId(), requestBody.getAccessId(), requestBody.getTime()).getTime()
+				.toLocalDate();
 
 		// Weekly weekly =
 		// this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
 		// checkingDate);
+		//
+		// List<Register> dateRegisters =
+		// this.registerService.getAllFromPersonWithDate(personId, checkingDate);
+		//
+		// if (weekly != null) {
+		// // do calculation for work attendance
+		// this.weeklyService.workAttendanceCalculation(weekly, checkingDate, dateRegisters);
+		// }
 
 		Weekly weekly = this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
 				requestBody.getTime().toLocalDate());
 
-		List<Register> dateRegisters =
-				this.registerService.getAllFromPersonWithDate(personId, checkingDate);
+		List<Register> dateRegisters = this.registerService.getAllFromPersonWithDate(personId,
+				requestBody.getTime().toLocalDate());
 
 		// this.registerService.getAllFromPerson(personId, from, to);
 		if (weekly != null) {
 			// do calculation for work attendance
-			this.weeklyService.workAttendanceCalculation(weekly, checkingDate, dateRegisters);
+			this.weeklyService.workAttendanceCalculation(weekly,
+					requestBody.getTime().toLocalDate(), dateRegisters);
 		}
-		// throw new ErrorResponse(
-		// RegistrationSystemApplication.MESSENGER.getWeeklyServiceMessenger()
-		// .notFoundByPersonIdAndContainingDate(personId, checkingDate.toString()),
-		// HttpStatus.NOT_FOUND);
 
 		return person;
 	}

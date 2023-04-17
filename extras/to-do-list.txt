@@ -1,3 +1,13 @@
+- apply calculateWorkAttendanceState when create a weekly that starts before today
+
+- twice weekly when request for workAttendances
+
+- must save extraordinary assistance
+
+- hardcoded tolerance
+
+- from/to parse code replication (register service, others)
+
 - check if a body is null in service layer
 
 - check if entity exists in service layers: when is needed and when is not ? 

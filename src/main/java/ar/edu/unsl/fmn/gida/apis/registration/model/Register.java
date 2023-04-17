@@ -45,6 +45,7 @@ public class Register {
 	@JoinColumn(name = "accessId", referencedColumnName = "id", insertable = false,
 			updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	private Access access;
 
 	// =============================== constructors ===============================

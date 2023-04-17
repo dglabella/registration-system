@@ -57,8 +57,7 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().crossDates(),
-						HttpStatus.BAD_REQUEST);
+						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
 
 		} catch (DateTimeParseException exception) {
 			exception.printStackTrace();
@@ -100,8 +99,7 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().crossDates(),
-						HttpStatus.BAD_REQUEST);
+						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
@@ -137,8 +135,7 @@ public class RegisterService {
 
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().crossDates(),
-						HttpStatus.BAD_REQUEST);
+						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
@@ -164,8 +161,7 @@ public class RegisterService {
 					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().crossDates(),
-						HttpStatus.BAD_REQUEST);
+						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
@@ -205,8 +201,7 @@ public class RegisterService {
 					: LocalDateTime.now();
 			if (fromDate.compareTo(toDate) > 0)
 				throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
-						.getRegisterServiceMessenger().crossDates(),
-						HttpStatus.BAD_REQUEST);
+						.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
 
 
 		} catch (DateTimeParseException exception) {
@@ -248,12 +243,13 @@ public class RegisterService {
 		return pageRet;
 	}
 
-	public Register insert(int personId, int accessId) {
+	public Register insert(int personId, int accessId, LocalDateTime time) {
 		Register register = new Register();
 
 		register.setAccessId(accessId);
 		register.setPersonId(personId);
-		register.setTime(LocalDateTime.now());
+		// register.setTime(LocalDateTime.now());
+		register.setTime(time);
 
 		Register ret = this.repository.save(register);
 

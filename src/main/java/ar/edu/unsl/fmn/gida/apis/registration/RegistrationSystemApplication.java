@@ -169,7 +169,6 @@ public class RegistrationSystemApplication {
 
 	public static void main(String[] args) {
 		// System.out.println("a ver el pass: " + new BCryptPasswordEncoder().encode("789789789"));
-
 		setUpConfigFile();
 		setUpMessagesLang();
 		SpringApplication.run(RegistrationSystemApplication.class, args);
