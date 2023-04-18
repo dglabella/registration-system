@@ -27,7 +27,7 @@ public class RegisterService {
 	private final String TIME_PART_FROM = "T00:00:00";
 	private final String TIME_PART_TO = "T00:00:00";
 
-	public Register getOne(int id) {
+	public Register get(int id) {
 		Register r = this.repository.findById(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()
@@ -78,7 +78,7 @@ public class RegisterService {
 				date.atStartOfDay(), date.plusDays(1).atStartOfDay());
 	}
 
-	public List<Register> getAllFromPerson(Integer personId, String from, String to) {
+	public List<Register> getAllFromPersonBetweenDates(Integer personId, String from, String to) {
 		LocalDateTime fromDate = null;
 		LocalDateTime toDate = null;
 
@@ -113,8 +113,8 @@ public class RegisterService {
 				toDate);
 	}
 
-	public Page<Register> getAllFromPerson(Integer personId, String from, String to, int page,
-			int size) {
+	public Page<Register> getAllFromPersonBetweenDates(Integer personId, String from, String to,
+			int page, int size) {
 		LocalDateTime fromDate = null;
 		LocalDateTime toDate = null;
 

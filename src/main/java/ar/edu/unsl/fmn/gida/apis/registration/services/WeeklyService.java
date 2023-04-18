@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -118,26 +117,29 @@ public class WeeklyService {
 			LocalDate from, LocalDate to) {
 
 		List<Weekly> weeklies = new ArrayList<>();
+		weeklies.addAll(this.repository
+				.findAllByPersonIdAndActiveTrueAndStartGreaterThanEqualAndEndLessThanEqual(personId,
+						from, to));
 
 		// get a weekly that 'from date' is in [start, end]
 		Optional<Weekly> optionalWeekly = this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						from, from);
-
-		if (optionalWeekly.isPresent())
-			weeklies.add(optionalWeekly.get());
-
-		weeklies.addAll(this.repository
-				.findAllByPersonIdAndActiveTrueAndStartGreaterThanEqualAndEndLessThanEqual(personId,
-						from, to));
+		if (optionalWeekly.isPresent()) {
+			Weekly w = optionalWeekly.get();
+			if (!weeklies.contains(w))
+				weeklies.add(w);
+		}
 
 		// get a weekly that 'to date' is in [start, end]
 		optionalWeekly = this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						to, to);
-
-		if (optionalWeekly.isPresent())
-			weeklies.add(optionalWeekly.get());
+		if (optionalWeekly.isPresent()) {
+			Weekly w = optionalWeekly.get();
+			if (!weeklies.contains(w))
+				weeklies.add(w);
+		}
 
 		for (Weekly w : weeklies) {
 			w.setWorkAttendances(
@@ -149,28 +151,31 @@ public class WeeklyService {
 
 	public List<Weekly> getAllFromPersonEachWithWorkAttendancesByStateBetweenDates(Integer personId,
 			WorkAttendanceState state, LocalDate from, LocalDate to) {
+
 		List<Weekly> weeklies = new ArrayList<>();
+		weeklies.addAll(this.repository
+				.findAllByPersonIdAndActiveTrueAndStartGreaterThanEqualAndEndLessThanEqual(personId,
+						from, to));
 
 		// get a weekly that 'from date' is in [start, end]
 		Optional<Weekly> optionalWeekly = this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						from, from);
-
-		if (optionalWeekly.isPresent())
-			weeklies.add(optionalWeekly.get());
-
-		weeklies.addAll(this.repository
-				.findAllByPersonIdAndActiveTrueAndStartGreaterThanEqualAndEndLessThanEqual(personId,
-						from, to));
+		if (optionalWeekly.isPresent()) {
+			Weekly w = optionalWeekly.get();
+			if (!weeklies.contains(w))
+				weeklies.add(w);
+		}
 
 		// get a weekly that 'to date' is in [start, end]
 		optionalWeekly = this.repository
 				.findByPersonIdAndActiveTrueAndStartLessThanEqualAndEndGreaterThanEqual(personId,
 						to, to);
-
-		if (optionalWeekly.isPresent())
-			weeklies.add(optionalWeekly.get());
-
+		if (optionalWeekly.isPresent()) {
+			Weekly w = optionalWeekly.get();
+			if (!weeklies.contains(w))
+				weeklies.add(w);
+		}
 
 		for (Weekly w : weeklies) {
 			w.setWorkAttendances(this.workAttendanceService

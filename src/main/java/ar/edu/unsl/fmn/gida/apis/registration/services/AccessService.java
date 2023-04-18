@@ -23,7 +23,7 @@ public class AccessService {
 	private final AccessValidator validator = new AccessValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getAccessValidationMessenger());
 
-	public Access getOne(int id) {
+	public Access get(int id) {
 		Access ret =
 				this.repository.findByIdAndActiveTrue(id)
 						.orElseThrow(() -> new ErrorResponse(

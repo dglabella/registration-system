@@ -67,16 +67,16 @@ public class RegisterController {
 		String to = map.get("to");
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllFromPerson(personId, from, to, this.DEFAULT_PAGE_NUMBER,
-					this.DEFAULT_PAGE_SIZE);
+			page = this.service.getAllFromPersonBetweenDates(personId, from, to,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllFromPerson(personId, from, to,
+			page = this.service.getAllFromPersonBetweenDates(personId, from, to,
 					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllFromPerson(personId, from, to, this.DEFAULT_PAGE_NUMBER,
-					Integer.parseInt(map.get("size")));
+			page = this.service.getAllFromPersonBetweenDates(personId, from, to,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAllFromPerson(personId, from, to,
+			page = this.service.getAllFromPersonBetweenDates(personId, from, to,
 					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
@@ -94,16 +94,16 @@ public class RegisterController {
 		String to = map.get("to");
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			content.add(this.personService.getOneByDniWithRegistersBetweenDates(value, from, to,
+			content.add(this.personService.getByDniWithRegistersBetweenDates(value, from, to,
 					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE));
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			content.add(this.personService.getOneByDniWithRegistersBetweenDates(value, from, to,
+			content.add(this.personService.getByDniWithRegistersBetweenDates(value, from, to,
 					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE));
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			content.add(this.personService.getOneByDniWithRegistersBetweenDates(value, from, to,
+			content.add(this.personService.getByDniWithRegistersBetweenDates(value, from, to,
 					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size"))));
 		} else {
-			content.add(this.personService.getOneByDniWithRegistersBetweenDates(value, from, to,
+			content.add(this.personService.getByDniWithRegistersBetweenDates(value, from, to,
 					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size"))));
 		}
 

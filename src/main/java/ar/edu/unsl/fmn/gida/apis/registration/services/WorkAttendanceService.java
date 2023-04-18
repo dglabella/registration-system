@@ -24,7 +24,7 @@ public class WorkAttendanceService {
 	@Autowired
 	private WorkAttendanceRepository repository;
 
-	public WorkAttendance getOne(int id) {
+	public WorkAttendance get(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getWorkAttendanceServiceMessenger()

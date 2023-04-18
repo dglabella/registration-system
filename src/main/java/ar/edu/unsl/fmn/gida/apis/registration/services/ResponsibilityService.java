@@ -25,7 +25,7 @@ public class ResponsibilityService {
 			new ResponsibilityValidator(new CustomExpressionValidator(),
 					RegistrationSystemApplication.MESSENGER.getResponsibilityValidationMessenger());
 
-	public Responsibility getOne(int id) {
+	public Responsibility get(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getPersonServiceMessenger()

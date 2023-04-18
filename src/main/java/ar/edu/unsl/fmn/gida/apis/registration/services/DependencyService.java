@@ -24,7 +24,7 @@ public class DependencyService {
 			new DependencyValidator(new CustomExpressionValidator(),
 					RegistrationSystemApplication.MESSENGER.getAccessValidationMessenger());
 
-	public Dependency getOne(int id) {
+	public Dependency get(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(
 						RegistrationSystemApplication.MESSENGER.getDependencyServiceMessenger()

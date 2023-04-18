@@ -34,7 +34,7 @@ public class DependencyController {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Dependency> getDependency(@PathVariable int id) {
-		Dependency d = this.service.getOne(id);
+		Dependency d = this.service.get(id);
 
 		ResponseEntity<Dependency> response = d != null ? ResponseEntity.ok().body(d)
 				: new ResponseEntity<>(HttpStatus.NOT_FOUND);

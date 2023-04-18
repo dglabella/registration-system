@@ -27,7 +27,7 @@ public class AccessController {
 
 	@GetMapping(value = Urls.Privileges.responsible + Urls.accesses + "/{id}")
 	public Access getAccess(@PathVariable int id) {
-		return this.service.getOne(id);
+		return this.service.get(id);
 	}
 
 	@GetMapping(value = Urls.Privileges.pub + Urls.accesses)

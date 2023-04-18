@@ -25,14 +25,14 @@ public class CredentialService {
 			new CredentialValidator(new CustomExpressionValidator(),
 					RegistrationSystemApplication.MESSENGER.getCredentialValidationMessenger());
 
-	public Credential getOne(Integer id) {
+	public Credential get(Integer id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getCredentialServiceMessenger().notFound(Person.class.getSimpleName(), id),
 						HttpStatus.NOT_FOUND));
 	}
 
-	public Credential getOneByPersonId(Integer personId) {
+	public Credential getByPersonId(Integer personId) {
 		return this.repository.findByPersonIdAndActiveTrue(personId)
 				.orElseThrow(() -> new ErrorResponse(RegistrationSystemApplication.MESSENGER
 						.getCredentialServiceMessenger().notFoundByPersonIdErrorMessage(personId),

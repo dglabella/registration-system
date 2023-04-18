@@ -1,6 +1,6 @@
 - apply calculateWorkAttendanceState when create a weekly that starts before today
 
-- twice weekly when request for workAttendances
+- twice weekly when request for workAttendances (done)
 
 - must save extraordinary assistance
 

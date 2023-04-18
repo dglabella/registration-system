@@ -31,7 +31,7 @@ public class CredentialController {
 
 	@GetMapping(value = "/{id}")
 	public Credential getCredential(@PathVariable int id) {
-		Credential credential = this.service.getOne(id);
+		Credential credential = this.service.get(id);
 		return credential;
 	}
 

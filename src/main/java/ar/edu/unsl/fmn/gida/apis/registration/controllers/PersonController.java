@@ -42,7 +42,7 @@ public class PersonController {
 
 	@GetMapping(value = "/{id}")
 	public Person getPerson(@PathVariable int id) {
-		Person person = this.service.getOne(id);
+		Person person = this.service.get(id);
 		return person;
 	}
 
@@ -144,7 +144,7 @@ public class PersonController {
 	public Page<Person> getPersonByDni(@PathVariable String value) {
 		Page<Person> page;
 		List<Person> content = new ArrayList<>();
-		content.add(this.service.getOneByDniWithCredential(value));
+		content.add(this.service.getByDniWithCredential(value));
 		page = new PageImpl<>(content, PageRequest.of(0, Integer.MAX_VALUE), Integer.MAX_VALUE);
 		return page;
 	}

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unsl.fmn.gida.apis.registration.enums.WorkAttendanceState;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.services.PersonService;
-import ar.edu.unsl.fmn.gida.apis.registration.services.WorkAttendanceService;
 import ar.edu.unsl.fmn.gida.apis.registration.urls.Urls;
 
 @RestController
@@ -26,9 +25,6 @@ public class WorkAttendanceController {
 	private final String SEARCH_OP = "/search";
 
 	private final String SEARCH_OP_BY_DNI_EXACT = "/dniexact=";
-
-	@Autowired
-	private WorkAttendanceService service;
 
 	@Autowired
 	private PersonService personService;

@@ -54,7 +54,7 @@ public class UserController {
 
 	@GetMapping(value = Urls.Privileges.user + Urls.users + "/{id}")
 	public User getUser(@PathVariable int id) {
-		return this.service.getOne(id);
+		return this.service.get(id);
 	}
 
 	@GetMapping(value = Urls.Privileges.user + Urls.users + "/account/{account}")

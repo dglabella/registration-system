@@ -3,13 +3,6 @@ Syntactics:
 ===========
 - variables and methods names: camelCase
 
-- Service: all services shares 5 methods (with very few exception):
-    public Entity getOne(int id);
-    public List<Entity> getAll();
-    public Entity insert(Entity entity);
-    public Entity update(Entity entity);
-    public Entity delete(int id);
-
 - Controllers methods names: (replace 'Entity' or 'Entities' for the model Class name)
     GET one resource: getEntity.
     GET all resources: getAllEntities.
@@ -17,7 +10,12 @@ Syntactics:
     PUT one resource: updateEntity.
     DELETE one resource: deleteEntity.
 
-- Models: no need to add explicit variables to store foreings key.
+- Service: all services shares 5 methods (with very few exception):
+    public Entity get(int id);
+    public List<Entity> getAll();
+    public Entity insert(Entity entity);
+    public Entity update(Entity entity);
+    public Entity delete(int id);
 
 Respect the default variables/methods disposition when create another POJO in the model 
 (Use Person class as reference).

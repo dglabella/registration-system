@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
 
 	private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-	public User getOne(int id) {
+	public User get(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(
 						() -> new ErrorResponse(

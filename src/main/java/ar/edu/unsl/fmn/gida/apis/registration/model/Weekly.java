@@ -131,6 +131,11 @@ public class Weekly {
 		}
 
 		Weekly w = (Weekly) weekly;
+
+		if (this.id != null && w.getId() != null && this.id != w.getId()) {
+			return false;
+		}
+
 		boolean ret = true;
 
 		if (this.start.compareTo(w.start) != 0

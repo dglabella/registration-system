@@ -54,7 +54,7 @@ public class PersonService {
 
 	private final QrDataConverter converter = new QrDataConverter(new QrCypher());
 
-	public Person getOne(int id) {
+	public Person get(int id) {
 		return this.repository.findByIdAndActiveTrue(id)
 				.orElseThrow(
 						() -> new ErrorResponse(
@@ -63,7 +63,7 @@ public class PersonService {
 								HttpStatus.NOT_FOUND));
 	}
 
-	public Person getOneWithCredential(int id) {
+	public Person getWithCredential(int id) {
 		Person person =
 				this.repository.findByIdAndActiveTrue(id)
 						.orElseThrow(() -> new ErrorResponse(
@@ -71,7 +71,7 @@ public class PersonService {
 										.notFound(Person.class.getSimpleName(), id),
 								HttpStatus.NOT_FOUND));
 
-		person.setCredential(this.credentialService.getOneByPersonId(id));
+		person.setCredential(this.credentialService.getByPersonId(id));
 
 		Weekly currentWeekly =
 				this.weeklyService.getFromPersonContainingDate(person.getId(), LocalDate.now());
@@ -80,7 +80,7 @@ public class PersonService {
 		return person;
 	}
 
-	public Person getOneByDniWithCredential(String dni) {
+	public Person getByDniWithCredential(String dni) {
 		Person person =
 				this.repository.findByDniAndActiveTrue(dni)
 						.orElseThrow(
@@ -89,7 +89,7 @@ public class PersonService {
 												.getPersonServiceMessenger().notFoundByDni(dni),
 										HttpStatus.NOT_FOUND));
 
-		person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+		person.setCredential(this.credentialService.getByPersonId(person.getId()));
 
 		// person.setCurrentWeekly(
 		// this.weeklyService.getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
@@ -97,7 +97,7 @@ public class PersonService {
 		return person;
 	}
 
-	public Person getOneByDniWithRegistersBetweenDates(String dni, String from, String to, int page,
+	public Person getByDniWithRegistersBetweenDates(String dni, String from, String to, int page,
 			int size) {
 		List<Register> registers;
 		Person person =
@@ -108,8 +108,7 @@ public class PersonService {
 												.getPersonServiceMessenger().notFoundByDni(dni),
 										HttpStatus.NOT_FOUND));
 
-		// registers = this.registerService.getAllFromPerson(person.getId(), from, to, page, size);
-		registers = this.registerService.getAllFromPerson(person.getId(), from, to);
+		registers = this.registerService.getAllFromPersonBetweenDates(person.getId(), from, to);
 
 		person.setRegisters(registers);
 
@@ -120,7 +119,7 @@ public class PersonService {
 		Page<Person> personsPage = this.repository.findAllByActiveTrue(PageRequest.of(page, size));
 
 		for (Person person : personsPage.getContent()) {
-			person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+			person.setCredential(this.credentialService.getByPersonId(person.getId()));
 			// person.setCurrentWeekly(this.weeklyService
 			// .getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 		}
@@ -133,7 +132,7 @@ public class PersonService {
 				PageRequest.of(page, size));
 
 		for (Person person : personPage.getContent()) {
-			person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+			person.setCredential(this.credentialService.getByPersonId(person.getId()));
 			// person.setCurrentWeekly(this.weeklyService
 			// .getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 		}
@@ -147,7 +146,7 @@ public class PersonService {
 				.findAllByDniContainingAndActiveTrueOrderByIdAsc(dni, PageRequest.of(page, size));
 
 		for (Person person : personsPage.getContent()) {
-			person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+			person.setCredential(this.credentialService.getByPersonId(person.getId()));
 			// person.setCurrentWeekly(this.weeklyService
 			// .getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 		}
@@ -161,7 +160,7 @@ public class PersonService {
 				PageRequest.of(page, size));
 
 		for (Person person : personsPage.getContent()) {
-			person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+			person.setCredential(this.credentialService.getByPersonId(person.getId()));
 			// person.setCurrentWeekly(this.weeklyService
 			// .getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 		}
@@ -174,7 +173,7 @@ public class PersonService {
 				.findAllByPersonLastNameContainingAndActiveTrue(name, PageRequest.of(page, size));
 
 		for (Person person : personsPage.getContent()) {
-			person.setCredential(this.credentialService.getOneByPersonId(person.getId()));
+			person.setCredential(this.credentialService.getByPersonId(person.getId()));
 			// person.setCurrentWeekly(this.weeklyService
 			// .getCurrentWeeklyFromPersonWithResponsibilities(person.getId()));
 		}

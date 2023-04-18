@@ -123,6 +123,10 @@ public class Responsibility {
 
         Responsibility r = (Responsibility) responsibility;
 
+        if (this.id != null && r.getId() != null && this.id != r.getId()) {
+            return false;
+        }
+
         boolean ret = false;
 
         if (this.day == r.day && this.entranceTime.equals(r.entranceTime)

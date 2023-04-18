@@ -55,7 +55,7 @@ public class WeeklyController {
 
 	@PostMapping(value = "/person/{id}")
 	public void postWeekly(@PathVariable int id, @RequestBody Weekly requestBody) {
-		this.service.insert(this.personService.getOne(id).getId(), requestBody);
+		this.service.insert(this.personService.get(id).getId(), requestBody);
 	}
 
 	@DeleteMapping(value = "/{id}")
