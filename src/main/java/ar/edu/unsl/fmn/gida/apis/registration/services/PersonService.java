@@ -1,6 +1,7 @@
 package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ar.edu.unsl.fmn.gida.apis.registration.RegistrationSystemApplication;
@@ -18,6 +20,7 @@ import ar.edu.unsl.fmn.gida.apis.registration.exceptions.ErrorResponse;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Credential;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Person;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
+import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
 import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
 import ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries.Check;
 import ar.edu.unsl.fmn.gida.apis.registration.repositories.PersonRepository;
@@ -396,8 +399,9 @@ public class PersonService {
 		return person;
 	}
 
-	public Person checkQr(Check requestBody) {
+	public ResponseEntity<Person> checkQr(Check requestBody) {
 		this.checkValidator.validateInsert(requestBody);
+		ResponseEntity<Person> response = null;
 
 		int personId;
 		try {
@@ -417,35 +421,32 @@ public class PersonService {
 						HttpStatus.NOT_FOUND));
 
 		// save register
-		LocalDate checkingDate = this.registerService
-				.insert(person.getId(), requestBody.getAccessId(), requestBody.getTime()).getTime()
-				.toLocalDate();
-
-		// Weekly weekly =
-		// this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
-		// checkingDate);
-		//
-		// List<Register> dateRegisters =
-		// this.registerService.getAllFromPersonWithDate(personId, checkingDate);
-		//
-		// if (weekly != null) {
-		// // do calculation for work attendance
-		// this.weeklyService.workAttendanceCalculation(weekly, checkingDate, dateRegisters);
-		// }
+		LocalDateTime checkingDateTime = LocalDateTime.now();
+		this.registerService.insert(person.getId(), requestBody.getAccessId(), checkingDateTime);
 
 		Weekly weekly = this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
-				requestBody.getTime().toLocalDate());
+				checkingDateTime.toLocalDate());
 
-		List<Register> dateRegisters = this.registerService.getAllFromPersonWithDate(personId,
-				requestBody.getTime().toLocalDate());
-
-		// this.registerService.getAllFromPerson(personId, from, to);
 		if (weekly != null) {
-			// do calculation for work attendance
-			this.weeklyService.workAttendanceCalculation(weekly,
-					requestBody.getTime().toLocalDate(), dateRegisters);
+			// 0 for monday, 6 for sunday
+			boolean[] days = {false, false, false, false, false, false, false};
+			for (Responsibility r : weekly.getResponsibilities())
+				days[r.getDay().ordinal()] = true;
+
+			if (days[checkingDateTime.getDayOfWeek().ordinal()]) {
+				List<Register> dateRegisters = this.registerService
+						.getAllFromPersonWithDate(personId, checkingDateTime.toLocalDate());
+
+				// do calculation for work attendance
+				this.weeklyService.workAttendanceCalculation(weekly, checkingDateTime.toLocalDate(),
+						dateRegisters);
+
+				response = new ResponseEntity<>(person, HttpStatus.OK);
+			} else {
+				response = new ResponseEntity<>(person, HttpStatus.ACCEPTED);
+			}
 		}
 
-		return person;
+		return response;
 	}
 }

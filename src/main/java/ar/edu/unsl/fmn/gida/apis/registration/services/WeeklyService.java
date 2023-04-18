@@ -217,6 +217,11 @@ public class WeeklyService {
 		this.workAttendanceService.createWorkAttendancesBetweenDates(ret.getId(), ret.getStart(),
 				ret.getEnd(), ret.getResponsibilities());
 
+		// inserting a weekly from the past
+		if (requestBody.getStart().compareTo(LocalDate.now()) < 0) {
+			this.calculateWorkAttendanceState(requestBody.getResponsibilities(), null, 0);
+		}
+
 		return requestBody;
 	}
 
