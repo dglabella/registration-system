@@ -5,22 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Register;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Responsibility;
-import ar.edu.unsl.fmn.gida.apis.registration.model.Weekly;
-import ar.edu.unsl.fmn.gida.apis.registration.services.WeeklyService;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.Cypher;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.data.interpreters.ConfigurationConverter;
@@ -104,67 +95,6 @@ public class RegistrationSystemApplication {
 
 	private static void setUpMessagesLang() {
 		MESSENGER = new Messenger(CONFIGURATION.get(Configuration.NAME_LANG));
-	}
-
-	private static void workAttendanceTest() {
-		List<Responsibility> dateResponsibilities = new ArrayList<>();
-		List<Register> dateRegisters = new ArrayList<>();
-
-		Responsibility r1 = new Responsibility();
-		r1.setId(1);
-		r1.setDay(DayOfWeek.FRIDAY);
-		r1.setEntranceTime(LocalTime.of(8, 0));
-		r1.setDepartureTime(LocalTime.of(10, 0));
-		dateResponsibilities.add(r1);
-
-		Responsibility r2 = new Responsibility();
-		r2.setId(45);
-		r2.setDay(DayOfWeek.FRIDAY);
-		r2.setEntranceTime(LocalTime.of(11, 0));
-		r2.setDepartureTime(LocalTime.of(13, 0));
-		dateResponsibilities.add(r2);
-
-		Responsibility r3 = new Responsibility();
-		r3.setId(23);
-		r3.setDay(DayOfWeek.FRIDAY);
-		r3.setEntranceTime(LocalTime.of(16, 0));
-		r3.setDepartureTime(LocalTime.of(18, 0));
-		dateResponsibilities.add(r3);
-
-
-		Register reg1 = new Register();
-		reg1.setId(5456);
-		reg1.setTime(LocalDateTime.of(2023, 4, 14, 8, 0, 45));
-		dateRegisters.add(reg1);
-
-		Register reg2 = new Register();
-		reg2.setId(5563);
-		reg2.setTime(LocalDateTime.of(2023, 4, 14, 10, 20, 0));
-		dateRegisters.add(reg2);
-
-		Register reg5 = new Register();
-		reg5.setId(6998);
-		reg5.setTime(LocalDateTime.of(2023, 4, 14, 10, 48, 45));
-		dateRegisters.add(reg5);
-
-		Register reg6 = new Register();
-		reg6.setId(6682);
-		reg6.setTime(LocalDateTime.of(2023, 4, 14, 12, 59, 0));
-		dateRegisters.add(reg6);
-
-		Register reg3 = new Register();
-		reg3.setId(5595);
-		reg3.setTime(LocalDateTime.of(2023, 4, 14, 16, 16, 26));
-		dateRegisters.add(reg3);
-
-		Register reg4 = new Register();
-		reg4.setId(5785);
-		reg4.setTime(LocalDateTime.of(2023, 4, 14, 18, 16, 26));
-		dateRegisters.add(reg4);
-
-		// System.out.println("hay al menos una responsabilidad finalizada? "
-		// + WeeklyService.calculateWorkAttendanceState(dateResponsibilities,
-		// dateRegisters, 1800));
 	}
 
 	public static void main(String[] args) {

@@ -66,7 +66,6 @@ public class Person {
 	private List<Weekly> weeklies;
 
 	@Transient
-	@JsonManagedReference
 	private List<Register> registers;
 
 	@Enumerated(EnumType.ORDINAL)
