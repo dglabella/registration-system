@@ -31,6 +31,9 @@ public class UserController {
 
 	private final String SEARCH_OP = "/search";
 	private final String SEARCH_OP_BY_NAME = "/name=";
+	private final String SEARCH_OP_BY_LASTNAME = "/lastname=";
+	private final String SEARCH_OP_BY_DNI_EXACT = "/dniexact=";
+
 
 	@Autowired
 	private UserService service;
@@ -48,7 +51,6 @@ public class UserController {
 			page = this.service.getAll(Integer.parseInt(map.get("page")),
 					Integer.parseInt(map.get("size")));
 		}
-
 		return page;
 	}
 
@@ -62,33 +64,77 @@ public class UserController {
 		return (User) this.service.loadUserByUsername(account);
 	}
 
-	// ---------------------------------- INICIO CRISTIAN
-	// -----------------------------------------------------
-	@GetMapping(
-			value = Urls.Privileges.user + Urls.users + SEARCH_OP + SEARCH_OP_BY_NAME + "{value}")
+	// ---------------------------------- INICIO CRISTIAN  -----------------------------------------------------
+	
+	@GetMapping(value = Urls.Privileges.admin + Urls.users + SEARCH_OP + SEARCH_OP_BY_DNI_EXACT + "{value}")
+	public Page<User> getUsersByDni(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
+
+		Page<User> page = null;
+
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getAllByDni(value,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getAllByDni(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
+			page = this.service.getAllByDni(value,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
+		} else {
+			page = this.service.getAllByDni(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
+		}
+		return page;
+	}
+	
+	
+	@GetMapping(value = Urls.Privileges.admin + Urls.users + SEARCH_OP + SEARCH_OP_BY_NAME + "{value}")
 	public Page<User> getUsersByNameApproach(@PathVariable String value,
 			@RequestParam Map<String, String> map) {
 
 		Page<User> page = null;
 
 		if (!map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+			page = this.service.getAllByUserNameApproach(value,
 					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
 		} else if (map.containsKey("page") && !map.containsKey("size")) {
-			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+			page = this.service.getAllByUserNameApproach(value,
 					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
 		} else if (!map.containsKey("page") && map.containsKey("size")) {
-			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+			page = this.service.getAllByUserNameApproach(value,
 					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
 		} else {
-			page = this.service.getAllByUserNameApproachEachWithCredential(value,
+			page = this.service.getAllByUserNameApproach(value,
+					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
+		}
+		return page;
+	}
+	
+	
+	@GetMapping(value = Urls.Privileges.admin + Urls.users + SEARCH_OP + SEARCH_OP_BY_LASTNAME + "{value}")
+	public Page<User> getUsersByLastNameApproach(@PathVariable String value,
+			@RequestParam Map<String, String> map) {
+
+		Page<User> page = null;
+		if (!map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getAllByUserLastNameApproach(value,
+					this.DEFAULT_PAGE_NUMBER, this.DEFAULT_PAGE_SIZE);
+		} else if (map.containsKey("page") && !map.containsKey("size")) {
+			page = this.service.getAllByUserLastNameApproach(value,
+					Integer.parseInt(map.get("page")), this.DEFAULT_PAGE_SIZE);
+		} else if (!map.containsKey("page") && map.containsKey("size")) {
+			page = this.service.getAllByUserLastNameApproach(value,
+					this.DEFAULT_PAGE_NUMBER, Integer.parseInt(map.get("size")));
+		} else {
+			page = this.service.getAllByUserLastNameApproach(value,
 					Integer.parseInt(map.get("page")), Integer.parseInt(map.get("size")));
 		}
 
 		return page;
 	}
-	// ---------------------------------- FIN CRISTIAN
-	// -----------------------------------------------------
+	
+	// ---------------------------------- FIN CRISTIAN  -----------------------------------------------------
 
 	@PostMapping(Urls.Privileges.admin + Urls.signup)
 	public void postUser(@RequestBody User user) {

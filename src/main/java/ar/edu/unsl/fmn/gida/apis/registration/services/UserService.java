@@ -196,13 +196,25 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 
-	// ---------------------------------- INICIO CRISTIAN
-	// --------------------------------------------------
-	public Page<User> getAllByUserNameApproachEachWithCredential(String name, int page, int size) {
+	// ---------------------------------- INICIO CRISTIAN  --------------------------------------------------
+	
+	public Page<User> getAllByDni(String dni, int page, int size) {
+		Page<User> usersPage = this.repository.findAllByDniAndActiveTrue(dni,
+				PageRequest.of(page, size));
+		return usersPage;
+	}
+	
+	public Page<User> getAllByUserNameApproach(String name, int page, int size) {
 		Page<User> usersPage = this.repository.findAllByUserNameContainingAndActiveTrue(name,
 				PageRequest.of(page, size));
 		return usersPage;
 	}
-	// ---------------------------------- FIN CRISTIAN
-	// -----------------------------------------------------
+	
+	
+	public Page<User> getAllByUserLastNameApproach(String lastName, int page, int size) {
+		Page<User> usersPage = this.repository.findAllByUserLastNameContainingAndActiveTrue(lastName,
+				PageRequest.of(page, size));
+		return usersPage;
+	}
+	// ---------------------------------- FIN CRISTIAN -----------------------------------------------------
 }
