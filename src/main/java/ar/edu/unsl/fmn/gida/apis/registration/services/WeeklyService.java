@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -217,11 +218,6 @@ public class WeeklyService {
 		this.workAttendanceService.createWorkAttendancesBetweenDates(ret.getId(), ret.getStart(),
 				ret.getEnd(), ret.getResponsibilities());
 
-		// inserting a weekly from the past
-		if (requestBody.getStart().compareTo(LocalDate.now()) < 0) {
-			this.calculateWorkAttendanceState(requestBody.getResponsibilities(), null, 0);
-		}
-
 		return requestBody;
 	}
 
@@ -283,10 +279,45 @@ public class WeeklyService {
 				this.workAttendanceService.getFromWeeklyIdAndDate(weekly.getId(), date);
 
 		workAttendance.setState(
-				this.calculateWorkAttendanceState(dateResponsibilities, dateRegisters, 1800));
+				this.calculateWorkAttendanceStatePerDay(dateResponsibilities, dateRegisters, 1800));
 	}
 
-	public WorkAttendanceState calculateWorkAttendanceState(
+	public void calculateWorkAttendanceStatePerWeekly(Weekly weekly,
+			List<Register> weeklyRegisters) {
+
+		// creating arraylists for the hash
+		Map<String, List<Register>> registersHashMap = new HashMap<>();
+		for (Register r : weeklyRegisters) {
+			if (registersHashMap.get(r.getTime().toLocalDate().toString()) == null) {
+				registersHashMap.put(r.getTime().toLocalDate().toString(), new ArrayList<>());
+			}
+		}
+		for (Register r : weeklyRegisters) {
+			registersHashMap.get(r.getTime().toLocalDate().toString()).add(r);
+		}
+
+		// 0 for monday, 6 for sunday
+		List<Responsibility>[] responsibilitiesPerDay = new ArrayList[7];
+		for (Responsibility r : weekly.getResponsibilities()) {
+			if (responsibilitiesPerDay[r.getDay().ordinal()] == null) {
+				responsibilitiesPerDay[r.getDay().ordinal()] = new ArrayList<>();
+			}
+		}
+		for (Responsibility r : weekly.getResponsibilities()) {
+			responsibilitiesPerDay[r.getDay().ordinal()].add(r);
+		}
+
+
+		for (List<Register> list : registersHashMap.values()) {
+			if (responsibilitiesPerDay[list.get(0).getTime().getDayOfWeek().ordinal()] == null) {
+				this.calculateWorkAttendanceStatePerDay(
+						responsibilitiesPerDay[list.get(0).getTime().getDayOfWeek().ordinal()],
+						list, 1800);
+			}
+		}
+	}
+
+	public WorkAttendanceState calculateWorkAttendanceStatePerDay(
 			List<Responsibility> dateResponsibilities, List<Register> dateRegisters,
 			int tolerance) {
 
