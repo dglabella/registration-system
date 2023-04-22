@@ -205,6 +205,11 @@ public class WorkAttendanceService {
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 
+
+	public List<WorkAttendance> updateAll(List<WorkAttendance> workAttendances) {
+		return this.repository.saveAll(workAttendances);
+	}
+
 	public void delete(int id) {
 		throw new ErrorResponse("work attendances delete not implemented",
 				HttpStatus.NOT_IMPLEMENTED);

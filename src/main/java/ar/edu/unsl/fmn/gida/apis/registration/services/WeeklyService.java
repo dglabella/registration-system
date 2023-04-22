@@ -38,6 +38,9 @@ public class WeeklyService {
 	@Autowired
 	private WorkAttendanceService workAttendanceService;
 
+	@Autowired
+	private RegisterService registerService;
+
 	private final WeeklyValidator validator = new WeeklyValidator(new CustomExpressionValidator(),
 			RegistrationSystemApplication.MESSENGER.getWeeklyValidationMessenger());
 
@@ -214,9 +217,19 @@ public class WeeklyService {
 		// this.responsibilityService.insert(ret.getId(), r);
 		this.responsibilityService.insertAll(ret.getId(), ret.getResponsibilities());
 
-		// create all work attendances for this weekly
-		this.workAttendanceService.createWorkAttendancesBetweenDates(ret.getId(), ret.getStart(),
-				ret.getEnd(), ret.getResponsibilities());
+		// create into DB all work attendances for this weekly
+		List<WorkAttendance> workAttendances =
+				this.workAttendanceService.createWorkAttendancesBetweenDates(ret.getId(),
+						ret.getStart(), ret.getEnd(), ret.getResponsibilities());
+
+		// inserting a weekly from the past?
+		if (ret.getStart().compareTo(LocalDate.now()) < 0) {
+
+			List<Register> registers = this.registerService.getAllFromPersonBetweenDates(personId,
+					ret.getStart(), ret.getEnd());
+
+			this.setWorkAttendancesStates(ret, workAttendances, registers);
+		}
 
 		return requestBody;
 	}
@@ -267,7 +280,7 @@ public class WeeklyService {
 			}
 	}
 
-	public void workAttendanceCalculation(Weekly weekly, LocalDate date,
+	public void setWorkAttendanceStateWithDate(LocalDate date, Weekly weekly,
 			List<Register> dateRegisters) {
 
 		List<Responsibility> dateResponsibilities = new ArrayList<>();
@@ -282,14 +295,21 @@ public class WeeklyService {
 				this.calculateWorkAttendanceStatePerDay(dateResponsibilities, dateRegisters, 1800));
 	}
 
-	public void calculateWorkAttendanceStatePerWeekly(Weekly weekly,
+	public void setWorkAttendancesStates(Weekly weekly, List<WorkAttendance> weeklyWorkAttendances,
 			List<Register> weeklyRegisters) {
 
-		// creating arraylists for the hash
+		// creating arraylists for the work attendances hash
+		Map<String, WorkAttendance> workAttendancesHashMap = new HashMap<>();
+		for (WorkAttendance w : weeklyWorkAttendances)
+			workAttendancesHashMap.put(w.getDate().toString(), w);
+
+
+		// creating arraylists for the registers hash
 		Map<String, List<Register>> registersHashMap = new HashMap<>();
 		for (Register r : weeklyRegisters) {
-			if (registersHashMap.get(r.getTime().toLocalDate().toString()) == null) {
-				registersHashMap.put(r.getTime().toLocalDate().toString(), new ArrayList<>());
+			String s = r.getTime().toLocalDate().toString();
+			if (registersHashMap.get(s) == null) {
+				registersHashMap.put(s, new ArrayList<>());
 			}
 		}
 		for (Register r : weeklyRegisters) {
@@ -307,14 +327,31 @@ public class WeeklyService {
 			responsibilitiesPerDay[r.getDay().ordinal()].add(r);
 		}
 
+		List<Register> dateRegisters;
+		List<Responsibility> dateResponsibilities;
+		List<WorkAttendance> workAttendances = new ArrayList<>();
+		WorkAttendance w1;
+		WorkAttendance w2;
+		for (String key : registersHashMap.keySet()) {
+			dateRegisters = registersHashMap.get(key);
+			dateResponsibilities =
+					responsibilitiesPerDay[dateRegisters.get(0).getTime().getDayOfWeek().ordinal()];
 
-		for (List<Register> list : registersHashMap.values()) {
-			if (responsibilitiesPerDay[list.get(0).getTime().getDayOfWeek().ordinal()] == null) {
-				this.calculateWorkAttendanceStatePerDay(
-						responsibilitiesPerDay[list.get(0).getTime().getDayOfWeek().ordinal()],
-						list, 1800);
+			if (dateResponsibilities != null) {
+				w1 = workAttendancesHashMap.get(key);
+				w2 = new WorkAttendance();
+				w2.setId(w1.getId());
+				w2.setWeeklyId(w1.getWeeklyId());
+				w2.setDate(w1.getDate());
+				w2.setActive(true);
+				w2.setState(this.calculateWorkAttendanceStatePerDay(dateResponsibilities,
+						dateRegisters, 1800));
+				workAttendances.add(w2);
 			}
 		}
+
+		this.workAttendanceService.updateAll(workAttendances);
+		// throw new ErrorResponse("testing", HttpStatus.I_AM_A_TEAPOT);
 	}
 
 	public WorkAttendanceState calculateWorkAttendanceStatePerDay(

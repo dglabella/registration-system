@@ -438,9 +438,9 @@ public class PersonService {
 				List<Register> dateRegisters = this.registerService
 						.getAllFromPersonWithDate(personId, checkingDateTime.toLocalDate());
 
-				// do calculation for work attendance
-				this.weeklyService.workAttendanceCalculation(weekly, checkingDateTime.toLocalDate(),
-						dateRegisters);
+				// set the work attendance state into DB
+				this.weeklyService.setWorkAttendanceStateWithDate(checkingDateTime.toLocalDate(),
+						weekly, dateRegisters);
 
 				response = new ResponseEntity<>(person, HttpStatus.OK);
 			} else {
