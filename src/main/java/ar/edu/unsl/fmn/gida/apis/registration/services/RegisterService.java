@@ -78,6 +78,17 @@ public class RegisterService {
 				date.atStartOfDay(), date.plusDays(1).atStartOfDay());
 	}
 
+	public List<Register> getAllFromPersonBetweenDates(Integer personId, LocalDate from,
+			LocalDate to) {
+
+		if (from.compareTo(to) > 0)
+			throw new ErrorResponse(RegistrationSystemApplication.MESSENGER
+					.getRegisterServiceMessenger().crossDates(), HttpStatus.BAD_REQUEST);
+
+		return this.repository.findAllByPersonIdAndActiveTrueAndTimeBetween(personId,
+				from.atStartOfDay(), to.atStartOfDay());
+	}
+
 	public List<Register> getAllFromPersonBetweenDates(Integer personId, String from, String to) {
 		LocalDateTime fromDate = null;
 		LocalDateTime toDate = null;

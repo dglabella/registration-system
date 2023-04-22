@@ -421,7 +421,8 @@ public class PersonService {
 						HttpStatus.NOT_FOUND));
 
 		// save register
-		LocalDateTime checkingDateTime = LocalDateTime.now();
+		// LocalDateTime checkingDateTime = LocalDateTime.now();
+		LocalDateTime checkingDateTime = requestBody.getTime();
 		this.registerService.insert(person.getId(), requestBody.getAccessId(), checkingDateTime);
 
 		Weekly weekly = this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
@@ -437,9 +438,9 @@ public class PersonService {
 				List<Register> dateRegisters = this.registerService
 						.getAllFromPersonWithDate(personId, checkingDateTime.toLocalDate());
 
-				// do calculation for work attendance
-				this.weeklyService.workAttendanceCalculation(weekly, checkingDateTime.toLocalDate(),
-						dateRegisters);
+				// set the work attendance state into DB
+				this.weeklyService.setWorkAttendanceStateWithDate(checkingDateTime.toLocalDate(),
+						weekly, dateRegisters);
 
 				response = new ResponseEntity<>(person, HttpStatus.OK);
 			} else {
