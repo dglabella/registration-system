@@ -421,8 +421,8 @@ public class PersonService {
 						HttpStatus.NOT_FOUND));
 
 		// save register
-		// LocalDateTime checkingDateTime = LocalDateTime.now();
-		LocalDateTime checkingDateTime = requestBody.getTime();
+		LocalDateTime checkingDateTime = LocalDateTime.now();
+		// LocalDateTime checkingDateTime = requestBody.getTime();
 		this.registerService.insert(person.getId(), requestBody.getAccessId(), checkingDateTime);
 
 		Weekly weekly = this.weeklyService.getFromPersonWithResponsibilitiesContainingDate(personId,
@@ -446,6 +446,8 @@ public class PersonService {
 			} else {
 				response = new ResponseEntity<>(person, HttpStatus.ACCEPTED);
 			}
+		} else {
+			response = new ResponseEntity<>(person, HttpStatus.ACCEPTED);
 		}
 
 		return response;

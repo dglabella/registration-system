@@ -40,8 +40,7 @@ public class RegistrationSystemApplication {
 
 	private static void setUpConfigFile() {
 		ConfigurationConverter configurationConverter = new ConfigurationConverter();
-		File configFile =
-				new File(System.getProperty("user.dir") + "\\src\\main\\resources\\configs.CONF");
+		File configFile = new File(System.getProperty("user.dir") + "\\classes\\configs.CONF");
 		try {
 			if (!configFile.exists()) {
 				System.out.println("no config file found, restoring with default values...");
@@ -105,6 +104,7 @@ public class RegistrationSystemApplication {
 	}
 
 	/*
+	 *
 	 * @Bean public WebMvcConfigurer corsConfigurer() { return new WebMvcConfigurer() {
 	 * 
 	 * @Override public void addCorsMappings(CorsRegistry registry) {

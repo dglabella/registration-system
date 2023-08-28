@@ -1,12 +1,12 @@
 package ar.edu.unsl.fmn.gida.apis.registration.model.auxiliaries;
 
-import java.time.LocalDateTime;
+// import java.time.LocalDateTime;
 
 public class Check {
 
     private Integer accessId;
     private String encryptedData;
-    private LocalDateTime time;
+    // private LocalDateTime time;
 
     public Integer getAccessId() {
         return this.accessId;
@@ -24,11 +24,11 @@ public class Check {
         this.encryptedData = encryptedData;
     }
 
-    public LocalDateTime getTime() {
-        return this.time;
-    }
+    // public LocalDateTime getTime() {
+    // return this.time;
+    // }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
+    // public void setTime(LocalDateTime time) {
+    // this.time = time;
+    // }
 }
