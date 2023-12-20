@@ -2,6 +2,7 @@ package ar.edu.unsl.fmn.gida.apis.registration.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -421,7 +422,7 @@ public class PersonService {
 						HttpStatus.NOT_FOUND));
 
 		// save register
-		LocalDateTime checkingDateTime = LocalDateTime.now();
+		LocalDateTime checkingDateTime = LocalDateTime.now(ZoneId.of("America/Argentina/San_Luis"));
 		// LocalDateTime checkingDateTime = requestBody.getTime();
 		this.registerService.insert(person.getId(), requestBody.getAccessId(), checkingDateTime);
 

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ar.edu.unsl.fmn.gida.apis.registration.external.configs.Configuration;
 import ar.edu.unsl.fmn.gida.apis.registration.messengers.Messenger;
 import ar.edu.unsl.fmn.gida.apis.registration.utils.cypher.QrCypher;
@@ -41,6 +40,7 @@ public class RegistrationSystemApplication {
 	private static void setUpConfigFile() {
 		ConfigurationConverter configurationConverter = new ConfigurationConverter();
 		File configFile = new File(System.getProperty("user.dir") + "\\classes\\configs.CONF");
+		System.out.println(configFile);
 		try {
 			if (!configFile.exists()) {
 				System.out.println("no config file found, restoring with default values...");
