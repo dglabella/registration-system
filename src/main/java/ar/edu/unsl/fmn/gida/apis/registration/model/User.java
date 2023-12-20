@@ -58,10 +58,8 @@ public class User implements UserDetails {
 
 	// ================================== extras ==================================
 
-	// active initial value = false. The user must be activated manually from DB by an ADMIN until
-	// an automatic mechanism is developed.
 	@Column(nullable = false)
-	private boolean active = false;
+	private boolean active = true;
 
 	// ============================ model associations ============================
 
